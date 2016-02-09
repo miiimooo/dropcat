@@ -7,7 +7,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class ComposerCommand extends Command {
 
@@ -24,7 +27,16 @@ class ComposerCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         $task = $input->getOption('task');
-        $output->writeln($task);
+        $process = new Process("composer $task");
+        $process->run();
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        echo $process->getOutput();
+
+        $output = new ConsoleOutput();
+        $output->writeln('<info>Task: wkse:composer finished</info>');
     }
 }
 

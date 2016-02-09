@@ -12,7 +12,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class ScpCommand extends Command {
+class RemoteDeployCommand extends Command {
 
     protected function configure()
     {
@@ -21,17 +21,19 @@ class ScpCommand extends Command {
       $user = 'ubuntu';
       $targetdir = '/tmp';
       $port = '22';
+      $drush_alias = 'default'
 
-      $this->setName("wkse:scp")
-           ->setDescription("Uploading zip via scp")
+      $this->setName("wkse:remotedeploy")
+           ->setDescription("Deploying on remote server")
            ->setDefinition( array (
              new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder', $folder),
              new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),
              new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
              new InputOption('targetdir', 't', InputOption::VALUE_OPTIONAL, 'Targetdir', $targetdir),
              new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
+             new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
            ))
-           ->setHelp('Scp');
+           ->setHelp('Remote Deploy');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
@@ -40,16 +42,16 @@ class ScpCommand extends Command {
         $user = $input->getOption('user');
         $targetdir = $input->getOption('targetdir');
         $port = $input->getOption('port');
+        $drush_alias = $input->getOption('drush_alias');
 
-        $process = new Process("scp -C  -P $port $folder $user@$server:$targetdir");
+        $process = new Process("ssh -p $port $user@$server");
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
 
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Task: wkse:scp finished</info>');
+        $output->writeln("\n $folder uploaded to $server in directory $targetdir\n");
     }
 }
 

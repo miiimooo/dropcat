@@ -12,32 +12,36 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class ZipCommand extends Command {
+class ConfigImportCommand extends Command {
 
     protected function configure()
     {
-      $dir = explode('/', getcwd());
-      $home_dir=$dir[count($dir)-1];
+        $drush_alias = 'default';
+        $config_name = 'staging';
 
-        $folder = $home_dir;
-        $this->setName("wkse:zip")
-             ->setDescription("Zip deploy folder")
+        $this->setName("wkse:configimport")
+             ->setDescription("Run config import task")
              ->setDefinition( array (
-               new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder to zip', $folder),
+               new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
+               new InputOption('config_name', 'c', InputOption::VALUE_OPTIONAL, 'Config name', $config_name),
              ))
-             ->setHelp('Zip');
+             ->setHelp('Config import task');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $folder = $input->getOption('folder');
-        $process = new Process("zip -q -r $folder.zip . -x vendor/\* -x *.git* -x *.zip -x .git/\* -x nodes/\* -x tools/\* -x provision/\* -x .vagrant/\* -x *files/\*");
+        $drush_alias = $input->getOption('drush_alias');
+        $config_name = $input->getOption('config_name');
+        $process = new Process("drush @$drush_alias cim $config_name -y");
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
-        $output->writeln('<info>Task: wkse:zip finished</info>');
+
+        $output = new ConsoleOutput();
+        $output->writeln('<info>Task: wkse:configimport finished</info>');
+
     }
 }
 
