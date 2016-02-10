@@ -21,6 +21,7 @@ class ComposerCommand extends Command {
       $user = 'ubuntu';
       $web_dir = '/tmp';
       $port = '22';
+      $timeout = '3600';
 
       $this->setName("dropcat:composer")
            ->setDescription("Upload archived folder or file via scp")
@@ -29,8 +30,9 @@ class ComposerCommand extends Command {
              new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
              new InputOption('web_dir', 'w', InputOption::VALUE_OPTIONAL, 'Web dir', $web_dir),
              new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
+             new InputOption('timeout', 'o', InputOption::VALUE_OPTIONAL, 'Port', $timeout),
            ))
-           ->setHelp('Scp');
+           ->setHelp('Composer');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
@@ -38,13 +40,14 @@ class ComposerCommand extends Command {
         $user = $input->getOption('user');
         $web_dir = $input->getOption('web_dir');
         $port = $input->getOption('port');
+        $timeout = $input->getOption('timeout');
 
         $process = new Process("ssh -p $port $user@$server << EOF
         cd $web_dir
         rm -rf vendor
         composer update
         EOF");
-
+        $process->setTimeout($timeout);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
