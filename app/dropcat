@@ -1,11 +1,26 @@
 #!/usr/bin/env php
 <?php
-
 // set to run indefinitely if needed
 set_time_limit(0);
 date_default_timezone_set('Europe/Stockholm');
-// include the composer autoloader
-require_once __DIR__ . '/../vendor/autoload.php';
+// Ensure that errors are only reported once.
+ini_set('display_errors', 1);
+ini_set('log_errors', 0);
+// Include the composer autoloader
+define('CLI_ROOT', __DIR__);
+
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require __DIR__ . '/../vendor/autoload.php';
+}
+
+if (file_exists(CLI_ROOT . '/vendor/autoload.php')) {
+    require CLI_ROOT . '/vendor/autoload.php';
+}
+elseif (file_exists(CLI_ROOT . '/../../../autoload.php')) {
+    // we are globally installed via Composer
+    require CLI_ROOT . '/../../../autoload.php';
+}
+
 
 // import the Symfony Console Application
 use Symfony\Component\Console\Application;
