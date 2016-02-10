@@ -30,7 +30,7 @@ class ZipCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         $folder = $input->getOption('folder');
-        $process = new Process("zip -q -r $folder.zip . -x *.git* -x *.zip -x .git/\* -x nodes/\* -x tools/\* -x provision/\* -x .vagrant/\* -x *files/\*");
+        $process = new Process("zip -q -r $folder.zip . -x *.git -x *.zip -x nodes/\* -x provision/\* -x .vagrant/\*");
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {

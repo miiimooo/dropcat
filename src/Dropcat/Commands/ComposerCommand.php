@@ -22,7 +22,7 @@ class ComposerCommand extends Command {
       $web_dir = '/tmp';
       $port = '22';
 
-      $this->setName("dropcat:scp")
+      $this->setName("dropcat:composer")
            ->setDescription("Upload archived folder or file via scp")
            ->setDefinition( array (
              new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),

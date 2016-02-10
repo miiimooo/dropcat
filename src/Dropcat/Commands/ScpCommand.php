@@ -21,6 +21,7 @@ class ScpCommand extends Command {
       $user = 'ubuntu';
       $targetdir = '/tmp';
       $port = '22';
+      $timeout = '3600';
 
       $this->setName("dropcat:scp")
            ->setDescription("Upload archived folder or file via scp")
@@ -30,6 +31,7 @@ class ScpCommand extends Command {
              new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
              new InputOption('targetdir', 't', InputOption::VALUE_OPTIONAL, 'Targetdir', $targetdir),
              new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
+             new InputOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'Port', $timeout),
            ))
            ->setHelp('Scp');
     }
@@ -40,8 +42,10 @@ class ScpCommand extends Command {
         $user = $input->getOption('user');
         $targetdir = $input->getOption('targetdir');
         $port = $input->getOption('port');
+        $timeout = $input->getOption('timeout');
 
         $process = new Process("scp -C  -P $port $folder $user@$server:$targetdir");
+        $process->setTimeout($timeout);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);

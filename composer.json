@@ -5,7 +5,7 @@
         "drush/drush": "^8.0.3"
       },
     "bin": [
-     "dropcat"
+     "app/dropcat"
     ],
     "autoload": {
       "psr-0": {
