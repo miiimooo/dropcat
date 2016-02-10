@@ -1,15 +1,25 @@
 {
-    "require": {
-        "symfony/console": "^3.0",
-        "symfony/process": "^3.0",
-        "drush/drush": "^8.0.3"
-      },
-    "bin": [
-     "app/dropcat"
-    ],
-    "autoload": {
-      "psr-0": {
-             "Dropcat\\": "src/"
-         }
+  "name": "dropcat/dropcat",
+  "description": "Simple deploy tool for deploy of drupal 8 sites",
+  "type": "drupal-deploy-tool",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+        "name": "Mikke Schirén",
+        "role": "Cat owner"
     }
+   ],
+  "require": {
+    "symfony/console": "^3.0",
+    "symfony/process": "^3.0",
+    "drush/drush": "^8.0"
+  },
+  "bin": [
+    "app/dropcat"
+  ],
+  "autoload": {
+  "psr-0": {
+    "Dropcat\\": "src/"
+  }
+  }
 }
