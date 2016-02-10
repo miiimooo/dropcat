@@ -1,6 +1,6 @@
 <?php
 
-namespace Wkse\Commands;
+namespace Dropcat\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +23,7 @@ class RemoteDeployCommand extends Command {
       $port = '22';
       $drush_alias = 'default'
 
-      $this->setName("wkse:remotedeploy")
+      $this->setName("dropcat:remotedeploy")
            ->setDescription("Deploying on remote server")
            ->setDefinition( array (
              new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder', $folder),
@@ -44,7 +44,13 @@ class RemoteDeployCommand extends Command {
         $port = $input->getOption('port');
         $drush_alias = $input->getOption('drush_alias');
 
-        $process = new Process("ssh -p $port $user@$server");
+        $connection = ssh2_connect($server, $port);
+        ssh2_auth_none($connection, $user);
+
+        $stream = ssh2_exec($connection, '/usr/local/bin/php -i');
+
+
+        $process = new Process();
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);

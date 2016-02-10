@@ -1,6 +1,6 @@
 <?php
 
-namespace Wkse\Commands;
+namespace Dropcat\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +19,7 @@ class BackupCommand extends Command {
         $drush_alias = 'default';
         $timestamp = date("Ymd_His");
         $backup_folder = '/backup';
-        $this->setName("wkse:backup")
+        $this->setName("dropcat:backup")
              ->setDescription("Run backup task")
              ->setDefinition( array (
                new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
@@ -42,7 +42,7 @@ class BackupCommand extends Command {
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: wkse:backup finished</info>');
+        $output->writeln('<info>Task: dropcat:backup finished</info>');
 
     }
 }

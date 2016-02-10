@@ -1,6 +1,6 @@
 <?php
 
-namespace Wkse\Commands;
+namespace Dropcat\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,36 +12,32 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class ConfigImportCommand extends Command {
+class ZipCommand extends Command {
 
     protected function configure()
     {
-        $drush_alias = 'default';
-        $config_name = 'staging';
+      $dir = explode('/', getcwd());
+      $home_dir=$dir[count($dir)-1];
 
-        $this->setName("wkse:configimport")
-             ->setDescription("Run config import task")
+        $folder = $home_dir;
+        $this->setName("dropcat:zip")
+             ->setDescription("Zip folder")
              ->setDefinition( array (
-               new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
-               new InputOption('config_name', 'c', InputOption::VALUE_OPTIONAL, 'Config name', $config_name),
+               new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder to zip', $folder),
              ))
-             ->setHelp('Config import task');
+             ->setHelp('Zip');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $drush_alias = $input->getOption('drush_alias');
-        $config_name = $input->getOption('config_name');
-        $process = new Process("drush @$drush_alias cim $config_name -y");
+        $folder = $input->getOption('folder');
+        $process = new Process("zip -q -r $folder.zip . -x vendor/\* -x *.git* -x *.zip -x .git/\* -x nodes/\* -x tools/\* -x provision/\* -x .vagrant/\* -x *files/\*");
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
-
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Task: wkse:configimport finished</info>');
-
+        $output->writeln('<info>Task: dropcat:zip finished</info>');
     }
 }
 

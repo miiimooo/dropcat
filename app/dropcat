@@ -9,11 +9,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 // import the Symfony Console Application
 use Symfony\Component\Console\Application;
-use Wkse\Commands\ZipCommand;
-use Wkse\Commands\BackupCommand;
-use Wkse\Commands\ComposerCommand;
-use Wkse\Commands\ConfigImportCommand;
-use Wkse\Commands\ScpCommand;
+use Dropcat\Commands\ZipCommand;
+use Dropcat\Commands\BackupCommand;
+use Dropcat\Commands\ComposerCommand;
+use Dropcat\Commands\ConfigImportCommand;
+use Dropcat\Commands\ScpCommand;
 
 $app = new Application();
 $app->addCommands(array(

@@ -1,6 +1,6 @@
 <?php
 
-namespace Wkse\Commands;
+namespace Dropcat\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,32 +12,31 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class ZipCommand extends Command {
+class ComposerCommand extends Command {
 
     protected function configure()
     {
-      $dir = explode('/', getcwd());
-      $home_dir=$dir[count($dir)-1];
-
-        $folder = $home_dir;
-        $this->setName("wkse:zip")
-             ->setDescription("Zip deploy folder")
+        $task = 'update';
+        $this->setName("dropcat:composer")
+             ->setDescription("Run composer task")
              ->setDefinition( array (
-               new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder to zip', $folder),
+               new InputOption('task', 't', InputOption::VALUE_OPTIONAL, 'Composer task', $task),
              ))
-             ->setHelp('Zip');
+             ->setHelp('Composer');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $folder = $input->getOption('folder');
-        $process = new Process("zip -q -r $folder.zip . -x vendor/\* -x *.git* -x *.zip -x .git/\* -x nodes/\* -x tools/\* -x provision/\* -x .vagrant/\* -x *files/\*");
+        $task = $input->getOption('task');
+        $process = new Process("composer $task");
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
-        $output->writeln('<info>Task: wkse:zip finished</info>');
+
+        $output = new ConsoleOutput();
+        $output->writeln('<info>Task: dropcat:composer finished</info>');
     }
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Wkse\Commands;
+namespace Dropcat\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,8 +22,8 @@ class ScpCommand extends Command {
       $targetdir = '/tmp';
       $port = '22';
 
-      $this->setName("wkse:scp")
-           ->setDescription("Uploading zip via scp")
+      $this->setName("dropcat:scp")
+           ->setDescription("Upload archived folder or file via scp")
            ->setDefinition( array (
              new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder', $folder),
              new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),

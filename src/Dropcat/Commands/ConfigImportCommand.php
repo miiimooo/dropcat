@@ -1,6 +1,6 @@
 <?php
 
-namespace Wkse\Commands;
+namespace Dropcat\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,22 +12,26 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class ComposerCommand extends Command {
+class ConfigImportCommand extends Command {
 
     protected function configure()
     {
-        $task = 'update';
-        $this->setName("wkse:composer")
-             ->setDescription("Run composer task")
+        $drush_alias = 'default';
+        $config_name = 'staging';
+
+        $this->setName("dropcat:configimport")
+             ->setDescription("Run config import task")
              ->setDefinition( array (
-               new InputOption('task', 't', InputOption::VALUE_OPTIONAL, 'Composer task', $task),
+               new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
+               new InputOption('config_name', 'c', InputOption::VALUE_OPTIONAL, 'Config name', $config_name),
              ))
-             ->setHelp('Composer');
+             ->setHelp('Config import task');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $task = $input->getOption('task');
-        $process = new Process("composer $task");
+        $drush_alias = $input->getOption('drush_alias');
+        $config_name = $input->getOption('config_name');
+        $process = new Process("drush @$drush_alias cim $config_name -y");
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
@@ -36,7 +40,8 @@ class ComposerCommand extends Command {
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: wkse:composer finished</info>');
+        $output->writeln('<info>Task: dropcat:configimport finished</info>');
+
     }
 }
 
