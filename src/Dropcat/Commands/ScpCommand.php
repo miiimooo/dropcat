@@ -31,7 +31,7 @@ class ScpCommand extends Command {
              new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
              new InputOption('targetdir', 't', InputOption::VALUE_OPTIONAL, 'Targetdir', $targetdir),
              new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
-             new InputOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'Port', $timeout),
+             new InputOption('timeout', 'o', InputOption::VALUE_OPTIONAL, 'Port', $timeout),
            ))
            ->setHelp('Scp');
     }
