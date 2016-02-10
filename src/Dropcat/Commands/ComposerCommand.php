@@ -16,27 +16,43 @@ class ComposerCommand extends Command {
 
     protected function configure()
     {
-        $task = 'update';
-        $this->setName("dropcat:composer")
-             ->setDescription("Run composer task")
-             ->setDefinition( array (
-               new InputOption('task', 't', InputOption::VALUE_OPTIONAL, 'Composer task', $task),
-             ))
-             ->setHelp('Composer');
+
+      $server = 'localhost';
+      $user = 'ubuntu';
+      $web_dir = '/tmp';
+      $port = '22';
+
+      $this->setName("dropcat:scp")
+           ->setDescription("Upload archived folder or file via scp")
+           ->setDefinition( array (
+             new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),
+             new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
+             new InputOption('web_dir', 'w', InputOption::VALUE_OPTIONAL, 'Web dir', $web_dir),
+             new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
+           ))
+           ->setHelp('Scp');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $task = $input->getOption('task');
-        $process = new Process("composer $task");
+        $server = $input->getOption('server');
+        $user = $input->getOption('user');
+        $web_dir = $input->getOption('web_dir');
+        $port = $input->getOption('port');
+
+        $process = new Process("ssh -p $port $user@$server << EOF
+        cd $web_dir
+        rm -rf vendor
+        composer update
+        EOF");
+
         $process->run();
-        // executes after the command finishes
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: dropcat:composer finished</info>');
+        $output->writeln('<info>Task: wkse:composer finished</info>');
     }
 }
 

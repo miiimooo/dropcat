@@ -14,6 +14,7 @@ use Dropcat\Commands\BackupCommand;
 use Dropcat\Commands\ComposerCommand;
 use Dropcat\Commands\ConfigImportCommand;
 use Dropcat\Commands\ScpCommand;
+use Dropcat\Commands\RemoteDeployCommand;
 
 $app = new Application();
 $app->addCommands(array(
@@ -22,6 +23,7 @@ $app->addCommands(array(
   new ScpCommand(),
   new BackupCommand(),
   new ConfigImportCommand(),
+  new RemoteDeployCommand(),
 ));
 $app->run();
 ?>
