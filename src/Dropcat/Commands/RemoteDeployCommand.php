@@ -36,8 +36,6 @@ class RemoteDeployCommand extends Command {
              new InputOption('alias', 'a', InputOption::VALUE_OPTIONAL, 'Alias', $alias),
              new InputOption('web_root', 'w', InputOption::VALUE_OPTIONAL, 'Web root', $web_root),
              new InputOption('temp_folder', 'tf', InputOption::VALUE_OPTIONAL, 'Temp folder', $temp_folder),
-
-
            ))
            ->setHelp('Remote Deploy');
     }
@@ -56,7 +54,7 @@ class RemoteDeployCommand extends Command {
         mkdir $temp_folder/$target_path
         mv $temp_folder/$zip $temp_folder/$target_path
         cd $temp_folder/$target_path
-        unzip $zip
+        unzip $zip -q
         rm *.zip
         cd ..
         mv $target_path $web_root
