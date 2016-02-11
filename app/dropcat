@@ -28,6 +28,7 @@ use Dropcat\Commands\ZipCommand;
 use Dropcat\Commands\BackupCommand;
 use Dropcat\Commands\ComposerCommand;
 use Dropcat\Commands\ConfigImportCommand;
+use Dropcat\Commands\DbImportCommand;
 use Dropcat\Commands\ScpCommand;
 use Dropcat\Commands\RemoteDeployCommand;
 
@@ -39,6 +40,7 @@ $app->addCommands(array(
   new BackupCommand(),
   new ConfigImportCommand(),
   new RemoteDeployCommand(),
+  new DbImportCommand(),
 ));
 $app->run();
 ?>
