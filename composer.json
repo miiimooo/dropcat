@@ -10,6 +10,7 @@
     }
    ],
   "require": {
+    "php": ">=5.5.9",
     "symfony/console": "2.7.*",
     "symfony/process": "2.7.*",
     "drush/drush": "^8.0",
