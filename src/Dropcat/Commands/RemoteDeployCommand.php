@@ -54,7 +54,7 @@ class RemoteDeployCommand extends Command {
         mkdir $temp_folder/$target_path
         mv $temp_folder/$zip $temp_folder/$target_path
         cd $temp_folder/$target_path
-        unzip $zip -q
+        unzip $zip
         rm *.zip
         cd ..
         mv $target_path $web_root
