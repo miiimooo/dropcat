@@ -19,7 +19,6 @@ class SymlinkCommand extends Command {
       $target = '/my/target';
       $server = 'localhost';
       $user = 'ubuntu';
-      $local = true;
       $port = '22';
       $timeout = '120';
 
@@ -32,7 +31,6 @@ class SymlinkCommand extends Command {
           new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
           new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
           new InputOption('timeout', 'to', InputOption::VALUE_OPTIONAL, 'Timeout', $timeout),
-          new InputOption('local', 'l', InputOption::VALUE_OPTIONAL, 'Local', $local),
         ))
         ->setHelp('Create symlink');
     }
@@ -44,16 +42,12 @@ class SymlinkCommand extends Command {
       $user = $input->getOption('user');
       $port = $input->getOption('port');
       $timeout = $input->getOption('timeout');
-      $local = $input->getOption('local');
-      if ($local == false) {
-        $process = new Process("ssh -p $port $user@$server << EOF
+
+      $process = new Process("ssh -p $port $user@$server << EOF
         rm $target 2> /dev/null
         ln -s $original $target
 EOF");
-      }
-      else {
-          $process = new Process("rm $target 2> /dev/null && ln -s $original $target");
-      }
+
       $process->setTimeout($timeout);
       $process->run();
       if (!$process->isSuccessful()) {
