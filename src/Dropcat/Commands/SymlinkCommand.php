@@ -14,8 +14,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class SymlinkCommand extends Command {
 
-    protected function configure()
-    {
+    protected function configure() {
       $original = '/my/path';
       $target = '/my/target';
       $server = 'localhost';
@@ -48,12 +47,12 @@ class SymlinkCommand extends Command {
       $local = $input->getOption('local');
       if ($local == false) {
         $process = new Process("ssh -p $port $user@$server << EOF
-        rm $target
+        rm $target 2> /dev/null
         ln -s $original $target
 EOF");
       }
       else {
-          $process = new Process("rm $target && ln -s $original $target");
+          $process = new Process("rm $target 2> /dev/null && ln -s $original $target");
       }
       $process->setTimeout($timeout);
       $process->run();
