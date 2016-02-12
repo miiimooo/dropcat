@@ -12,7 +12,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class RemoteDeployCommand extends Command {
+class DeployCommand extends Command {
 
     protected function configure()
     {
@@ -25,7 +25,7 @@ class RemoteDeployCommand extends Command {
       $web_root = '/var/www/webroot/';
       $temp_folder = '/tmp';
 
-      $this->setName("dropcat:remotedeploy")
+      $this->setName("dropcat:deploy")
            ->setDescription("Deploying on remote server")
            ->setDefinition( array (
              new InputOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Zip', $zip),
@@ -37,7 +37,7 @@ class RemoteDeployCommand extends Command {
              new InputOption('web_root', 'w', InputOption::VALUE_OPTIONAL, 'Web root', $web_root),
              new InputOption('temp_folder', 'tf', InputOption::VALUE_OPTIONAL, 'Temp folder', $temp_folder),
            ))
-           ->setHelp('Remote Deploy');
+           ->setHelp('Deploy');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {

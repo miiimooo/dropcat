@@ -24,23 +24,24 @@ elseif (file_exists(CLI_ROOT . '/../../../autoload.php')) {
 
 // import the Symfony Console Application
 use Symfony\Component\Console\Application;
-use Dropcat\Commands\ZipCommand;
+
 use Dropcat\Commands\BackupCommand;
-use Dropcat\Commands\ComposerCommand;
 use Dropcat\Commands\ConfigImportCommand;
 use Dropcat\Commands\DbImportCommand;
+use Dropcat\Commands\DeployCommand;
 use Dropcat\Commands\ScpCommand;
-use Dropcat\Commands\RemoteDeployCommand;
+use Dropcat\Commands\SymlinkCommand;
+use Dropcat\Commands\ZipCommand;
 
 $app = new Application();
 $app->addCommands(array(
-  new ComposerCommand(),
   new ZipCommand(),
   new ScpCommand(),
   new BackupCommand(),
   new ConfigImportCommand(),
-  new RemoteDeployCommand(),
   new DbImportCommand(),
+  new DeployCommand(),
+  new SymlinkCommand(),
 ));
 $app->run();
 ?>
