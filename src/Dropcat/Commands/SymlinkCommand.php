@@ -24,7 +24,7 @@ class SymlinkCommand extends Command {
       $timeout = '120';
 
       $this->setName("dropcat:symlink")
-        ->setDescription("Deploying on remote server")
+        ->setDescription("Create symlink")
         ->setDefinition( array (
           new InputOption('original', 'o', InputOption::VALUE_OPTIONAL, 'Original', $original),
           new InputOption('target', 't', InputOption::VALUE_OPTIONAL, 'Target', $target),

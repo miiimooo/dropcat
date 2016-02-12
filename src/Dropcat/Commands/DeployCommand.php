@@ -24,6 +24,7 @@ class DeployCommand extends Command {
       $alias = 'default';
       $web_root = '/var/www/webroot/';
       $temp_folder = '/tmp';
+      $debug = false;
 
       $this->setName("dropcat:deploy")
            ->setDescription("Deploying on remote server")
@@ -36,7 +37,10 @@ class DeployCommand extends Command {
              new InputOption('alias', 'a', InputOption::VALUE_OPTIONAL, 'Alias', $alias),
              new InputOption('web_root', 'w', InputOption::VALUE_OPTIONAL, 'Web root', $web_root),
              new InputOption('temp_folder', 'tf', InputOption::VALUE_OPTIONAL, 'Temp folder', $temp_folder),
+             new InputOption('debug', 'd', InputOption::VALUE_OPTIONAL, 'Debug', $debug),
+
            ))
+
            ->setHelp('Deploy');
     }
 
@@ -49,19 +53,34 @@ class DeployCommand extends Command {
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
         $temp_folder = $input->getOption('temp_folder');
+        $debug = $input->getOption('debug');
 
-        $process = new Process("ssh -p $port $user@$server << EOF
-        mkdir $temp_folder/$target_path
-        mv $temp_folder/$zip $temp_folder/$target_path
-        cd $temp_folder/$target_path
-        unzip $zip
-        rm *.zip
-        cd ..
-        mv $target_path $web_root
-        cd $web_root
-        rm $alias
-        ln -s $target_path $alias
+        // Debug mode does not delete anything and does not create the symlink to build
+        if ($debug == true) {
+          $process = new Process("ssh -p $port $user@$server << EOF
+          mkdir $temp_folder/$target_path
+          cp $temp_folder/$zip $temp_folder/$target_path
+          cd $temp_folder/$target_path
+          unzip $zip
+          cd ..
+          cp $target_path $web_root
 EOF");
+        }
+        else  {
+          $process = new Process("ssh -p $port $user@$server << EOF
+          mkdir $temp_folder/$target_path
+          mv $temp_folder/$zip $temp_folder/$target_path
+          cd $temp_folder/$target_path
+          unzip $zip
+          rm *.zip
+          cd ..
+          mv $target_path $web_root
+          cd $web_root
+          rm $alias
+          ln -s $target_path $alias
+EOF");
+        }
+
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
