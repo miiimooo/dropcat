@@ -1,0 +1,25 @@
+{
+  "chmod": "0755",
+  "directories": [
+    "src"
+  ],
+  "files": [
+    "app/dropcat",
+    "app/config/config.yml",
+    "vendor/autoload.php"
+  ],
+  "finder": [
+    {
+      "in": "vendor",
+      "name": "*.php",
+      "exclude": [
+        "phpunit",
+        "Tests",
+        "tests"
+      ]
+    }
+  ],
+  "main": "app/dropcat",
+  "output": "dropcat.phar",
+  "stub": true
+}
