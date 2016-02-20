@@ -31,11 +31,11 @@ use Dropcat\Command\DbImportCommand;
 use Dropcat\Command\DeployCommand;
 use Dropcat\Command\ScpCommand;
 use Dropcat\Command\SymlinkCommand;
-use Dropcat\Command\ZipCommand;
+use Dropcat\Commands\TarCommand;
 
 $app = new Application();
 $app->addCommands(array(
-  new ZipCommand(),
+  new TarCommand(),
   new ScpCommand(),
   new BackupCommand(),
   new ConfigImportCommand(),
