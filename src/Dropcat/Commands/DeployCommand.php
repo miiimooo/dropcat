@@ -29,7 +29,7 @@ class DeployCommand extends Command {
       $temp_folder = '/tmp';
       $debug = false;
 
-      $this->setName("dropcat:deploy")
+      $this->setName("deploy")
            ->setDescription("Deploying on remote server")
            ->setDefinition( array (
              new InputOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Zip', $zip),
@@ -93,7 +93,7 @@ class DeployCommand extends Command {
 
       $ssh->disconnect();
 
-      $output->writeln('<info>Task: dropcat:deploy finished</info>');
+      $output->writeln('<info>Task: deploy finished</info>');
     }
 }
 

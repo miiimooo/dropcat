@@ -19,7 +19,7 @@ class ConfigImportCommand extends Command {
         $drush_alias = 'default';
         $config_name = 'staging';
 
-        $this->setName("dropcat:configimport")
+        $this->setName("configimport")
              ->setDescription("Run config import task")
              ->setDefinition( array (
                new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
@@ -40,7 +40,7 @@ class ConfigImportCommand extends Command {
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: dropcat:configimport finished</info>');
+        $output->writeln('<info>Task: configimport finished</info>');
 
     }
 }

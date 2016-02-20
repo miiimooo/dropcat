@@ -24,7 +24,7 @@ class SymlinkCommand extends Command {
       $port = '22';
       $identity_file = '/srv/www/wk_basebox/.vagrant/machines/default/virtualbox/private_key';
 
-      $this->setName("dropcat:symlink")
+      $this->setName("symlink")
         ->setDescription("Create symlink")
         ->setDefinition( array (
           new InputOption('original', 'o', InputOption::VALUE_OPTIONAL, 'Original', $original),
@@ -57,7 +57,7 @@ class SymlinkCommand extends Command {
       $ssh->exec('rm '. $target .' 2> /dev/null');
       $ssh->exec('ln -s '. $original .' '. $target);
 
-      $output->writeln('<info>Task: dropcat:symlink finished</info>');
+      $output->writeln('<info>Task: symlink finished</info>');
     }
 }
 

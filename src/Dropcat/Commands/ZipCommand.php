@@ -20,7 +20,7 @@ class ZipCommand extends Command {
       $home_dir=$dir[count($dir)-1];
 
         $folder = $home_dir;
-        $this->setName("dropcat:zip")
+        $this->setName("zip")
              ->setDescription("Zip folder")
              ->setDefinition( array (
                new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder to zip', $folder),
@@ -37,7 +37,7 @@ class ZipCommand extends Command {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
-        $output->writeln('<info>Task: dropcat:zip finished</info>');
+        $output->writeln('<info>Task: zip finished</info>');
     }
 }
 
