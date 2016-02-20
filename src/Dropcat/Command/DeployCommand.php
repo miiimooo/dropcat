@@ -1,6 +1,6 @@
 <?php
 
-namespace Dropcat\Commands;
+namespace Dropcat\Command;
 
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SSH2;
