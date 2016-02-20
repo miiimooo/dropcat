@@ -1,6 +1,6 @@
 <?php
 
-namespace Dropcat\Commands;
+namespace Dropcat\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +18,7 @@ class DbImportCommand extends Command {
       $path_to_db = '/mydb/backup/db.sql';
       $drush_alias = 'default';
       $timeout = '3600';
-      $this->setName("dropcat:dbimport")
+      $this->setName("dbimport")
         ->setDescription("Import db")
         ->setDefinition( array (
           new InputOption('path_to_db', 'p', InputOption::VALUE_OPTIONAL, 'Path to database', $path_to_db),
@@ -43,7 +43,7 @@ class DbImportCommand extends Command {
         }
         echo $process->getOutput();
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: dropcat:dbimport finished</info>');
+        $output->writeln('<info>Task: dbimport finished</info>');
     }
 }
 

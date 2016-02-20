@@ -1,6 +1,6 @@
 <?php
 
-namespace Dropcat\Commands;
+namespace Dropcat\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +23,7 @@ class ComposerCommand extends Command {
       $port = '22';
       $timeout = '3600';
 
-      $this->setName("dropcat:composer")
+      $this->setName("composer")
            ->setDescription("Upload archived folder or file via scp")
            ->setDefinition( array (
              new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),
@@ -55,7 +55,7 @@ class ComposerCommand extends Command {
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: wkse:composer finished</info>');
+        $output->writeln('<info>Task: composer finished</info>');
     }
 }
 

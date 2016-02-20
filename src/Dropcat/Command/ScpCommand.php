@@ -1,6 +1,6 @@
 <?php
 
-namespace Dropcat\Commands;
+namespace Dropcat\Command;
 
 //use phpseclib\Crypt\RSA;
 //use phpseclib\Net\SFTP;
@@ -27,7 +27,7 @@ class ScpCommand extends Command {
       $port = '22';
       $timeout = '3600';
 
-      $this->setName("dropcat:scp")
+      $this->setName("scp")
            ->setDescription("Upload archived folder or file via scp")
            ->setDefinition( array (
              new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder', $folder),
@@ -59,7 +59,7 @@ class ScpCommand extends Command {
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: wkse:scp finished</info>');
+        $output->writeln('<info>Task: scp finished</info>');
     }
 }
 
