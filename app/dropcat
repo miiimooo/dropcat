@@ -32,6 +32,7 @@ use Dropcat\Command\DeployCommand;
 use Dropcat\Command\ScpCommand;
 use Dropcat\Command\SymlinkCommand;
 use Dropcat\Command\ZipCommand;
+use Dropcat\Command\TestConnectionCommand;
 
 $app = new Application();
 $app->addCommands(array(
@@ -42,6 +43,7 @@ $app->addCommands(array(
   new DbImportCommand(),
   new DeployCommand(),
   new SymlinkCommand(),
+  new TestConnectionCommand(),
 ));
 $app->run();
 ?>
