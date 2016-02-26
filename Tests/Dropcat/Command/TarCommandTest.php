@@ -42,4 +42,20 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($contents[0]['filename'], 'TarCommandTest.php');
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Unable to tar folder, Error message:
+    Invalid file list
+
+     */
+    function testTarError()
+    {
+        $t = new StdClass();
+        $this->tester->execute(
+          array(
+            'command' => 'dropcat:tar',
+            '-f'      => $t
+          )
+        );
+    }
 }
