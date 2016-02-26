@@ -1,0 +1,17 @@
+<phpunit
+    bootstrap="Tests/bootstrap.php"
+>
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">src/Dropcat</directory>
+        </whitelist>
+    </filter>
+    <testsuites>
+        <testsuite name="Commands">
+            <directory>Tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

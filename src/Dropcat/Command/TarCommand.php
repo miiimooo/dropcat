@@ -32,10 +32,10 @@ class TarCommand extends Command
     {
         $ignore_files     = $this->getFilesToIgnore();
         $path_to_app      = $input->getOption('folder');
-        $path_to_tar_file = $this->configuration->pathToTarFileInTemp();
+        $path_to_tar_file = $this->getTarFileLocation();
         $basepath_for_tar = $path_to_app;
 
-        $tar = new Archive_Tar($path_to_tar_file);
+        $tar = new Archive_Tar($path_to_tar_file, true);
         $tar->setIgnoreList($ignore_files);
         $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
         if ( !$success ) {
@@ -47,9 +47,9 @@ class TarCommand extends Command
               $error_object->message
             );
             throw new \RuntimeException($exceptionMessage, $error_object->code);
-
         }
         $output->writeln('<info>Task: dropcat:tar finished</info>');
+
     }
 
     /**
@@ -71,13 +71,13 @@ class TarCommand extends Command
     /**
      * Returns the path where the tar-file should be created and saved
      *
+     * This makes it override:able, if we ever need that for a special project
+     *
      * @return string
      */
     protected function getTarFileLocation()
     {
         return $this->configuration->pathToTarFileInTemp();
     }
-
 }
-
 ?>
