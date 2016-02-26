@@ -49,17 +49,27 @@ class TarCommand extends Command
         $output->writeln('<info>Task: dropcat:tar finished</info>');
     }
 
+    /**
+     * We convert the usual tar --exclude='...' list to an array with only the
+     * the name of the file/path to ignore.
+     *
+     * @return array
+     */
     protected function getFilesToIgnore()
     {
         $filesToIgnore = \explode(' ',
           $this->configuration->deployIgnoreFilesTarString());
         foreach ($filesToIgnore as &$file) {
-            $file = str_replace("--exclude='", '', $file);
-            $file = substr($file, 0, -1);
+            $file = substr($file, 11, -1);
         }
         return $filesToIgnore;
     }
 
+    /**
+     * Returns the path where the tar-file should be created and saved
+     *
+     * @return string
+     */
     protected function getTarFileLocation()
     {
         return $this->configuration->pathToTarFileInTemp();
