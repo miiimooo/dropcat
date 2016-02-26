@@ -1,6 +1,6 @@
 <?php
 
-namespace Dropcat\Commands;
+namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;

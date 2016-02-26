@@ -32,7 +32,7 @@ use Dropcat\Command\DeployCommand;
 use Dropcat\Command\ScpCommand;
 use Dropcat\Command\SymlinkCommand;
 use Dropcat\Command\TestConnectionCommand;
-use Dropcat\Commands\TarCommand;
+use Dropcat\Command\TarCommand;
 
 $app = new Application();
 $app->addCommands(array(
