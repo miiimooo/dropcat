@@ -30,22 +30,25 @@ class TarCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ignore_files = $this->getFilesToIgnore();
-
-
+        $ignore_files     = $this->getFilesToIgnore();
         $path_to_app      = $input->getOption('folder');
         $path_to_tar_file = $this->configuration->pathToTarFileInTemp();
-
         $basepath_for_tar = $path_to_app;
 
-        try {
-            $tar = new Archive_Tar($path_to_tar_file);
-            $tar->setIgnoreList($ignore_files);
-            $tar->createModify($path_to_app, '', $basepath_for_tar);
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
+        $tar = new Archive_Tar($path_to_tar_file);
+        $tar->setIgnoreList($ignore_files);
+        $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
+        if ( !$success ) {
+            /** @var \PEAR_Error $error_object */
+            $error_object = $tar->error_object;
+            $exceptionMessage = sprintf(
+              "Unable to tar folder \"%s\". Error message:\n%s\n\n",
+              $path_to_app,
+              $error_object->message
+            );
+            throw new \RuntimeException($exceptionMessage, $error_object->code);
 
+        }
         $output->writeln('<info>Task: dropcat:tar finished</info>');
     }
 
