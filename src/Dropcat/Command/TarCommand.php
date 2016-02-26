@@ -42,8 +42,7 @@ class TarCommand extends Command
             /** @var \PEAR_Error $error_object */
             $error_object = $tar->error_object;
             $exceptionMessage = sprintf(
-              "Unable to tar folder \"%s\". Error message:\n%s\n\n",
-              $path_to_app,
+              "Unable to tar folder, Error message:\n%s\n\n",
               $error_object->message
             );
             throw new \RuntimeException($exceptionMessage, $error_object->code);
