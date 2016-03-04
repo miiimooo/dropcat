@@ -14,7 +14,9 @@
     "symfony/console": "2.7.*",
     "symfony/process": "2.7.*",
     "drush/drush": "^8.0",
-    "phpseclib/phpseclib": "^2.0"
+    "phpseclib/phpseclib": "^2.0",
+    "symfony/config": "^3.0",
+    "symfony/dependency-injection": "^3.0"
   },
   "bin": [
     "app/dropcat"

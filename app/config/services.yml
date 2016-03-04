@@ -1,0 +1,4 @@
+services:
+    app.backup:
+        class:        Dropcat\BackupCommand
+        arguments:    [sendmail]

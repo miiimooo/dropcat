@@ -27,6 +27,8 @@ class BackupCommand extends Command {
       ->setHelp('Backup task');
     }
     protected function execute(InputInterface $input, OutputInterface $output) {
+
+      var_dump($this->setApplication( 'foo'));
       $drush_alias = $input->getOption('drush_alias');
       $timestamp = $input->getOption('timestamp');
       $backup_folder = $input->getOption('backup_folder');
@@ -41,6 +43,7 @@ class BackupCommand extends Command {
       $output = new ConsoleOutput();
       $output->writeln('<info>Task: backup finished</info>');
     }
+
 }
 
 ?>
