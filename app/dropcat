@@ -10,21 +10,18 @@ ini_set('log_errors', 0);
 define('CLI_ROOT', __DIR__);
 
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    require __DIR__ . '/../vendor/autoload.php';
+  require __DIR__ . '/../vendor/autoload.php';
 }
 
 if (file_exists(CLI_ROOT . '/vendor/autoload.php')) {
-    require CLI_ROOT . '/vendor/autoload.php';
+  require CLI_ROOT . '/vendor/autoload.php';
 }
 elseif (file_exists(CLI_ROOT . '/../../../autoload.php')) {
-    // we are globally installed via Composer
-    require CLI_ROOT . '/../../../autoload.php';
+  // we are globally installed via Composer
+  require CLI_ROOT . '/../../../autoload.php';
 }
 
-
-// import the Symfony Console Application
 use Symfony\Component\Console\Application;
-
 
 use Dropcat\Command\BackupCommand;
 use Dropcat\Command\ConfigImportCommand;
@@ -34,12 +31,15 @@ use Dropcat\Command\ScpCommand;
 use Dropcat\Command\SymlinkCommand;
 use Dropcat\Command\TarCommand;
 use Dropcat\Command\ZipCommand;
+use Dropcat\Tests\Command\ConnectionCommand;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Yaml\Yaml;
 
+
+
 $app = new Application();
 $app->addCommands(array(
-  new ZipCommand(),
+  new TarCommand(),
   new ScpCommand(),
   new TarCommand(),
   new BackupCommand(),
@@ -47,6 +47,6 @@ $app->addCommands(array(
   new DbImportCommand(),
   new DeployCommand(),
   new SymlinkCommand(),
+  new ConnectionCommand(),
 ));
 $app->run();
-?>

@@ -1,7 +1,7 @@
 <?php
+namespace Dropcat\Command;
 
-namespace Dropcat\Commands;
-
+use Archive_Tar;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,32 +15,68 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class TarCommand extends Command {
 
-  protected function configure()
-    {
+    /** @var Configuration configuration */
+    private $configuration;
+
+    protected function configure()  {
       $this->configuration = new Configuration();
       $this->setName("tar")
         ->setDescription("Tar folder")
-        ->setDefinition( array (
-          new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder to tar', $this->configuration->localEnvironmentAppPath()),
-        ))
-        ->setHelp('Tar');
+        ->setDefinition(array(
+          new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL,
+            'Folder to tar', $this->configuration->localEnvironmentAppPath()),
+          ))
+          ->setHelp('Tar');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
-        $ignore_files = $this->configuration->deployIgnoreFilesTarString();
-        $path_to_app = $input->getOption('folder');
-        $path_to_tar_file = $this->configuration->pathToTarFileInTemp();
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $ignore_files     = $this->getFilesToIgnore();
+        $path_to_app      = $input->getOption('folder');
+        $path_to_tar_file = $this->getTarFileLocation();
+        $basepath_for_tar = $path_to_app;
 
-        $process = new Process("tar $ignore_files -cvf $path_to_tar_file -C $path_to_app .");
-        $process->run();
-        // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        $tar = new Archive_Tar($path_to_tar_file, true);
+        $tar->setIgnoreList($ignore_files);
+        $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
+        if ( !$success ) {
+            /** @var \PEAR_Error $error_object */
+            $error_object = $tar->error_object;
+            $exceptionMessage = sprintf(
+              "Unable to tar folder, Error message:\n%s\n\n",
+              $error_object->message
+            );
+            throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
-        echo $process->getOutput();
-        $output->writeln('<info>Task: tar finished</info>');
+        $output->writeln('<info>Task: dropcat:tar finished</info>');
+
     }
 
-}
+    /**
+     * We convert the usual tar --exclude='...' list to an array with only the
+     * the name of the file/path to ignore.
+     *
+     * @return array
+     */
+    protected function getFilesToIgnore()  {
+      $filesToIgnore = \explode(' ',
+        $this->configuration->deployIgnoreFilesTarString());
+      foreach ($filesToIgnore as &$file) {
+        $file = substr($file, 11, -1);
+      }
+      return $filesToIgnore;
+    }
 
+    /**
+     * Returns the path where the tar-file should be created and saved
+     *
+     * This makes it override:able, if we ever need that for a special project
+     *
+     * @return string
+     */
+    protected function getTarFileLocation()
+    {
+        return $this->configuration->pathToTarFileInTemp();
+    }
+}
 ?>
