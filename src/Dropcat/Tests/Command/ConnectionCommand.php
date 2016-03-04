@@ -16,23 +16,21 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class ConnectionCommand extends Command {
 
-    protected function configure()
-    {
-      $server = '192.168.10.20';
-      $user = 'vagrant';
-      $port = '22';
-      $identity_file = '/srv/www/wk_basebox/.vagrant/machines/default/virtualbox/private_key';
+  protected function configure()  {
+    $server = '192.168.10.20';
+    $user = 'vagrant';
+    $port = '22';
+    $identity_file = '/srv/www/wk_basebox/.vagrant/machines/default/virtualbox/private_key';
 
-
-      $this->setName("tests:connection")
-           ->setDescription("Deploying on remote server")
-           ->setDefinition( array (
-             new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),
-             new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
-             new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
-             new InputOption('identity_file', 'i', InputOption::VALUE_OPTIONAL, 'IdentityFile', $identity_file),
-           ))
-           ->setHelp('Test connection');
+    $this->setName("tests:connection")
+      ->setDescription("Deploying on remote server")
+      ->setDefinition( array (
+        new InputOption('server', 's', InputOption::VALUE_OPTIONAL, 'Server addreess', $server),
+        new InputOption('user', 'u', InputOption::VALUE_OPTIONAL, 'User', $user),
+        new InputOption('port', 'p', InputOption::VALUE_OPTIONAL, 'Port', $port),
+        new InputOption('identity_file', 'i', InputOption::VALUE_OPTIONAL, 'IdentityFile', $identity_file),
+      ))
+      ->setHelp('Test connection');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
@@ -46,14 +44,13 @@ class ConnectionCommand extends Command {
       $auth = new RSA();
       $auth->loadKey($identity_file_content);
 
-
       if (!$ssh->login($user, $auth)) {
         exit('Login Failed');
       }
 
       $ssh->disconnect();
 
-      $output->writeln('<info>Task: test-connection finished</info>');
+      $output->writeln('<info>Task: Test connection finished</info>');
     }
 }
 
