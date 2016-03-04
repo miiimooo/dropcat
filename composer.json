@@ -5,7 +5,7 @@
   "license": "GPL-2.0+",
   "authors": [
     {
-        "name": "Mikke Schirén",
+        "name": "BOFH of WK sweden, with friends",
         "role": "Cat owner"
     }
    ],
@@ -15,12 +15,9 @@
     "symfony/process": "2.7.*",
     "drush/drush": "^8.0",
     "phpseclib/phpseclib": "^2.0",
-<<<<<<< HEAD
     "symfony/config": "^3.0",
-    "symfony/dependency-injection": "^3.0"
-=======
+    "symfony/dependency-injection": "^3.0",
     "pear/archive_tar": "^1.4"
->>>>>>> 73a7ecc06921086e6ac27acfba7a5dc76f622c64
   },
   "bin": [
     "app/dropcat"
