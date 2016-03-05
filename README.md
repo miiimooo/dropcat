@@ -5,5 +5,8 @@ Install with composer
 `composer require dropcat/dropcat:dev-master`
 
 #PHPunit-testing example
-phpunit --bootstrap Tests/bootstrap.php Tests/Dropcat/Command/TarCommandTest.php
-(need phpunit in your path, see https://phpunit.de/getting-started.html, and you should also have php5-xdebug installed.)
+./phpunit
+This file points to the composer installed phpunit and runs that with
+the settings from phpunit.xml. This will run all tests found in the
+Tests folder. This also runs code coverage so you can see how much of
+your code that has been tested.
