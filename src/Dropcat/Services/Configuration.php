@@ -36,6 +36,9 @@ class Configuration {
     return $this->configuration['app_name'];
   }
 
+  /**
+   * Get build id, prefderable overriden with option.
+   */
   public function localEnvironmentBuildId() {
     return $this->configuration['local']['environment']['build_id'];
   }
@@ -47,8 +50,33 @@ class Configuration {
     return $this->configuration['local']['environment']['tmp_path'];
   }
 
+  /**
+   * Gets the seperator in names.
+   */
   public function localEnvironmentSeperator() {
     return $this->configuration['local']['environment']['seperator'];
+  }
+
+  /**
+   * Gets the drush alias.
+   */
+  public function siteEnvironmentDrushAlias() {
+    return $this->configuration['site']['environment']['drush_alias'];
+  }
+
+  /**
+   * Gets the sites backup path.
+   */
+  public function siteEnvironmentBackupPath() {
+    return $this->configuration['site']['environment']['backup_path'];
+  }
+
+  /**
+   * Gets the sites backup path.
+   */
+  public function timeStamp() {
+    $timestamp = date("Ymd_His");
+    return $timestamp;
   }
 
   /**

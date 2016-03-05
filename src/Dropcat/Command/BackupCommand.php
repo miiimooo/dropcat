@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,19 +13,50 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class BackupCommand extends Command {
-  protected function configure() {
-    $drush_alias = 'default';
-    $timestamp = date("Ymd_His");
-    $backup_folder = '/backup';
-    $this->setName("backup")
-      ->setDescription("Run backup task")
-      ->setDefinition( array (
-        new InputOption('drush_alias', 'd', InputOption::VALUE_OPTIONAL, 'Drush alias', $drush_alias),
-        new InputOption('timestamp', 't', InputOption::VALUE_OPTIONAL, 'Timestamp', $timestamp),
-        new InputOption('backup_folder', 'b', InputOption::VALUE_OPTIONAL, 'Backup folder', $backup_folder),
-      ))
-      ->setHelp('Backup task');
+class BackupCommand extends Command
+{
+    /** @var Configuration configuration */
+    private $configuration;
+
+    protected function configure()
+    {
+        $HelpText = 'The <info>backup</info> command will create a backup of site db.
+<comment>Samples:</comment>
+To run with default options (using config from dropcat.yml in the currrent dir):
+<info>dropcat backup</info>
+To override config in dropcat.yml, using options:
+<info>dropcat backup -d mysite -b /var/dump -t 20160101</info>';
+
+        $this->configuration = new Configuration();
+        $this->setName("backup")
+            ->setDescription("Tar folder")
+            ->setDefinition(
+                array(
+                    new InputOption(
+                        'drush_alias',
+                        'd',
+                        InputOption::VALUE_OPTIONAL,
+                        'Drush alias',
+                        $this->configuration->siteEnvironmentDrushAlias()
+                    ),
+                    new InputOption(
+                        'backup_path',
+                        'b',
+                        InputOption::VALUE_OPTIONAL,
+                        'Backuo path',
+                        $this->configuration->siteEnvironmentBackupPath()
+                    ),
+                    new InputOption(
+                        'time_stamp',
+                        't',
+                        InputOption::VALUE_OPTIONAL,
+                        'Time stamp',
+                        $this->configuration->timeStamp()
+                    ),
+                )
+            )
+          ->setHelp($HelpText);
+
     }
     protected function execute(InputInterface $input, OutputInterface $output) {
 

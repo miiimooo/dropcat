@@ -41,6 +41,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
             $this->assertFileExists($filename);
 
         $tar_library = new Archive_Tar($filename);
+
         $contents    = $tar_library->listContent();
         $this->assertEquals(\count($contents), 1);
         $this->assertEquals($contents[0]['filename'], 'TarCommandTest.php');
