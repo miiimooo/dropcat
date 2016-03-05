@@ -18,7 +18,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         $this->conf = $configuration = new Configuration();
         $application = new Application();
         $application->add(new TarCommand());
-        $command = $application->find('dropcat:tar');
+        $command = $application->find('tar');
         $this->tester =  new CommandTester($command);
     }
 
@@ -26,17 +26,21 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
     {
         $this->tester->execute(
           array(
-            'command' => 'dropcat:tar',
+            'command' => 'tar',
             '-f'      => realpath(__DIR__)
           )
         );
         $this->assertEquals($this->tester->getDisplay(),
-          'Task: dropcat:tar finished' . "\n");
+          'Task: tar finished' . "\n");
         $this->conf = new Configuration();
 
-        $this->assertFileExists($this->conf->pathToTarFileInTemp());
+        $filename = $this->conf->localEnvironmentTmpPath() .
+            $this->conf->localEnvironmentAppName() .
+            $this->conf->localEnvironmentSeperator() .
+            $this->conf->localEnvironmentBuildId() . '.tar';
+            $this->assertFileExists($filename);
 
-        $tar_library = new Archive_Tar($this->conf->pathToTarFileInTemp());
+        $tar_library = new Archive_Tar($filename);
         $contents    = $tar_library->listContent();
         $this->assertEquals(\count($contents), 1);
         $this->assertEquals($contents[0]['filename'], 'TarCommandTest.php');
@@ -53,7 +57,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         $t = new StdClass();
         $this->tester->execute(
           array(
-            'command' => 'dropcat:tar',
+            'command' => 'tar',
             '-f'      => $t
           )
         );
