@@ -16,6 +16,8 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class BackupCommand extends Command
 {
+  
+
     /** @var Configuration configuration */
     private $configuration;
 
@@ -44,7 +46,7 @@ To override config in dropcat.yml, using options:
                         'backup_path',
                         'b',
                         InputOption::VALUE_OPTIONAL,
-                        'Backuo path',
+                        'Backup path',
                         $this->configuration->siteEnvironmentBackupPath()
                     ),
                     new InputOption(
@@ -70,7 +72,7 @@ To override config in dropcat.yml, using options:
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
         $process = new Process(
-            "drush @$drush_alias sql-dump > $backup_path" . '/' . "$drush_alias" . '_' . "$timestamp.dmp"
+            "drush @$drush_alias sql-dump > $backup_path" . '/' . "$drush_alias" . '_' . "$timestamp.sql"
         );
         $process->run();
         // executes after the command finishes
