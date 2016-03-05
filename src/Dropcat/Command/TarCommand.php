@@ -23,32 +23,40 @@ class TarCommand extends Command {
       $this->setName("tar")
         ->setDescription("Tar folder")
         ->setDefinition(array(
-          new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL,
-            'Folder to tar', $this->configuration->localEnvironmentAppPath()),
+          new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder', $this->configuration->localEnvironmentAppPath()),
+          new InputOption('build-id', 'i', InputOption::VALUE_OPTIONAL, 'Id', $this->configuration->localEnvironmentBuildId()),
+          new InputOption('temp-path', 't', InputOption::VALUE_OPTIONAL, 'Temp', $this->configuration->localEnvironmentTmpPath()),
+          new InputOption('app-name', 'a', InputOption::VALUE_OPTIONAL, 'App name', $this->configuration->localEnvironmentAppName()),
+          new InputOption('name-seperator', 's', InputOption::VALUE_OPTIONAL, 'Name seperator', $this->configuration->localEnvironmentNameSeperator()),
           ))
           ->setHelp('Tar');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $ignore_files     = $this->getFilesToIgnore();
-        $path_to_app      = $input->getOption('folder');
-        $path_to_tar_file = $this->getTarFileLocation();
-        $basepath_for_tar = $path_to_app;
+  protected function execute(InputInterface $input, OutputInterface $output)  {
+      $ignore_files     = $this->getFilesToIgnore();
+      $path_to_app      = $input->getOption('folder');
+      $build_id      = $input->getOption('build-id');
+      $temp_path      = $input->getOption('temp-path');
+      $app_name = $input->getOption('app-name');
+      $name_seperator = $input->getOption('name-seperator');
 
-        $tar = new Archive_Tar($path_to_tar_file, true);
-        $tar->setIgnoreList($ignore_files);
-        $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
-        if ( !$success ) {
-            /** @var \PEAR_Error $error_object */
-            $error_object = $tar->error_object;
-            $exceptionMessage = sprintf(
-              "Unable to tar folder, Error message:\n%s\n\n",
-              $error_object->message
-            );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
-        }
-        $output->writeln('<info>Task: dropcat:tar finished</info>');
+      $path_to_tar_file = $temp_path . $app_name . $name_seperator . $build_id . '.tar';
+      $basepath_for_tar = $path_to_app;
+
+
+      $tar = new Archive_Tar($path_to_tar_file, true);
+      $tar->setIgnoreList($ignore_files);
+      $success = $tar->createModify($path_to_app, '', "$basepath_for_tar");
+      if ( !$success ) {
+        /** @var \PEAR_Error $error_object */
+        $error_object = $tar->error_object;
+        $exceptionMessage = sprintf(
+          "Unable to tar folder, Error message:\n%s\n\n",
+          $error_object->message
+        );
+        throw new \RuntimeException($exceptionMessage, $error_object->code);
+      }
+      $output->writeln('<info>Task: dropcat:tar finished</info>');
 
     }
 
@@ -76,7 +84,7 @@ class TarCommand extends Command {
      */
     protected function getTarFileLocation()
     {
-        return $this->configuration->pathToTarFileInTemp();
+        return $this->configuration->pathToTarFileInTemp;
     }
 }
 ?>

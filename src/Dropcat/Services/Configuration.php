@@ -36,11 +36,19 @@ class Configuration {
     return $this->configuration['app_name'];
   }
 
+  public function localEnvironmentBuildId() {
+    return $this->configuration['local']['environment']['build_id'];
+  }
+
   /**
    * Gets the absolute path of a tmp-folder in this environment.
    */
   public function localEnvironmentTmpPath() {
     return $this->configuration['local']['environment']['tmp_path'];
+  }
+
+  public function localEnvironmentNameSeperator() {
+    return $this->configuration['local']['environment']['name_seperator'];
   }
 
   /**
@@ -62,14 +70,4 @@ class Configuration {
     $ignore_files = rtrim($ignore_files);
     return $ignore_files;
   }
-
-  /**
-   * Resolves path to the tar-file in the temp-directory.
-   */
-  public function pathToTarFileInTemp() {
-    $tmp_path = $this->localEnvironmentTmpPath();
-    $app_name = $this->localEnvironmentAppName();
-    return $tmp_path .'/'. $app_name .'.tar';
-  }
-
 }
