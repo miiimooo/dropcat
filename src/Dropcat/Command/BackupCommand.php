@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Drush\Sql\Sqlmysql;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,24 +59,27 @@ To override config in dropcat.yml, using options:
           ->setHelp($HelpText);
 
     }
-    protected function execute(InputInterface $input, OutputInterface $output) {
 
-      var_dump($this->setApplication( 'foo'));
-      $drush_alias = $input->getOption('drush_alias');
-      $timestamp = $input->getOption('timestamp');
-      $backup_folder = $input->getOption('backup_folder');
-      $process = new Process("drush @$drush_alias sql-dump > $backup_folder" . '/' . "$drush_alias" . '_' . "$timestamp.dmp");
-      $process->run();
-      // executes after the command finishes
-      if (!$process->isSuccessful()) {
-        throw new ProcessFailedException($process);
-      }
-      echo $process->getOutput();
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $drush_alias      = $input->getOption('drush_alias');
+        $timestamp        = $input->getOption('time_stamp');
+        $backup_path      = $input->getOption('backup_path');
 
-      $output = new ConsoleOutput();
-      $output->writeln('<info>Task: backup finished</info>');
+        // Remove '@' if the alias beginns with it.
+        $drush_alias = preg_replace('/^@/', '', $drush_alias);
+
+        $process = new Process(
+            "drush @$drush_alias sql-dump > $backup_path" . '/' . "$drush_alias" . '_' . "$timestamp.dmp"
+        );
+        $process->run();
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        echo $process->getOutput();
+
+        $output = new ConsoleOutput();
+        $output->writeln('<info>Task: backup finished</info>');
     }
-
 }
-
-?>
