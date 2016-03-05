@@ -13,50 +13,85 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class TarCommand extends Command {
+class TarCommand extends Command
+{
 
     /** @var Configuration configuration */
     private $configuration;
 
-    protected function configure()  {
-      $this->configuration = new Configuration();
-      $this->setName("tar")
-        ->setDescription("Tar folder")
-        ->setDefinition(array(
-          new InputOption('folder', 'f', InputOption::VALUE_OPTIONAL, 'Folder', $this->configuration->localEnvironmentAppPath()),
-          new InputOption('build-id', 'i', InputOption::VALUE_OPTIONAL, 'Id', $this->configuration->localEnvironmentBuildId()),
-          new InputOption('temp-path', 't', InputOption::VALUE_OPTIONAL, 'Temp', $this->configuration->localEnvironmentTmpPath()),
-          new InputOption('app-name', 'a', InputOption::VALUE_OPTIONAL, 'App name', $this->configuration->localEnvironmentAppName()),
-          new InputOption('name-seperator', 's', InputOption::VALUE_OPTIONAL, 'Name seperator', $this->configuration->localEnvironmentNameSeperator()),
-          ))
+    protected function configure()
+    {
+        $this->configuration = new Configuration();
+        $this->setName("tar")
+          ->setDescription("Tar folder")
+          ->setDefinition(
+              array(
+                  new InputOption(
+                      'folder',
+                      'f',
+                      InputOption::VALUE_OPTIONAL,
+                      'Folder',
+                      $this->configuration->localEnvironmentAppPath()
+                  ),
+                  new InputOption(
+                      'build-id',
+                      'i',
+                      InputOption::VALUE_OPTIONAL,
+                      'Id',
+                      $this->configuration->localEnvironmentBuildId()
+                  ),
+                  new InputOption(
+                      'temp-path',
+                      't',
+                      InputOption::VALUE_OPTIONAL,
+                      'Temp',
+                      $this->configuration->localEnvironmentTmpPath()
+                  ),
+                  new InputOption(
+                      'app-name',
+                      'a',
+                      InputOption::VALUE_OPTIONAL,
+                      'App name',
+                      $this->configuration->localEnvironmentAppName()
+                  ),
+                  new InputOption(
+                      'seperator',
+                      's',
+                      InputOption::VALUE_OPTIONAL,
+                      'Name seperator',
+                      $this->configuration->localEnvironmentSeperator()
+                  ),
+              )
+          )
           ->setHelp('Tar');
     }
 
-  protected function execute(InputInterface $input, OutputInterface $output)  {
-      $ignore_files     = $this->getFilesToIgnore();
-      $path_to_app      = $input->getOption('folder');
-      $build_id      = $input->getOption('build-id');
-      $temp_path      = $input->getOption('temp-path');
-      $app_name = $input->getOption('app-name');
-      $name_seperator = $input->getOption('name-seperator');
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $ignore_files     = $this->getFilesToIgnore();
+        $path_to_app      = $input->getOption('folder');
+        $build_id         = $input->getOption('build-id');
+        $temp_path        = $input->getOption('temp-path');
+        $app_name         = $input->getOption('app-name');
+        $seperator        = $input->getOption('seperator');
 
-      $path_to_tar_file = $temp_path . $app_name . $name_seperator . $build_id . '.tar';
-      $basepath_for_tar = $path_to_app;
+        $path_to_tar_file = $temp_path . $app_name . $seperator . $build_id . '.tar';
+        $basepath_for_tar = $path_to_app;
 
 
-      $tar = new Archive_Tar($path_to_tar_file, true);
-      $tar->setIgnoreList($ignore_files);
-      $success = $tar->createModify($path_to_app, '', "$basepath_for_tar");
-      if ( !$success ) {
-        /** @var \PEAR_Error $error_object */
-        $error_object = $tar->error_object;
-        $exceptionMessage = sprintf(
-          "Unable to tar folder, Error message:\n%s\n\n",
-          $error_object->message
-        );
-        throw new \RuntimeException($exceptionMessage, $error_object->code);
-      }
-      $output->writeln('<info>Task: tar finished</info>');
+        $tar = new Archive_Tar($path_to_tar_file, true);
+        $tar->setIgnoreList($ignore_files);
+        $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
+        if (!$success) {
+            /** @var \PEAR_Error $error_object */
+            $error_object = $tar->error_object;
+            $exceptionMessage = sprintf(
+                "Unable to tar folder, Error message:\n%s\n\n",
+                $error_object->message
+            );
+            throw new \RuntimeException($exceptionMessage, $error_object->code);
+        }
+        $output->writeln('<info>Task: tar finished</info>');
 
     }
 
@@ -66,25 +101,12 @@ class TarCommand extends Command {
      *
      * @return array
      */
-    protected function getFilesToIgnore()  {
-      $filesToIgnore = \explode(' ',
-        $this->configuration->deployIgnoreFilesTarString());
-      foreach ($filesToIgnore as &$file) {
-        $file = substr($file, 11, -1);
-      }
-      return $filesToIgnore;
-    }
-
-    /**
-     * Returns the path where the tar-file should be created and saved
-     *
-     * This makes it override:able, if we ever need that for a special project
-     *
-     * @return string
-     */
-    protected function getTarFileLocation()
+    protected function getFilesToIgnore()
     {
-        return $this->configuration->pathToTarFileInTemp;
+        $filesToIgnore = \explode(' ', $this->configuration->deployIgnoreFilesTarString());
+        foreach ($filesToIgnore as &$file) {
+            $file = substr($file, 11, -1);
+        }
+        return $filesToIgnore;
     }
 }
-?>
