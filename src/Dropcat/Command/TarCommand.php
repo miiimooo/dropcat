@@ -56,7 +56,7 @@ class TarCommand extends Command {
         );
         throw new \RuntimeException($exceptionMessage, $error_object->code);
       }
-      $output->writeln('<info>Task: dropcat:tar finished</info>');
+      $output->writeln('<info>Task: tar finished</info>');
 
     }
 
