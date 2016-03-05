@@ -26,11 +26,12 @@ class BackupCommandTest extends PHPUnit_Framework_TestCase
         $this->tester->execute(
             array(
                 'command' => 'backup',
+                'b' => 'backup'
             )
         );
         $this->assertEquals(
             $this->tester->getDisplay(),
-            'Task: backup finished'
+            "\n" . 'Task: backup finished' . "\n"
         );
 
         $this->conf     = new Configuration();
@@ -46,15 +47,16 @@ class BackupCommandTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException "The "b" argument does not exist."
      * @expectedExceptionMessage Unable to complete test
      */
     function testBackupError()
     {
-        $t = new StdClass();
+        $b = new StdClass();
         $this->tester->execute(
             array(
                 'command' => 'backup',
+                'b' => $b,
             )
         );
     }

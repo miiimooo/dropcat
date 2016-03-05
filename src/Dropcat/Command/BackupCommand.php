@@ -77,8 +77,15 @@ To override config in dropcat.yml, using options:
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            /** @var \PEAR_Error $error_object */
+            $error_object = $process->error_object;
+            $exceptionMessage = sprintf(
+                "Unable to make backup, Error message:\n%s\n\n",
+                $error_object->message
+            );
+            throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
+
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
