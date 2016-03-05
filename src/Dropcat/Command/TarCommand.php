@@ -21,6 +21,13 @@ class TarCommand extends Command
 
     protected function configure()
     {
+        $HelpText = 'The <info>tar</info> command will create a gzipped tar.
+<comment>Samples:</comment>
+To run with default options (using config from dropcat.yml in the currrent dir):
+<info>dropcat tar</info>
+To override config in dropcat.yml, using options:
+<info>dropcat tar -f foofolder -t ./ -s __ -a mysitename -i 42</info>';
+
         $this->configuration = new Configuration();
         $this->setName("tar")
           ->setDescription("Tar folder")
@@ -44,7 +51,7 @@ class TarCommand extends Command
                       'temp-path',
                       't',
                       InputOption::VALUE_OPTIONAL,
-                      'Temp',
+                      'Temp (./ for current dir)',
                       $this->configuration->localEnvironmentTmpPath()
                   ),
                   new InputOption(
@@ -63,7 +70,7 @@ class TarCommand extends Command
                   ),
               )
           )
-          ->setHelp('Tar');
+          ->setHelp($HelpText);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

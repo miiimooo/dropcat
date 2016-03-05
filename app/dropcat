@@ -30,12 +30,9 @@ use Dropcat\Command\DeployCommand;
 use Dropcat\Command\ScpCommand;
 use Dropcat\Command\SymlinkCommand;
 use Dropcat\Command\TarCommand;
-use Dropcat\Command\ZipCommand;
 use Dropcat\Tests\Command\ConnectionCommand;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Yaml\Yaml;
-
-
 
 $app = new Application();
 $app->addCommands(array(

@@ -47,8 +47,8 @@ class Configuration {
     return $this->configuration['local']['environment']['tmp_path'];
   }
 
-  public function localEnvironmentNameSeperator() {
-    return $this->configuration['local']['environment']['name_seperator'];
+  public function localEnvironmentSeperator() {
+    return $this->configuration['local']['environment']['seperator'];
   }
 
   /**
