@@ -91,7 +91,6 @@ To override config in dropcat.yml, using options:
             throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
         echo $process->getOutput();
-        $output = new ConsoleOutput();
         $output->writeln('<info>Task: dbimport finished</info>');
     }
 }

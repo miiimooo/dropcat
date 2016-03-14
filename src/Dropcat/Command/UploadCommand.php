@@ -10,10 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
+
 
 class UploadCommand extends Command
 {
@@ -124,7 +121,6 @@ To override config in dropcat.yml, using options:
         }
         $sftp->put($tar, $targetdir);
 
-        $output = new ConsoleOutput();
         $output->writeln('<info>Task: upload finished</info>');
     }
 }
