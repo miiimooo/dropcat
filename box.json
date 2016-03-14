@@ -6,6 +6,7 @@
   "files": [
     "app/dropcat",
     "app/config/config.yml",
+    "app/config/services.yml",
     "vendor/autoload.php"
   ],
   "finder": [
@@ -15,7 +16,9 @@
       "exclude": [
         "phpunit",
         "Tests",
-        "tests"
+        "tests",
+        "drush",
+        "test"
       ]
     }
   ],
