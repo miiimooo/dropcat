@@ -1,4 +1,42 @@
 services:
-    app.backup:
-        class:        Dropcat\BackupCommand
-        arguments:    [sendmail]
+    symfony.application:
+      class: Symfony\Component\Console\Application
+    symfony.console_output:
+      class: Symfony\Component\Console\Output\ConsoleOutput
+    dropcat.configuration:
+      class: Dropcat\Services\Configuration
+    dropcat.command.tar:
+        class: Dropcat\Command\TarCommand
+        arguments: ['@dropcat.configuration']
+        tags:
+          - {name: console.command}
+    dropcat.command.backup:
+      class: Dropcat\Command\BackupCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.configimport:
+      class: Dropcat\Command\ConfigImportCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.dbimport:
+      class: Dropcat\Command\DbImportCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.deploy:
+      class: Dropcat\Command\DeployCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.symlink:
+      class: Dropcat\Command\SymlinkCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.upload:
+      class: Dropcat\Command\UploadCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}

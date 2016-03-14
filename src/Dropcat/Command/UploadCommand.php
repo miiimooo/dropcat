@@ -18,6 +18,15 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 class UploadCommand extends Command
 {
 
+    /** @var Configuration configuration */
+    private $configuration;
+
+    public function __construct(Configuration $conf)
+    {
+        $this->configuration = $conf;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $HelpText = 'The <info>upload</info> connects to remote server and upload tar and unpack it in path.
@@ -27,8 +36,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat upload -server 127.0.0.0 -i my_pub.key</info>';
 
-
-        $this->configuration = new Configuration();
         $this->setName("upload")
             ->setDescription("Upload to server")
             ->setDefinition(

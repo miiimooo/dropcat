@@ -18,6 +18,13 @@ class DbImportCommand extends Command
 {
     /** @var Configuration configuration */
     private $configuration;
+
+    public function __construct(Configuration $conf)
+    {
+        $this->configuration = $conf;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $HelpText = 'The <info>dbimport</info> command will import.
@@ -27,7 +34,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat dbimport -d mysite -i /var/dump -t 120</info>';
 
-        $this->configuration = new Configuration();
         $this->setName("dbimport")
             ->setDescription("Import DB to site")
             ->setDefinition(

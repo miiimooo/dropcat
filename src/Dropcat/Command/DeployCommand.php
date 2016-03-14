@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -20,6 +19,11 @@ class DeployCommand extends Command
 
     /** @var Configuration configuration */
     private $configuration;
+    public function __construct(Configuration $conf)
+    {
+        $this->configuration = $conf;
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -30,8 +34,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat deploy -server 127.0.0.0 -i my_pub.key</info>';
 
-
-        $this->configuration = new Configuration();
         $this->setName("deploy")
             ->setDescription("Deploy to server")
             ->setDefinition(

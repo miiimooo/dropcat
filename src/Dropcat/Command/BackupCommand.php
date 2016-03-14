@@ -19,6 +19,12 @@ class BackupCommand extends Command
     /** @var Configuration configuration */
     private $configuration;
 
+    public function __construct(Configuration $conf)
+    {
+        $this->configuration = $conf;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $HelpText = 'The <info>backup</info> command will create a backup of site db.
@@ -28,9 +34,8 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat backup -d mysite -b /var/dump -t 20160101</info>';
 
-        $this->configuration = new Configuration();
         $this->setName("backup")
-            ->setDescription("Tar folder")
+            ->setDescription("Backup site")
             ->setDefinition(
                 array(
                     new InputOption(

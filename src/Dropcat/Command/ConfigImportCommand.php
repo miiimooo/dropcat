@@ -15,6 +15,15 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class ConfigImportCommand extends Command
 {
+    /** @var Configuration configuration */
+    private $configuration;
+
+    public function __construct(Configuration $conf)
+    {
+        $this->configuration = $conf;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $HelpText = 'The <info>configimport</info> command import configuration to drupal site.
@@ -24,7 +33,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat configimport -d mysite -c myconfig</info>';
 
-        $this->configuration = new Configuration();
         $this->setName("configimport")
           ->setDescription("Configuration import")
           ->setDefinition(

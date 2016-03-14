@@ -17,7 +17,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
     function setUp() {
         $this->conf = $configuration = new Configuration();
         $application = new Application();
-        $application->add(new TarCommand());
+        $application->add(new TarCommand($this->conf));
         $command = $application->find('tar');
         $this->tester =  new CommandTester($command);
     }
