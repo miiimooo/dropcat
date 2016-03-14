@@ -40,3 +40,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.prepare:
+      class: Dropcat\Command\PrepareCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}

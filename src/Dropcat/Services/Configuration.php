@@ -199,6 +199,22 @@ class Configuration
         return $this->configuration['site']['environment']['symlink'];
     }
 
+    /**
+     * Gets the sites backup path.
+     */
+    public function siteEnvironmentUrl()
+    {
+        return $this->configuration['site']['environment']['url'];
+    }
+
+    /**
+     * Gets the sites name.
+     */
+    public function siteEnvironmentName()
+    {
+        return $this->configuration['site']['environment']['name'];
+    }
+
 
     /**
      * Gets the sites backup path.
