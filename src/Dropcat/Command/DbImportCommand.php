@@ -29,7 +29,7 @@ To override config in dropcat.yml, using options:
 
         $this->configuration = new Configuration();
         $this->setName("dbimport")
-            ->setDescription("Tar folder")
+            ->setDescription("Import DB to site")
             ->setDefinition(
                 array(
                     new InputOption(

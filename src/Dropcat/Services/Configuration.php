@@ -186,6 +186,23 @@ class Configuration
     /**
      * Gets the sites backup path.
      */
+    public function siteEnvironmentOriginalPath()
+    {
+        return $this->configuration['site']['environment']['original_path'];
+    }
+
+    /**
+     * Gets the sites backup path.
+     */
+    public function siteEnvironmentSymLink()
+    {
+        return $this->configuration['site']['environment']['symlink'];
+    }
+
+
+    /**
+     * Gets the sites backup path.
+     */
     public function timeStamp()
     {
         $timestamp = date("Ymd_His");

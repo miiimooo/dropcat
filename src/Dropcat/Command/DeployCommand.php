@@ -58,13 +58,6 @@ To override config in dropcat.yml, using options:
                         $this->configuration->remoteEnvironmentSshUser()
                     ),
                     new InputOption(
-                        'target_path',
-                        'tp',
-                        InputOption::VALUE_OPTIONAL,
-                        'Target path',
-                        $this->configuration->remoteEnvironmentTargetPath()
-                    ),
-                    new InputOption(
                         'ssh_port',
                         'p',
                         InputOption::VALUE_OPTIONAL,
@@ -77,6 +70,20 @@ To override config in dropcat.yml, using options:
                         InputOption::VALUE_OPTIONAL,
                         'Identify file',
                         $this->configuration->remoteEnvironmentIdentifyFile()
+                    ),
+                    new InputOption(
+                        'ssh_key_password',
+                        'skp',
+                        InputOption::VALUE_OPTIONAL,
+                        'SSH key password',
+                        $this->configuration->localEnvironmentSshKeyPassword()
+                    ),
+                    new InputOption(
+                        'target_path',
+                        'tp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Target path',
+                        $this->configuration->remoteEnvironmentTargetPath()
                     ),
                     new InputOption(
                         'web_root',
@@ -110,7 +117,8 @@ To override config in dropcat.yml, using options:
         $server = $input->getOption('server');
         $user = $input->getOption('user');
         $target_path = $input->getOption('target_path');
-        $port = $input->getOption('port');
+        $port = $input->getOption('ssh_port');
+        $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
         $web_root = $input->getOption('web_root');
@@ -119,6 +127,9 @@ To override config in dropcat.yml, using options:
 
         $ssh = new SSH2($server, $port);
         $auth = new RSA();
+        if (isset($ssh_key_password)) {
+            $auth->setPassword($ssh_key_password);
+        }
         $auth->loadKey($identity_file_content);
 
         if (!$ssh->login($user, $auth)) {
