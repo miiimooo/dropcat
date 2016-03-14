@@ -118,7 +118,6 @@ To override config in dropcat.yml, using options:
         $sftp->put($tar, $targetdir);
 
         $output = new ConsoleOutput();
-
         $output->writeln('<info>Task: upload finished</info>');
     }
 }

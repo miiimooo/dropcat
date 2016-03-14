@@ -125,7 +125,6 @@ To override config in dropcat.yml, using options:
             exit('Login Failed');
         }
 
-        // hm, look into this, these seems not correct
         $ssh->exec('mkdir ' . $temp_folder . '/' . $target_path);
         $ssh->exec('mv ' . $temp_folder . '/' . $tar . ' ' . $temp_folder . '/' . $target_path);
         $ssh->exec('cd ' . $temp_folder . '/' . $target_path);
