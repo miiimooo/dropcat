@@ -2,9 +2,9 @@
 
 namespace Dropcat\Command;
 
-use phpseclib\Crypt\RSA;
-use phpseclib\Net\SSH2;
 use Dropcat\Services\Configuration;
+use phpseclib\Crypt\RSA;
+use phpseclib\Net\SFTP;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,25 +15,22 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class DeployCommand extends Command
+class UploadCommand extends Command
 {
-
-    /** @var Configuration configuration */
-    private $configuration;
 
     protected function configure()
     {
-        $HelpText = 'The <info>deploy</info> connects to remote server and upload tar and unpack it in path.
+        $HelpText = 'The <info>upload</info> connects to remote server and upload tar and unpack it in path.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat deployt</info>
+<info>dropcat upload</info>
 To override config in dropcat.yml, using options:
-<info>dropcat deploy -server 127.0.0.0 -i my_pub.key</info>';
+<info>dropcat upload -server 127.0.0.0 -i my_pub.key</info>';
 
 
         $this->configuration = new Configuration();
-        $this->setName("deploy")
-            ->setDescription("Deploy to server")
+        $this->setName("upload")
+            ->setDescription("Upload to server")
             ->setDefinition(
                 array(
                     new InputOption(
@@ -58,18 +55,25 @@ To override config in dropcat.yml, using options:
                         $this->configuration->remoteEnvironmentSshUser()
                     ),
                     new InputOption(
-                        'target_path',
-                        'tp',
-                        InputOption::VALUE_OPTIONAL,
-                        'Target path',
-                        $this->configuration->remoteEnvironmentTargetPath()
-                    ),
-                    new InputOption(
                         'ssh_port',
                         'p',
                         InputOption::VALUE_OPTIONAL,
                         'SSH port',
                         $this->configuration->remoteEnvironmentSshPort()
+                    ),
+                    new InputOption(
+                        'ssh_key_password',
+                        'skp',
+                        InputOption::VALUE_OPTIONAL,
+                        'SSH key password',
+                        $this->configuration->localEnvironmentSshKeyPassword()
+                    ),
+                    new InputOption(
+                        'target_dir',
+                        'tp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Target dir',
+                        $this->configuration->remoteEnvironmentTargetDir()
                     ),
                     new InputOption(
                         'identity_file',
@@ -79,25 +83,11 @@ To override config in dropcat.yml, using options:
                         $this->configuration->remoteEnvironmentIdentifyFile()
                     ),
                     new InputOption(
-                        'web_root',
-                        'w',
+                        'timeout',
+                        'to',
                         InputOption::VALUE_OPTIONAL,
-                        'Web root',
-                        $this->configuration->remoteEnvironmentWebRoot()
-                    ),
-                    new InputOption(
-                        'temp_folder',
-                        'tf',
-                        InputOption::VALUE_OPTIONAL,
-                        'Temp folder',
-                        $this->configuration->remoteEnvironmentTempFolder()
-                    ),
-                    new InputOption(
-                        'alias',
-                        'a',
-                        InputOption::VALUE_OPTIONAL,
-                        'Symlink alias',
-                        $this->configuration->remoteEnvironmentAlias()
+                        'Timeout',
+                        $this->configuration->timeOut()
                     ),
                 )
             )
@@ -109,35 +99,26 @@ To override config in dropcat.yml, using options:
         $tar = $input->getOption('tar');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
-        $target_path = $input->getOption('target_path');
-        $port = $input->getOption('port');
+        $targetdir = $input->getOption('target_dir');
+        $port = $input->getOption('ssh_port');
+        $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
-        $web_root = $input->getOption('web_root');
-        $alias = $input->getOption('alias');
-        $temp_folder = $input->getOption('temp_folder');
+        $timeout = $input->getOption('timeout');
 
-        $ssh = new SSH2($server, $port);
+        $sftp = new SFTP($server, $port, $timeout);
         $auth = new RSA();
-        $auth->loadKey($identity_file_content);
-
-        if (!$ssh->login($user, $auth)) {
-            exit('Login Failed');
+        if (isset($ssh_key_password)) {
+            $auth->setPassword($ssh_key_password);
         }
+        $auth->loadKey($identity_file_content);
+        if (!$sftp->login($user, $auth)) {
+            exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+        }
+        $sftp->put($tar, $targetdir);
 
-        // hm, look into this, these seems not correct
-        $ssh->exec('mkdir ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('mv ' . $temp_folder . '/' . $tar . ' ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('cd ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('tar xvf ' . $tar);
-        $ssh->exec('cd ..');
-        $ssh->exec('mv ' . $target_path . ' ' . $web_root);
-        $ssh->exec('cd ' . $web_root);
-        $ssh->exec('rm ' . $alias);
-        $ssh->exec('ln -s ' . $target_path . ' ' . $alias);
+        $output = new ConsoleOutput();
 
-        $ssh->disconnect();
-
-        $output->writeln('<info>Task: deploy finished</info>');
+        $output->writeln('<info>Task: upload finished</info>');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Dropcat\Command;
 
-use Drush\Sql\Sqlmysql;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +15,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class BackupCommand extends Command
 {
-  
 
     /** @var Configuration configuration */
     private $configuration;

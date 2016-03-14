@@ -27,7 +27,7 @@ use Dropcat\Command\BackupCommand;
 use Dropcat\Command\ConfigImportCommand;
 use Dropcat\Command\DbImportCommand;
 use Dropcat\Command\DeployCommand;
-use Dropcat\Command\ScpCommand;
+use Dropcat\Command\UploadCommand;
 use Dropcat\Command\SymlinkCommand;
 use Dropcat\Command\TarCommand;
 use Symfony\Component\Config\Loader\FileLoader;
@@ -39,7 +39,7 @@ $app->addCommands(array(
   new ConfigImportCommand(),
   new DbImportCommand(),
   new DeployCommand(),
-  new ScpCommand(),
+  new UploadCommand(),
   new SymlinkCommand(),
   new TarCommand(),
 ));
