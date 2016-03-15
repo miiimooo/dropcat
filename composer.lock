@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e49ec76c94e2d7c70ec699b17dd0e15a",
-    "content-hash": "972a9369a44862089f74ace51489111c",
+    "hash": "024c6988d6fba2162a71ac3d3fb3e2d7",
+    "content-hash": "e007b5f0fdbcf7bc183d9c4dc58ba144",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -856,25 +856,28 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v3.0.3",
+            "version": "v2.7.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "821800ae6753b88dab55a7280811d8734b8112bf"
+                "reference": "157326648175d52326cd9b9e5f4fef207dc447f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/821800ae6753b88dab55a7280811d8734b8112bf",
-                "reference": "821800ae6753b88dab55a7280811d8734b8112bf",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/157326648175d52326cd9b9e5f4fef207dc447f9",
+                "reference": "157326648175d52326cd9b9e5f4fef207dc447f9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": ">=5.3.9"
+            },
+            "conflict": {
+                "symfony/expression-language": "<2.6"
             },
             "require-dev": {
-                "symfony/config": "~2.8|~3.0",
-                "symfony/expression-language": "~2.8|~3.0",
-                "symfony/yaml": "~2.8|~3.0"
+                "symfony/config": "~2.2",
+                "symfony/expression-language": "~2.6",
+                "symfony/yaml": "~2.1"
             },
             "suggest": {
                 "symfony/config": "",
@@ -884,7 +887,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
@@ -911,7 +914,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-28 16:50:08"
+            "time": "2016-02-28 16:34:40"
         },
         {
             "name": "symfony/filesystem",
