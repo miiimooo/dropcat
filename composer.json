@@ -15,7 +15,7 @@
     "symfony/process": "2.7.*",
     "drush/drush": "^8.0",
     "phpseclib/phpseclib": "^2.0",
-    "symfony/config": "^3.0",
+    "symfony/config": "2.7.*",
     "symfony/dependency-injection": "2.7.*",
     "pear/archive_tar": "^1.4"
   },
