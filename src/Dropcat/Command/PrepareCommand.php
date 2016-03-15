@@ -121,7 +121,7 @@ $aliases["' . $site_name . '"] = array (
         try {
             $drush_file->dumpFile('.drush/'. $drush_alias . '.aliases.drushrc.php', $alias_content);
         } catch (IOExceptionInterface $e) {
-            echo "An error occurred while creating your directory at ".$e->getPath();
+            echo "An error occurred while creating your file at ".$e->getPath();
         }
         $output->writeln('<info>Task: prepare finished</info>');
     }

@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class SymlinkCommand extends Command
 {
+
     /** @var Configuration configuration */
     private $configuration;
     public function __construct(Configuration $conf)
@@ -32,7 +33,7 @@ To override config in dropcat.yml, using options:
 <info>dropcat dbimport  -o /var/www/test --symlink=/var/www/foo</info>';
 
         $this->setName("symlink")
-            ->setDescription("Create symlink for target on server")
+            ->setDescription("Create symlink for target on server, intended for files folders")
             ->setDefinition(
                 array(
                     new InputOption(
@@ -100,6 +101,7 @@ To override config in dropcat.yml, using options:
 
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
+        
 
         $ssh = new SSH2($server, $port);
         $auth = new RSA();
