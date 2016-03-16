@@ -14,7 +14,7 @@ class ConfigImportCommandTest extends \PHPUnit_Framework_TestCase
     function setUp() {
         $this->conf = $configuration = new Configuration();
         $application = new Application();
-        $application->add(new ConfigImportCommand());
+        $application->add(new ConfigImportCommand($this->conf));
         $command = $application->find('configimport');
         $this->tester =  new CommandTester($command);
     }
@@ -31,24 +31,5 @@ class ConfigImportCommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->tester->getDisplay(),
                 'Task: configimport finished' . "\n");
       // @todo more testing needed
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to tar folder, Error message:
-    Invalid file list
-
-     */
-    function testConfigImportError()
-    {
-        $d = new StdClass();
-        $c = new StdClass();
-        $this->tester->execute(
-          array(
-            'command' => 'configimport',
-            '-d'      => $d,
-            '-c'      => $c,
-          )
-        );
     }
 }
