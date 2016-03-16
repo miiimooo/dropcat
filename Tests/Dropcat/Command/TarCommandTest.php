@@ -51,7 +51,6 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Unable to tar folder, Error message:
     Invalid file list
-
      */
     function testTarError()
     {
