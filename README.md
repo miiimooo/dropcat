@@ -91,3 +91,9 @@ This file points to the composer installed phpunit and runs that with
 the settings from phpunit.xml. This will run all tests found in the
 Tests folder. This also runs code coverage so you can see how much of
 your code that has been tested.
+
+
+## Disclaimer
+We don't give any gurantees that this tool will work for you, you site could be
+blown to pieces by it, and we don't have any support for it, but if you have 
+problems using it, please create an issue.
