@@ -4,12 +4,12 @@ Install with composer
 `composer require dropcat/dropcat:dev-master`
 
 ## What does it do and why should anybody need it?
-In the history we have used a combination of jenkins and aegir to deploy our
-sites. When we started develop Drupal 8 sites, aegir were not ready for Drupal 8
-and we also wanted a simpler workflow with deploys, more fit to our normal needs.
-So we started to test out some tools there are out there that almost worked for 
-us, but we realized that it should take us longer to adapt to a tool that almost
-fits, then to develop our own.
+In the history we, Wunderkraut Sweden (former NodeOne) have used a combination 
+of jenkins and aegir to deploy our sites. When we started develop Drupal 8 
+sites, aegir were not ready for Drupal 8 and we also wanted a simpler workflow 
+with deploys, more fit to our normal needs. So we started to test out some tools 
+out there that almost worked for us, but we realized that it should take us 
+longer to adapt to a tool that almost fits, then to develop our own.
 
 ### Symfony
 We deciedied to develop the tool using symfony components, because drupal uses 
