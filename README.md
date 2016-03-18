@@ -4,7 +4,7 @@ Install with composer
 `composer require dropcat/dropcat:dev-master`
 
 ## Run it
-`dropcat backup --env=dev`
+`/path/to/run/dropcat backup --env=dev`
 This uses the default settings in dropcat.yml and the overrides, if the exists, in dev_dropcat.yml
 
 ## Examples
