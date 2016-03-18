@@ -24,21 +24,32 @@ class Configuration
         $input = new ArgvInput();
         $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
         $running_path = getcwd();
-        $default_config = Yaml::parse(
-            file_get_contents($running_path .'/dropcat.yml')
-        );
-        $configs = $default_config;
+        if (file_exists($running_path . '/dropcat.yml')) {
+            $default_config = Yaml::parse(
+                file_get_contents($running_path . '/dropcat.yml')
+            );
+            $configs = $default_config;
+        }
+
         // Check for env. dropcat file.
         if (file_exists($running_path . '/' . $env . '_dropcat.yml')) {
             $env_config = Yaml::parse(
                 file_get_contents($running_path .'/' . $env . '_dropcat.yml')
             );
             // Recreate configs if env. exists.
-            $configs = array_replace_recursive($default_config, $env_config);
+            if (isset($default_config)) {
+                $configs = array_replace_recursive($default_config, $env_config);
+            } else {
+                $configs = $env_config;
+            }
         } else {
             echo "No configuration found for the specified environment $env, using default settings\n";
         }
-        $this->configuration = $configs;
+        if (isset($configs)) {
+            $this->configuration = $configs;
+        } else {
+            $this->configuration = null;
+        }
     }
 
     /**
