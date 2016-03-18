@@ -12,7 +12,7 @@ us, but we realized that it should take us longer to adapt to a tool that almost
 fits, then to develop our own.
 
 ### Symfony
-We deciedied to develop tåhe tool using symfony components, because drupal uses 
+We deciedied to develop the tool using symfony components, because drupal uses 
 some of them already, and therefor a good fit. 
 
 ### Dont't reproduce, re-use
