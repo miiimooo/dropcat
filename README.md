@@ -28,7 +28,7 @@ We are using dropcat from jenkins, in a excuted shell. In this example dropcat i
 export BACKUPNAME="${JOB_NAME}_${BUILD_NUMBER}"
 export ALIAS="mysite_latest_stage"
 export ENV='stage'
-export SITEALIAS="onlinevoicesintegration"
+export SITEALIAS="mysite"
 
 composer install
 
