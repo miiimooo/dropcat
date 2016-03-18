@@ -57,7 +57,6 @@ We are using dropcat from jenkins, in a excuted shell. In this example dropcat
 is installed as required in composer.json (and placed in vednor/bin by default) 
 for the drupal site (also a drush alias is setup for the site:
 ```
-# Setting drush path @todo: fix this in server
 export BACKUPNAME="${JOB_NAME}_${BUILD_NUMBER}"
 export ALIAS="mysite_latest_stage"
 export ENV='stage'
