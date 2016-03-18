@@ -1,0 +1,5 @@
+app_name: dropcat-overrides
+site:
+  environment:
+    drush_alias: bar
+    backup_path: /tmp

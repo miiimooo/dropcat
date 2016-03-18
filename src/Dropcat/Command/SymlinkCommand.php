@@ -101,7 +101,7 @@ To override config in dropcat.yml, using options:
 
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
-        
+
 
         $ssh = new SSH2($server, $port);
         $auth = new RSA();

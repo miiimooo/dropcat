@@ -1,7 +1,11 @@
 <?php
 namespace Dropcat\Services;
 
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * Class AppConfiguration
@@ -12,16 +16,29 @@ use Symfony\Component\Yaml\Parser;
  */
 class Configuration
 {
-
     /**
      * AppConfiguration constructor.
      */
     public function __construct()
     {
-        $config_parser = new Parser();
+        $input = new ArgvInput();
+        $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
         $running_path = getcwd();
-        $configuration_file_content = file_get_contents($running_path . '/dropcat.yml');
-        $this->configuration = $config_parser->parse($configuration_file_content);
+        $default_config = Yaml::parse(
+            file_get_contents($running_path .'/dropcat.yml')
+        );
+        $configs = $default_config;
+        // Check for env. dropcat file.
+        if (file_exists($running_path . '/' . $env . '_dropcat.yml')) {
+            $env_config = Yaml::parse(
+                file_get_contents($running_path .'/' . $env . '_dropcat.yml')
+            );
+            // Recreate configs if env. exists.
+            $configs = array_replace_recursive($default_config, $env_config);
+        } else {
+            echo "No configuration found for the specified environment $env, using default settings\n";
+        }
+        $this->configuration = $configs;
     }
 
     /**

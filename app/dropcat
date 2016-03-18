@@ -37,6 +37,8 @@ $commandsToInit = array();
 foreach ($commands as $id => $tags) {
     $commandsToInit[] = $container->get($id);
 }
+
 // Add them to the application.
 $application->addCommands($commandsToInit);
+
 $application->run(null, $output);

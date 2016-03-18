@@ -1,0 +1,5 @@
+app_name: dropcat-overrides
+site:
+  environment:
+    drush_alias: foobar
+    backup_path: /tjosan
