@@ -1,6 +1,6 @@
 {
   "name": "dropcat/dropcat",
-  "description": "Simple deploy tool for deploy of drupal 8 sites",
+  "description": "Simple deploy tool for deploy of drupal sites",
   "type": "drupal-deploy-tool",
   "license": "GPL-2.0+",
   "authors": [
@@ -16,7 +16,6 @@
     "drush/drush": "^8.0",
     "phpseclib/phpseclib": "^2.0",
     "symfony/config": "2.7.*",
-    "symfony/http-kernel": "2.7.*",
     "symfony/dependency-injection": "2.7.*",
     "pear/archive_tar": "^1.4"
   },
@@ -29,6 +28,7 @@
   }
   },
   "require-dev": {
-    "phpunit/phpunit": "^5.2"
+    "phpunit/phpunit": "^5.2",
+    "kherge/box": "~2.0"
   }
 }
