@@ -22,7 +22,8 @@ To get help on a command, and explanation of commands use:
 
 
 ## Run Dropcat from jenkins
-We are using dropcat from jenkins, in a excuted shell. In this example dropcat is installed as required in composer.json for the drupal site:
+We are using dropcat from jenkins, in a excuted shell. In this example dropcat 
+is installed as required in composer.json (and placed in vednor/bin by default) for the drupal site (also a drush alias is setup for the site:
 ```
 # Setting drush path @todo: fix this in server
 export BACKUPNAME="${JOB_NAME}_${BUILD_NUMBER}"
