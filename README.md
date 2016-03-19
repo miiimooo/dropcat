@@ -31,8 +31,7 @@ the near future.
 * deploy: unpacks a tar-folder and put it in place
 * symlink: creates a symlink to target folder - use case should be files-folder
 as an example.
-* configimport: Imports configuration (this maybe is going to be removed in 
-favour for drush cim)
+* configimport: Imports configuration (wrapper for drush config-import)
 
 ## Drupal 8
 The first target for this tool is to deploy drupal 8 sites, on the list is also 
