@@ -8,7 +8,8 @@
     "app/dropcat",
     "app/config/config.yml",
     "app/config/services.yml",
-    "vendor/autoload.php"
+    "vendor/autoload.php",
+    "public.key"
   ],
   "finder": [
     {
