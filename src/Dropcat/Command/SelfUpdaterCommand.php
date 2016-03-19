@@ -37,7 +37,7 @@ class SelfUpdaterCommand extends Command
         try {
             $result = $updater->update();
             if (! $result) {
-                printf("No update is needed");
+                echo "No update is needed";
                 exit;
             }
             $new = $updater->getNewVersion();
@@ -45,7 +45,7 @@ class SelfUpdaterCommand extends Command
             printf('Updated from %s to %s', $old, $new);
             exit;
         } catch (\Exception $e) {
-            printf( "Error occurred");
+            echo "Error occurred";
             exit;
         }
     }
