@@ -1,6 +1,6 @@
 {
+  "algorithm": "OPENSSL",
   "chmod": "0755",
-  "compression": "BZ2",
   "directories": [
     "src"
   ],
@@ -23,6 +23,9 @@
       ]
     }
   ],
+  "git-version": "package_version",
+  "intercept": true,
+  "key": ".travis/phar-private.pem",
   "main": "app/dropcat",
   "output": "dropcat.phar",
   "stub": true

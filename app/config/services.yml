@@ -48,3 +48,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.self-update:
+      class: Dropcat\Command\SelfUpdaterCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
