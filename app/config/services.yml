@@ -3,7 +3,7 @@ services:
       class: Symfony\Component\Console\Application
       arguments:
         - 'Dropcat'
-        - '0.0.1'
+        - '0.1.0'
     symfony.console_output:
       class: Symfony\Component\Console\Output\ConsoleOutput
     dropcat.configuration:
