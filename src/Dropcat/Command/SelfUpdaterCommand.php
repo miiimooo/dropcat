@@ -31,13 +31,13 @@ class SelfUpdaterCommand extends Command
     {
         $urlToPhar = 'https://dropcat.org/dropcat.phar';
         $urlToVersionFile = 'https://dropcat.org/dropcat.phar.version';
-        $updater = new Updater();
+        $updater = new Updater(null, false);
         $updater->getStrategy()->setPharUrl($urlToPhar);
         $updater->getStrategy()->setVersionUrl($urlToVersionFile);
         try {
             $result = $updater->update();
             if (! $result) {
-                // No update needed!
+                printf("No update is needed");
                 exit;
             }
             $new = $updater->getNewVersion();
@@ -45,7 +45,7 @@ class SelfUpdaterCommand extends Command
             printf('Updated from %s to %s', $old, $new);
             exit;
         } catch (\Exception $e) {
-            // Report an error!
+            printf( "Error occurred");
             exit;
         }
     }

@@ -1,7 +1,15 @@
 # Deploy tool for Drupal
 
-Install with composer
+## Install with composer
 `composer require dropcat/dropcat:dev-master`
+
+After that you could run dropcat as: `vendor/bin/dropcat`
+
+## Install globaly (Mac/Linux)
+`wget https://dropcat.org/dropcat.phar`
+`chmod +x dropcat.phar`
+`sudo mv dropcat.phar /usr/local/bin/dropcat`
+`dropcat --version`
 
 ## What does it do and why should anybody need it?
 In the history we, Wunderkraut Sweden (former NodeOne) have used a combination 

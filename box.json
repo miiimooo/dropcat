@@ -1,5 +1,4 @@
 {
-  "algorithm": "OPENSSL",
   "chmod": "0755",
   "directories": [
     "src"
@@ -8,8 +7,7 @@
     "app/dropcat",
     "app/config/config.yml",
     "app/config/services.yml",
-    "vendor/autoload.php",
-    "public.key"
+    "vendor/autoload.php"
   ],
   "finder": [
     {
@@ -26,7 +24,6 @@
   ],
   "git-version": "package_version",
   "intercept": true,
-  "key": ".travis/phar-private.pem",
   "main": "app/dropcat",
   "output": "dropcat.phar",
   "stub": true
