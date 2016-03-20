@@ -62,14 +62,6 @@ To override config in dropcat.yml, using options:
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
-
-            /** @var \PEAR_Error $error_object */
-            $error_object = $process->error_object;
-            $exceptionMessage = sprintf(
-                "Unable to clone repo, Error message:\n%s\n\n",
-                $error_object->message
-            );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
 
         echo $process->getOutput();
@@ -112,14 +104,6 @@ To override config in dropcat.yml, using options:
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
-
-            /** @var \PEAR_Error $error_object */
-            $error_object = $process->error_object;
-            $exceptionMessage = sprintf(
-                "Unable to copy web_init/web to web, Error message:\n%s\n\n",
-                $error_object->message
-            );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
 
         echo $process->getOutput();
