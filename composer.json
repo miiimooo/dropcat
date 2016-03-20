@@ -1,35 +1,55 @@
 {
-  "name": "dropcat/dropcat",
-  "description": "Simple deploy tool for deploy of drupal sites",
-  "type": "drupal-deploy-tool",
-  "license": "GPL-2.0+",
-  "authors": [
-    {
-        "name": "BOFH of WK sweden, with friends",
-        "role": "Cat owner"
+    "name": "drupal-composer/drupal-project",
+    "description": "Project template for Drupal 8 projects with composer",
+    "type": "project",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "",
+            "role": ""
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.drupal-composer.org"
+        }
+    ],
+    "require": {
+        "composer/installers": "^1.0.20",
+        "drupal-composer/drupal-scaffold": "~1",
+        "cweagans/composer-patches": "~1.0",
+        "drupal/core": "8.0.*",
+        "drush/drush": "~8.0",
+        "drupal/console": "~0.10"
+    },
+    "require-dev": {
+        "behat/mink": "~1.6",
+        "behat/mink-goutte-driver": "~1.2",
+        "jcalderonzumba/gastonjs": "^1.1@dev",
+        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
+        "mikey179/vfsStream": "~1.2",
+        "phpunit/phpunit": "~4.8",
+        "symfony/css-selector": "2.7.*"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "post-install-cmd": "sh ./scripts/composer/post-install.sh",
+        "post-update-cmd": "sh ./scripts/composer/post-update.sh"
+    },
+    "extra": {
+        "installer-paths": {
+
+            "web/core": ["type:drupal-core"],
+            "web/profiles/wk-standard/modules/contrib/{$name}": ["type:drupal-module"],
+            "web/profiles/{$name}": ["type:drupal-profile"],
+            "web/profiles/eps/themes/contrib/{$name}": ["type:drupal-theme"],
+            "drush/contrib/{$name}": ["type:drupal-drush"]
+        }
     }
-   ],
-  "require": {
-    "php": ">=5.5.9",
-    "symfony/console": "2.7.*",
-    "symfony/process": "2.7.*",
-    "drush/drush": "^8.0",
-    "phpseclib/phpseclib": "^2.0",
-    "symfony/config": "2.7.*",
-    "symfony/dependency-injection": "2.7.*",
-    "pear/archive_tar": "^1.4",
-    "padraic/phar-updater": "^1.0"
-  },
-  "bin": [
-    "app/dropcat"
-  ],
-  "autoload": {
-  "psr-4": {
-    "": "src/"
-  }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^5.2",
-    "kherge/box": "~2.0"
-  }
 }
