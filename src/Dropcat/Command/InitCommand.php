@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
+use Dropcat\Lib\UUID;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -84,7 +85,7 @@ To override config in dropcat.yml, using options:
 
 
         // Create uuid for profile
-        $uuid = uniqid(NULL, TRUE);
+        $uuid = UUID::v4();
 
         // Replace what is needed
         $path_to_profile_install = 'web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.install';
