@@ -136,6 +136,7 @@ The command needs the --profile parameter):
 
         $fs = new Filesystem();
         try {
+            $fs->remove($pathToProfileInstall);
             $fs->dumpFile($pathToProfileInstall, $fileContents);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while replacing content in ".$e->getPath();
@@ -164,6 +165,7 @@ The command needs the --profile parameter):
 
         $fs = new Filesystem();
         try {
+            $fs->remove($pathToComposerJson);
             $fs->dumpFile($pathToComposerJson, $fileContents);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while replacing content in ".$e->getPath();
@@ -187,6 +189,7 @@ The command needs the --profile parameter):
 
         $fs = new Filesystem();
         try {
+            $fs->remove($pathToProfileComposerJson);
             $fs->dumpFile($pathToProfileComposerJson, $fileContents);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while replacing content in ".$e->getPath();
