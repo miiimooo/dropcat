@@ -30,11 +30,11 @@ class Configuration
             );
             $configs = $default_config;
         }
-
-        // Check for env. dropcat file.
-        if (file_exists($running_path . '/' . $env . '_dropcat.yml')) {
+        // Check for environment dropcat file.
+        $environment = '/dropcat.' . $env . '.yml';
+        if (file_exists($running_path . $environment)) {
             $env_config = Yaml::parse(
-                file_get_contents($running_path .'/' . $env . '_dropcat.yml')
+                file_get_contents($running_path . $environment)
             );
             // Recreate configs if env. exists.
             if (isset($default_config)) {
