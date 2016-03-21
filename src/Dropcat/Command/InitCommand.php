@@ -81,25 +81,25 @@ The command needs the --profile parameter):
         $output->writeln('<info>Wk Drupal Template cloned to web_init/web</info>');
 
         // Rename files and functions
-        $fs = new Filesystem();
+        $fs1 = new Filesystem();
 
         try {
             // Rename profile to project name
-            $fs->rename(
+            $fs1->rename(
                 'web_init/web/profiles/wk-standard',
                 'web_init/web/profiles/' . $myProfile
             );
 
             // Rename files to project-name
-            $fs->rename(
+            $fs1->rename(
                 'web_init/web/profiles/' . $myProfile . '/wk-standard.profile',
                 'web_init/web/profiles/' . $myProfile . '/' . $myProfile . '.profile'
             );
-            $fs->rename(
+            $fs1->rename(
                 'web_init/web/profiles/' . $myProfile . '/wk-standard.install',
                 'web_init/web/profiles/' . $myProfile . '/' . $myProfile . '.install'
             );
-            $fs->rename(
+            $fs1->rename(
                 'web_init/web/profiles/' . $myProfile . '/wk-standard.info.yml',
                 'web_init/web/profiles/' . $myProfile . '/' . $myProfile . '.info.yml'
             );
@@ -134,10 +134,10 @@ The command needs the --profile parameter):
             $fileContents
         );
 
-        $fs = new Filesystem();
+        $fs2 = new Filesystem();
         try {
-            $fs->remove($pathToProfileInstall);
-            $fs->dumpFile($pathToProfileInstall, $fileContents);
+            $fs2->remove($pathToProfileInstall);
+            $fs2->dumpFile($pathToProfileInstall, $fileContents);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while replacing content in ".$e->getPath();
         }
@@ -163,10 +163,10 @@ The command needs the --profile parameter):
             $fileContents
         );
 
-        $fs = new Filesystem();
+        $fs3 = new Filesystem();
         try {
-            $fs->remove($pathToComposerJson);
-            $fs->dumpFile($pathToComposerJson, $fileContents);
+            $fs3->remove($pathToComposerJson);
+            $fs3->dumpFile($pathToComposerJson, $fileContents);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while replacing content in ".$e->getPath();
         }
@@ -187,10 +187,10 @@ The command needs the --profile parameter):
             $fileContents
         );
 
-        $fs = new Filesystem();
+        $fs4 = new Filesystem();
         try {
-            $fs->remove($pathToProfileComposerJson);
-            $fs->dumpFile($pathToProfileComposerJson, $fileContents);
+            $fs4->remove($pathToProfileComposerJson);
+            $fs4->dumpFile($pathToProfileComposerJson, $fileContents);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while replacing content in ".$e->getPath();
         }
