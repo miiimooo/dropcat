@@ -42,9 +42,8 @@ class Configuration
             } else {
                 $configs = $env_config;
             }
-        } else {
-            echo "No configuration found for the specified environment $env, using default settings\n";
         }
+
         if (isset($configs)) {
             $this->configuration = $configs;
         } else {
@@ -243,6 +242,14 @@ class Configuration
         return $this->configuration['site']['environment']['name'];
     }
 
+
+    /**
+     * Get the profile name
+     */
+    public function siteEnvironmentProfile()
+    {
+        return $this->configuration['site']['environment']['profile'];
+    }
 
     /**
      * Gets the sites backup path.
