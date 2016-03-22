@@ -39,7 +39,7 @@ class SelfUpdaterCommand extends Command
             $result = $updater->update();
             if (! $result) {
                 $output = new ConsoleOutput();
-                $output->writeln('<info>So, you are already a fashion lion. No update is needed.</info>');
+                $output->writeln('<info>You are already a fashion lion. No update is needed.</info>');
                 exit;
             }
             $new = $updater->getNewVersion();

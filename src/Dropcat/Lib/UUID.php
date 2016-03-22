@@ -1,6 +1,8 @@
 <?php
 namespace Dropcat\Lib;
 
+// Source: https://gist.github.com/dahnielson/508447
+
 class UUID {
     public static function v3($namespace, $name) {
         if(!self::is_valid($namespace)) return false;
