@@ -7,6 +7,7 @@ use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class SelfUpdaterCommand extends Command
 {
@@ -14,7 +15,8 @@ class SelfUpdaterCommand extends Command
     private $configuration;
 
 
-    public function __construct(Configuration $conf) {
+    public function __construct(Configuration $conf)
+    {
         $this->configuration = $conf;
         parent::__construct();
     }
@@ -23,8 +25,7 @@ class SelfUpdaterCommand extends Command
     {
         $this
             ->setName('self-update')
-            ->setDescription('Updates dropcat.phar/dropcat to the latest version')
-        ;
+            ->setDescription('Updates dropcat.phar to the latest version if needed');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,15 +38,18 @@ class SelfUpdaterCommand extends Command
         try {
             $result = $updater->update();
             if (! $result) {
-                echo "No update is needed";
+                $output = new ConsoleOutput();
+                $output->writeln('<info>So, you are already a fashion lion. No update is needed.</info>');
                 exit;
             }
             $new = $updater->getNewVersion();
             $old = $updater->getOldVersion();
-            printf('Updated from %s to %s', $old, $new);
+            $output = new ConsoleOutput();
+            $output->writeln("<info>Oh, fresh! Updated from $old to $new.</info>");
             exit;
         } catch (\Exception $e) {
-            echo "Error occurred";
+            $output = new ConsoleOutput();
+            $output->writeln("<info>We got an error. Sorry. $e->getMessage()</info>");
             exit;
         }
     }
