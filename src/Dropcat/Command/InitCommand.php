@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use SplFileObject;
 use Exception;
 
@@ -68,6 +69,9 @@ To override config in dropcat.yml, using options:
         if ( !preg_match('/^[a-z]+$/', $my_profile) ) {
             throw new Exception('Profiles must use a-z i names.');
         }
+        $io = new SymfonyStyle($input, $output);
+
+        $io->confirm('This will add files for setting up a drupal site in current folder, continue?', true);
 
         // (startdir is needed for application)
         $process = new Process("git clone git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init");
@@ -79,8 +83,7 @@ To override config in dropcat.yml, using options:
         }
         echo $process->getOutput();
 
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Wk Drupal Template cloned to web_init/web</info>');
+        $io->note('Wk Drupal Template cloned to web_init/web');
 
         // Rename files and functions
         $fs = new Filesystem();
@@ -141,8 +144,8 @@ To override config in dropcat.yml, using options:
         $write = new SplFileObject($read->getPathname(), 'w+');
         $write->fwrite($content);
 
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Renaming of functions and files finished</info>');
+
+        $io->note('Renaming of functions and files finished');
 
         $process = new Process("mv web_init/* . && rm -rf web_init");
         $process->run();
@@ -153,7 +156,10 @@ To override config in dropcat.yml, using options:
 
         echo $process->getOutput();
 
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Site is setup in current folder.</info>');
+        $io->note('Move web folder in place, removed web_init folder');
+
+        $io->newLine(2);
+        $io->success('Site is setup');
+
     }
 }

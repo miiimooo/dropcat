@@ -82,13 +82,7 @@ To override config in dropcat.yml, using options:
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            /** @var \PEAR_Error $error_object */
-            $error_object = $process->error_object;
-            $exceptionMessage = sprintf(
-                "Unable to import db, Error message:\n%s\n\n",
-                $error_object->message
-            );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
+            throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
         $output->writeln('<info>Task: dbimport finished</info>');

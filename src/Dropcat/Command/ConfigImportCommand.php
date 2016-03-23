@@ -40,7 +40,7 @@ To override config in dropcat.yml, using options:
                       'drush_alias',
                       'd',
                       InputOption::VALUE_OPTIONAL,
-                      'Folder',
+                      'Drush alias',
                       $this->configuration->siteEnvironmentDrushAlias()
                   ),
                   new InputOption(

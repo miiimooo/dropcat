@@ -58,3 +58,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.initabout:
+      class: Dropcat\Command\AboutCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
