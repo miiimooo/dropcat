@@ -15,6 +15,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use SplFileObject;
+use Exception;
 
 class InitCommand extends Command
 {
@@ -57,6 +58,16 @@ To override config in dropcat.yml, using options:
     {
 
         $my_profile = $input->getOption('profile');
+
+        if (!isset($my_profile)) {
+            throw new Exception('You need to specify a profile name.');
+        }
+        if ( preg_match('/\s/', $my_profile) ) {
+            throw new Exception('Profile name can not have spaces.');
+        }
+        if ( !preg_match('/^[a-z]+$/', $my_profile) ) {
+            throw new Exception('Profiles must use a-z i names.');
+        }
 
         // (startdir is needed for application)
         $process = new Process("git clone git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init");
