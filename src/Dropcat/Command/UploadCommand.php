@@ -53,7 +53,7 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'seperator',
-                        's',
+                        'se',
                         InputOption::VALUE_OPTIONAL,
                         'Name seperator',
                         $this->configuration->localEnvironmentSeperator()
