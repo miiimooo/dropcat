@@ -152,7 +152,7 @@ To override config in dropcat.yml, using options:
         }
         echo $sftp->pwd();
 
-        $sftp->put("$targetdir/$tarfile", "$tarfile", NET_SFTP_LOCAL_FILE);
+        $sftp->put("$targetdir/$tarfile", "$tarfile", SOURCE_LOCAL_FILE);
 
         $output->writeln('<info>Task: upload finished</info>');
     }
