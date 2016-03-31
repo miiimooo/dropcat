@@ -148,7 +148,7 @@ To override config in dropcat.yml, using options:
         $url = $input->getOption('url');
         $site_name = $input->getOption('site_name');
         $mysql_host = $input->getOption('mysql_host');
-        $mysql_port = $input->getOption('mysql_host');
+        $mysql_port = $input->getOption('mysql_port');
         $mysql_db = $input->getOption('mysql_db');
         $mysql_user = $input->getOption('mysql_user');
         $mysql_password = $input->getOption('mysql_password');
