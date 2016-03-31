@@ -170,13 +170,15 @@ To override config in dropcat.yml, using options:
         $deploy_folder = "$app_name$seperator$build_id";
 
         if ($output->isVerbose()) {
-            echo "verbose";
+            echo "deploy folder: $deploy_folder\n";
+            echo "tarfile: $tarfile\n";
+            echo  "current dir" . $ssh->exec('pwd') . "\n";
         }
-        echo $deploy_folder;
-        echo $tarfile;
-        echo $ssh->exec('pwd');
-        $ssh->exec('cd ' . $temp_folder);
-        echo $ssh->exec('pwd');
+
+        echo $ssh->exec('cd ' . $temp_folder);
+        if ($output->isVerbose()) {
+            echo $ssh->exec('pwd');
+        }
         //$ssh->exec("mkdir $temp_folder/$deploy_folder");
         //$ssh->exec("mv $temp_folder/$tarfile $deploy_folder");
 
