@@ -7,20 +7,23 @@ After that you could run dropcat as: `vendor/bin/dropcat`
 
 ## Install globaly (Mac/Linux)
 `wget https://dropcat.org/dropcat.phar`
+
 `chmod +x dropcat.phar`
+
 `sudo mv dropcat.phar /usr/local/bin/dropcat`
+
 `dropcat --version`
 
 ## What does it do and why should anybody need it?
 In the history we, Wunderkraut Sweden (former NodeOne) have used a combination 
-of jenkins and aegir to deploy our sites. When we started develop Drupal 8 
-sites, aegir were not ready for Drupal 8 and we also wanted a simpler workflow 
+of Jenkins and Aegir to deploy our sites. When we started develop Drupal 8 
+sites, Aegir were not ready for it and we also wanted a simpler workflow 
 with deploys, more fit to our normal needs. So we started to test out some tools 
 out there that almost worked for us, but we realized that it should take us 
-longer to adapt to a tool that almost fits, then to develop our own.
+longer to adapt a tool that almost fits, then to develop our own.
 
 ### Symfony
-We deciedied to develop the tool using symfony components, because drupal uses 
+We deciedied to develop the tool using symfony components, because Drupal uses 
 some of them already, and therefor a good fit. 
 
 ### Dont't reproduce, re-use
@@ -46,17 +49,17 @@ The first target for this tool is to deploy drupal 8 sites, on the list is also
 to deploy drupal 7 sites, and maybe also other types of sites after that.
 
 ## Run it
-`/path/to/run/dropcat backup --env=dev`
+`dropcat backup --env=dev`
 This uses the default settings in dropcat.yml and the overrides, if the exists, 
-in dev_dropcat.yml. The config files must exits in the folder that dropcat is
+in dropcat.dev.yml. The config files must exits in the folder that dropcat is
 runned from.
 
 ## Different commands for different tasks
 To get a list of all tasks that could be used use:
-`/path/to/run/dropcat list`
+`dropcat list`
 
 To get help on a command, and explanation of commands use:
-`/path/to/run/dropcat help backup`
+`dropcat help backup`
 
 
 ## Run Dropcat from jenkins
@@ -83,12 +86,13 @@ drush @${SITEALIAS} updb -y
 drush @${SITEALIAS} uli -y
 
 ```
-All config for the deploy is in dropcat.yml
+All config for the deploy is in dropcat.stage.yml.
 
 
 ## Config examples
 Dropcat need as a minimum a dropcat.yml in the running directory. Example is 
-found in examples folder. Also examples for dev and prod environmengt is in the folder.
+found in examples folder. Also examples for dev and prod environmengt is in the 
+folder.
 
 
 ## PHPunit-testing example
