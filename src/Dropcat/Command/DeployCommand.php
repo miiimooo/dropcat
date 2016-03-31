@@ -178,14 +178,13 @@ To override config in dropcat.yml, using options:
         $ssh->exec("mv $temp_folder/$tarfile $temp_folder/$deploy_folder/");
         if ($output->isVerbose()) {
             echo "path to tar to unpack is: " . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . "\n";
-            echo  $ssh->exec('tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
         }
-        $ssh->exec('tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
-        //$ssh->exec('cd ..');
-        //$ssh->exec('mv ' . $target_path . ' ' . $web_root);
-        //$ssh->exec('cd ' . $web_root);
-        //$ssh->exec('rm ' . $alias);
-        //$ssh->exec('ln -s ' . $target_path . ' ' . $alias);
+        $ssh->exec('tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . ' -C' . $temp_folder . '/' . $deploy_folder);
+        if ($output->isVerbose()) {
+            echo "path to deployed folder is: " . $web_root . '/' . $deploy_folder . "\n";
+        }
+        $ssh->exec('mv ' . $temp_folder . '/' . $deploy_folder . ' ' . $web_root . '/' . $deploy_folder);
+        $ssh->exec('ln -s ' . $web_root . '/' . $deploy_folder . ' ' . $web_root . '/' . $alias);
         $ssh->disconnect();
 
         $output->writeln('<info>Task: deploy finished</info>');
