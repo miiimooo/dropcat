@@ -38,6 +38,27 @@ To override config in dropcat.yml, using options:
             ->setDefinition(
                 array(
                     new InputOption(
+                        'app-name',
+                        'a',
+                        InputOption::VALUE_OPTIONAL,
+                        'App name',
+                        $this->configuration->localEnvironmentAppName()
+                    ),
+                    new InputOption(
+                        'build-id',
+                        'bi',
+                        InputOption::VALUE_OPTIONAL,
+                        'Id',
+                        $this->configuration->localEnvironmentBuildId()
+                    ),
+                    new InputOption(
+                        'seperator',
+                        'se',
+                        InputOption::VALUE_OPTIONAL,
+                        'Name seperator',
+                        $this->configuration->localEnvironmentSeperator()
+                    ),
+                    new InputOption(
                         'tar',
                         't',
                         InputOption::VALUE_OPTIONAL,
@@ -102,7 +123,7 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'alias',
-                        'a',
+                        'aa',
                         InputOption::VALUE_OPTIONAL,
                         'Symlink alias',
                         $this->configuration->remoteEnvironmentAlias()
@@ -114,6 +135,9 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app_name = $input->getOption('app-name');
+        $build_id = $input->getOption('build-id');
+        $seperator = $input->getOption('seperator');
         $tar = $input->getOption('tar');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
@@ -137,10 +161,17 @@ To override config in dropcat.yml, using options:
             exit('Login Failed');
         }
 
+        if (isset($tar)) {
+            $tarfile = $tar;
+        }
+        else {
+            $tarfile = $app_name . $seperator . $build_id . '.tar';
+        }
+
         $ssh->exec('mkdir ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('mv ' . $temp_folder . '/' . $tar . ' ' . $temp_folder . '/' . $target_path);
+        $ssh->exec('mv ' . $temp_folder . '/' . $tarfile . ' ' . $temp_folder . '/' . $target_path);
         $ssh->exec('cd ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('tar xvf ' . $tar);
+        $ssh->exec('tar xvf ' . $tarfile);
         $ssh->exec('cd ..');
         $ssh->exec('mv ' . $target_path . ' ' . $web_root);
         $ssh->exec('cd ' . $web_root);
