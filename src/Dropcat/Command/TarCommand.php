@@ -27,7 +27,7 @@ class TarCommand extends Command
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat tar</info>
 To override config in dropcat.yml, using options:
-<info>dropcat tar -f foofolder -t ./ -s __ -a mysitename -i 42</info>';
+<info>dropcat tar -f foofolder -t ./ -se __ -a mysitename -bi 42</info>';
 
         $this->setName("tar")
           ->setDescription("Tar folder")

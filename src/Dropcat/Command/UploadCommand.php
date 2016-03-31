@@ -150,7 +150,7 @@ To override config in dropcat.yml, using options:
         if (!$sftp->login($user, $auth)) {
             exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
         }
-        $sftp->put($tarfile, $targetdir);
+        $sftp->put("$tarfile", "$targetdir/$tarfile");
 
         $output->writeln('<info>Task: upload finished</info>');
     }
