@@ -169,15 +169,16 @@ To override config in dropcat.yml, using options:
         }
         $deploy_folder = "$app_name$seperator$build_id";
 
-        $ssh->exec("mkdir $temp_folder/$deploy_folder");
-        //$ssh->exec('mv ' . $temp_folder . '/' . $tarfile . ' ' . $temp_folder . '/' . $target_path);
-        //$ssh->exec('cd ' . $temp_folder . '/' . $target_path);
-        //$ssh->exec('tar xvf ' . $tarfile);
-        //$ssh->exec('cd ..');
-        //$ssh->exec('mv ' . $target_path . ' ' . $web_root);
-        //$ssh->exec('cd ' . $web_root);
+        $ssh->exec("cd $temp_folder");
+        $ssh->exec("mkdir $deploy_folder");
+        $ssh->exec("mv $tarfile $deployfolder/");
+        $ssh->exec("cd $deployfolder");
+        $ssh->exec("tar xvf $tarfile");
+        $ssh->exec('cd ..');
+        $ssh->exec("cp -r $deployfolder $web_root/");
+        $ssh->exec('cd ' . $web_root);
         //$ssh->exec('rm ' . $alias);
-        //$ssh->exec('ln -s ' . $target_path . ' ' . $alias);
+        $ssh->exec('ln -sf ' . $deployfolder . ' ' . $alias);
         $ssh->disconnect();
 
         $output->writeln('<info>Task: deploy finished</info>');
