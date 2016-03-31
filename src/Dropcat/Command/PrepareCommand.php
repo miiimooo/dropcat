@@ -40,6 +40,13 @@ To override config in dropcat.yml, using options:
             ->setDefinition(
                 array(
                     new InputOption(
+                        'drush_folder',
+                        'df',
+                        InputOption::VALUE_OPTIONAL,
+                        'Drush folder',
+                        $this->configuration->localEnvironmentDrushFolder()
+                    ),
+                    new InputOption(
                         'drush_alias',
                         'd',
                         InputOption::VALUE_OPTIONAL,
@@ -89,6 +96,41 @@ To override config in dropcat.yml, using options:
                         'Site url',
                         $this->configuration->siteEnvironmentName()
                     ),
+                    new InputOption(
+                        'mysql_host',
+                        'mh',
+                        InputOption::VALUE_OPTIONAL,
+                        'Mysql host',
+                        $this->configuration->mysqlEnvironmentHost()
+                    ),
+                    new InputOption(
+                        'mysql_port',
+                        'mp',
+                        InputOption::VALUE_OPTIONAL,
+                        'Mysql port',
+                        $this->configuration->mysqlEnvironmentPort()
+                    ),
+                    new InputOption(
+                        'mysql_db',
+                        'md',
+                        InputOption::VALUE_OPTIONAL,
+                        'Mysql db',
+                        $this->configuration->mysqlEnvironmentDataBase()
+                    ),
+                    new InputOption(
+                        'mysql_user',
+                        'mu',
+                        InputOption::VALUE_OPTIONAL,
+                        'Mysql user',
+                        $this->configuration->mysqlEnvironmentUser()
+                    ),
+                    new InputOption(
+                        'mysql_password',
+                        'mpd',
+                        InputOption::VALUE_OPTIONAL,
+                        'Mysql password',
+                        $this->configuration->mysqlEnvironmentPassword()
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -97,7 +139,7 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
+        $drush_folder = $input->getOption('drush_folder');
         $drush_alias = $input->getOption('drush_alias');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
@@ -105,7 +147,11 @@ To override config in dropcat.yml, using options:
         $alias = $input->getOption('alias');
         $url = $input->getOption('url');
         $site_name = $input->getOption('site_name');
-
+        $mysql_host = $input->getOption('mysql_host');
+        $mysql_port = $input->getOption('mysql_host');
+        $mysql_db = $input->getOption('mysql_db');
+        $mysql_user = $input->getOption('mysql_user');
+        $mysql_password = $input->getOption('mysql_password');
 
         $alias_content = '<?php
 
@@ -119,10 +165,21 @@ $aliases["' . $site_name . '"] = array (
 
         $drush_file = new Filesystem();
         try {
-            $drush_file->dumpFile('.drush/'. $drush_alias . '.aliases.drushrc.php', $alias_content);
+            $drush_file->dumpFile($drush_folder .  '/'. $drush_alias . '.aliases.drushrc.php', $alias_content);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while creating your file at ".$e->getPath();
         }
+
+        $process = new Process(
+            "mysqladmin -u $mysql_user -p $mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
+        );
+        $process->run();
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        echo $process->getOutput();
+
         $output->writeln('<info>Task: prepare finished</info>');
     }
 }

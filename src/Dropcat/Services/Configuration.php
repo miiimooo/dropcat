@@ -128,6 +128,18 @@ class Configuration
     }
 
     /**
+     * Get path to drush folder.
+     */
+    public function localEnvironmentDrushFolder()
+    {
+        if (isset($this->configuration['local']['environment']['drush_folder'])) {
+            return $this->configuration['local']['environment']['drush_folder'];
+        } else {
+            return;
+        }
+    }
+
+    /**
      * Get remote server name.
      */
     public function remoteEnvironmentServerName()
@@ -287,6 +299,46 @@ class Configuration
     public function deployIgnoreFiles()
     {
         return $this->configuration['deploy']['ignore'];
+    }
+
+    /**
+     * Gets Mysql/MariaDB host
+     */
+    public function mysqlEnvironmentHost()
+    {
+        return $this->configuration['mysql']['environment']['host'];
+    }
+
+    /**
+     * Gets Mysql database
+     */
+    public function mysqlEnvironmentDataBase()
+    {
+        return $this->configuration['mysql']['environment']['database'];
+    }
+
+    /**
+     * Gets Mysql user
+     */
+    public function mysqlEnvironmentUser()
+    {
+        return $this->configuration['mysql']['environment']['user'];
+    }
+
+    /**
+     * Gets Mysql port
+     */
+    public function mysqlEnvironmentPort()
+    {
+        return $this->configuration['mysql']['environment']['port'];
+    }
+
+    /**
+     * Gets Mysql port
+     */
+    public function mysqlEnvironmentPassword()
+    {
+        return $this->configuration['mysql']['environment']['password'];
     }
 
     /**
