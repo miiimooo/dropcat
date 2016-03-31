@@ -167,8 +167,9 @@ To override config in dropcat.yml, using options:
         else {
             $tarfile = $app_name . $seperator . $build_id . '.tar';
         }
+        $deploy_folder = "$app_name$seperator$build_id";
 
-        $ssh->exec("mkdir $temp_folder/$alias");
+        $ssh->exec("mkdir $temp_folder/$deploy_folder");
         //$ssh->exec('mv ' . $temp_folder . '/' . $tarfile . ' ' . $temp_folder . '/' . $target_path);
         //$ssh->exec('cd ' . $temp_folder . '/' . $target_path);
         //$ssh->exec('tar xvf ' . $tarfile);
