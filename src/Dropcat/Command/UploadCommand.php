@@ -38,6 +38,27 @@ To override config in dropcat.yml, using options:
             ->setDefinition(
                 array(
                     new InputOption(
+                        'app-name',
+                        'a',
+                        InputOption::VALUE_OPTIONAL,
+                        'App name',
+                        $this->configuration->localEnvironmentAppName()
+                    ),
+                    new InputOption(
+                        'build-id',
+                        'i',
+                        InputOption::VALUE_OPTIONAL,
+                        'Id',
+                        $this->configuration->localEnvironmentBuildId()
+                    ),
+                    new InputOption(
+                        'seperator',
+                        's',
+                        InputOption::VALUE_OPTIONAL,
+                        'Name seperator',
+                        $this->configuration->localEnvironmentSeperator()
+                    ),
+                    new InputOption(
                         'tar',
                         't',
                         InputOption::VALUE_OPTIONAL,
@@ -100,6 +121,9 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app_name = $input->getOption('app-name');
+        $build_id = $input->getOption('build-id');
+        $seperator = $input->getOption('seperator');
         $tar = $input->getOption('tar');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
@@ -110,6 +134,13 @@ To override config in dropcat.yml, using options:
         $identity_file_content = file_get_contents($identity_file);
         $timeout = $input->getOption('timeout');
 
+        if (isset($tar)) {
+            $tarfile = $tar;
+        }
+        else {
+            $tarfile = $app_name . $seperator . $build_id . '.tar';
+        }
+
         $sftp = new SFTP($server, $port, $timeout);
         $auth = new RSA();
         if (isset($ssh_key_password)) {
@@ -119,7 +150,7 @@ To override config in dropcat.yml, using options:
         if (!$sftp->login($user, $auth)) {
             exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
         }
-        $sftp->put($tar, $targetdir);
+        $sftp->put($tarfile, $targetdir);
 
         $output->writeln('<info>Task: upload finished</info>');
     }
