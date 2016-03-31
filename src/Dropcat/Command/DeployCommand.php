@@ -177,9 +177,9 @@ To override config in dropcat.yml, using options:
         $ssh->exec("mkdir $temp_folder/$deploy_folder");
         $ssh->exec("mv $temp_folder/$tarfile $temp_folder/$deploy_folder/");
         if ($output->isVerbose()) {
-            echo "path to tar to unpack is: " . $temp_folder/$deploy_folder/$tarfile . "\n";
+            echo "path to tar to unpack is: " . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . "\n";
         }
-        $ssh->exec("tar xvf $temp_folder/$deploy_folder/$tarfile");
+        $ssh->exec('tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
         //$ssh->exec('cd ..');
         //$ssh->exec('mv ' . $target_path . ' ' . $web_root);
         //$ssh->exec('cd ' . $web_root);
