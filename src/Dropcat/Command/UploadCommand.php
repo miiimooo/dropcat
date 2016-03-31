@@ -66,6 +66,15 @@ To override config in dropcat.yml, using options:
                         $this->configuration->localEnvironmentTarName()
                     ),
                     new InputOption(
+                        'tar_dir',
+                        'td',
+                        InputOption::VALUE_OPTIONAL,
+                        'Tar dir',
+                        $this->configuration->localEnvironmentTarDir()
+                    ),
+
+
+                    new InputOption(
                         'server',
                         's',
                         InputOption::VALUE_OPTIONAL,
@@ -125,6 +134,7 @@ To override config in dropcat.yml, using options:
         $build_id = $input->getOption('build-id');
         $seperator = $input->getOption('seperator');
         $tar = $input->getOption('tar');
+        $tar_dir = $input->getOption('tar_dir');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
         $targetdir = $input->getOption('target_dir');
@@ -151,8 +161,11 @@ To override config in dropcat.yml, using options:
             exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
         }
         echo $sftp->pwd();
+        if (isset($tar_dir)) {
+            $tarfile = "$tar_dir/$tarfile";
+        }
 
-        $sftp->put("$targetdir/$tarfile", "$tarfile");
+        $sftp->put("$targetdir/$tarfile", "$tarfile", SFTP::SOURCE_LOCAL_FILE);
 
         $output->writeln('<info>Task: upload finished</info>');
     }

@@ -106,6 +106,16 @@ class Configuration
     {
         return $this->configuration['local']['environment']['tar_name'];
     }
+
+    /**
+     * Get name of tar to deploy.
+     */
+    public function localEnvironmentTarDir()
+    {
+        return $this->configuration['local']['environment']['tar_dir'];
+    }
+
+
     /**
      * Get name of tar to deploy.
      */
