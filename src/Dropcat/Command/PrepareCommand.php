@@ -171,7 +171,7 @@ $aliases["' . $site_name . '"] = array (
         }
 
         $process = new Process(
-            "mysqladmin -u $mysql_user -p $mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
+            "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
         );
         $process->run();
         // executes after the command finishes
