@@ -169,7 +169,7 @@ To override config in dropcat.yml, using options:
         }
         $deploy_folder = "$app_name$seperator$build_id";
 
-        if ($ssh->isVerbose()) {
+        if ($output->isVerbose()) {
             echo "verbose";
         }
         echo $deploy_folder;
