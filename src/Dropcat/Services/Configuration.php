@@ -2,8 +2,6 @@
 namespace Dropcat\Services;
 
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
