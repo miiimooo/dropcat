@@ -189,7 +189,7 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo "alias to deployed folder are: " . $web_root . '/' . $alias . "\n";
         }
-        $ssh->exec('ln -s ' . $web_root . '/' . $deploy_folder . ' ' . $web_root . '/' . $alias);
+        $ssh->exec('ln -sf ' . $web_root . '/' . $deploy_folder . ' ' . $web_root . '/' . $alias);
         $ssh->disconnect();
 
         $output->writeln('<info>Task: deploy finished</info>');
