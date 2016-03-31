@@ -112,9 +112,12 @@ class Configuration
      */
     public function localEnvironmentTarDir()
     {
-        return $this->configuration['local']['environment']['tar_dir'];
+        if (isset($this->configuration['local']['environment']['tar_dir'])) {
+            return $this->configuration['local']['environment']['tar_dir'];
+        } else {
+            return;
+        }
     }
-
 
     /**
      * Get name of tar to deploy.

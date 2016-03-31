@@ -72,8 +72,6 @@ To override config in dropcat.yml, using options:
                         'Tar dir',
                         $this->configuration->localEnvironmentTarDir()
                     ),
-
-
                     new InputOption(
                         'server',
                         's',
@@ -161,11 +159,8 @@ To override config in dropcat.yml, using options:
             exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
         }
         echo $sftp->pwd();
-        if (isset($tar_dir)) {
-            $tarfile = "$tar_dir/$tarfile";
-        }
 
-        $sftp->put("$targetdir/$tarfile", "$tarfile", SFTP::SOURCE_LOCAL_FILE);
+        $sftp->put("$targetdir/$remotetarfile", "$tar_dir$tarfile", 1);
 
         $output->writeln('<info>Task: upload finished</info>');
     }
