@@ -42,7 +42,7 @@ To override config in dropcat.yml, using options:
                   ),
                   new InputOption(
                       'build-id',
-                      'i',
+                      'bi',
                       InputOption::VALUE_OPTIONAL,
                       'Id',
                       $this->configuration->localEnvironmentBuildId()
