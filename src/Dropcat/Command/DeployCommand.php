@@ -168,16 +168,15 @@ To override config in dropcat.yml, using options:
             $tarfile = $app_name . $seperator . $build_id . '.tar';
         }
 
-        $ssh->exec('mkdir ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('mv ' . $temp_folder . '/' . $tarfile . ' ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('cd ' . $temp_folder . '/' . $target_path);
-        $ssh->exec('tar xvf ' . $tarfile);
-        $ssh->exec('cd ..');
-        $ssh->exec('mv ' . $target_path . ' ' . $web_root);
-        $ssh->exec('cd ' . $web_root);
-        $ssh->exec('rm ' . $alias);
-        $ssh->exec('ln -s ' . $target_path . ' ' . $alias);
-
+        $ssh->exec("mkdir $temp_folder/$alias");
+        //$ssh->exec('mv ' . $temp_folder . '/' . $tarfile . ' ' . $temp_folder . '/' . $target_path);
+        //$ssh->exec('cd ' . $temp_folder . '/' . $target_path);
+        //$ssh->exec('tar xvf ' . $tarfile);
+        //$ssh->exec('cd ..');
+        //$ssh->exec('mv ' . $target_path . ' ' . $web_root);
+        //$ssh->exec('cd ' . $web_root);
+        //$ssh->exec('rm ' . $alias);
+        //$ssh->exec('ln -s ' . $target_path . ' ' . $alias);
         $ssh->disconnect();
 
         $output->writeln('<info>Task: deploy finished</info>');
