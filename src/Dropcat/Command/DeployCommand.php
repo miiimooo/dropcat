@@ -163,8 +163,7 @@ To override config in dropcat.yml, using options:
 
         if (isset($tar)) {
             $tarfile = $tar;
-        }
-        else {
+        } else {
             $tarfile = $app_name . $seperator . $build_id . '.tar';
         }
         $deploy_folder = "$app_name$seperator$build_id";
@@ -179,11 +178,17 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo "path to tar to unpack is: " . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . "\n";
         }
-        $ssh->exec('tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . ' -C' . $temp_folder . '/' . $deploy_folder);
+        $ssh->exec(
+            'tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile .
+            ' -C' . $temp_folder . '/' . $deploy_folder
+        );
         if ($output->isVerbose()) {
             echo "path to deployed folder is: " . $web_root . '/' . $deploy_folder . "\n";
         }
         $ssh->exec('mv ' . $temp_folder . '/' . $deploy_folder . ' ' . $web_root . '/' . $deploy_folder);
+        if ($output->isVerbose()) {
+            echo "alias to deployed folder are: " . $web_root . '/' . $alias . "\n";
+        }
         $ssh->exec('ln -s ' . $web_root . '/' . $deploy_folder . ' ' . $web_root . '/' . $alias);
         $ssh->disconnect();
 
