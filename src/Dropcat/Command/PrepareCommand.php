@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
+
 class PrepareCommand extends Command
 {
     /** @var Configuration configuration */
@@ -139,6 +140,9 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $input = new ArgvInput();
+        $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
+        
         $drush_folder = $input->getOption('drush_folder');
         $drush_alias = $input->getOption('drush_alias');
         $server = $input->getOption('server');
