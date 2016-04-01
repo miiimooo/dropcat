@@ -84,10 +84,11 @@ To override config in dropcat.yml, using options:
 
         $path_to_tar_file = $temp_path . $app_name . $seperator . $build_id . '.tar';
         $basepath_for_tar = $path_to_app;
-
-
+        
         $tar = new Archive_Tar($path_to_tar_file, true);
-        $tar->setIgnoreList($ignore_files);
+        if (isset($ignore_files)) {
+            $tar->setIgnoreList($ignore_files);
+        }
         $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
         if (!$success) {
             /** @var \PEAR_Error $error_object */
@@ -110,10 +111,6 @@ To override config in dropcat.yml, using options:
      */
     protected function getFilesToIgnore()
     {
-        $filesToIgnore = \explode(' ', $this->configuration->deployIgnoreFilesTarString());
-        foreach ($filesToIgnore as &$file) {
-            $file = substr($file, 11, -1);
-        }
-        return $filesToIgnore;
+        return $this->configuration->deployIgnoreFiles();
     }
 }
