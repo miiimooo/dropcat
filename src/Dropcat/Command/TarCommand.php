@@ -86,6 +86,11 @@ To override config in dropcat.yml, using options:
         $basepath_for_tar = $path_to_app;
         
         $tar = new Archive_Tar($path_to_tar_file, true);
+
+        if ($output->isVerbose()) {
+            echo "Build number from Jenkins is: " . getenv('BUILD_NUMBER');
+        }
+
         if (isset($ignore_files)) {
             $tar->setIgnoreList($ignore_files);
         }
