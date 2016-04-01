@@ -31,12 +31,14 @@ The aim is not to replace an existing tool that do things perfect (or almost),
 the aim is to be the glue between the other tools. So in our deploy flow we use
 composer (instead of drush make that we have used for all drupal 7 sites in 
 Wunderkraut Sweden), dropcat and drush, with jenkins (but we could also run our
-deploys localy, using whatever tools you want to run commands, like bash).
+deploys localy, using whatever tools you want to run commands, like your own 
+terminal).
 
 ### Commands
 We have now a bunch of commands to use with dropcat, and we are adding more in 
 the near future.
 
+* backup: backups db to path.
 * prepare: creates drush-alias for site and db on host.
 * tar: tar:s a folder so it could be uploaded later
 * upload: uploads a tar-folder to destination
@@ -52,7 +54,7 @@ The first target for this tool is to deploy drupal 8 sites, on the list is also
 to deploy drupal 7 sites, and maybe also other types of sites after that.
 
 ## Run it
-`dropcat backup
+`dropcat backup`
 This uses the default settings in dropcat.yml. If the system variable DROPCAT_ENV 
 is set to dev, dropcat uses dropcat.dev.yml, if that exists. 
 The config yaml-file must exits in the folder that dropcat is
