@@ -23,6 +23,16 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         $this->conf->method('localEnvironmentAppName')->willReturn('Tarcommandapptest');
         $this->conf->method('localEnvironmentAppPath')->willReturn(realpath(__DIR__));
 
+        // set up to ignore files
+        $dh = opendir($this->conf->localEnvironmentAppPath());
+        $files_to_ignore = array();
+        while (($file = readdir($dh)) !== false) {
+            if ($file[0] !== '.' && basename(__FILE__) !== $file) {
+                $files_to_ignore[] = $file;
+            }
+        }
+        $this->conf->method('deployIgnoreFiles')->willReturn($files_to_ignore);
+
 
         $application = new Application();
         $application->add(new TarCommand($this->conf));
@@ -52,22 +62,9 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         $tar_library = new Archive_Tar($filename);
 
         $contents = $tar_library->listContent();
-        // go through all files in this folder and count them
-        $dh = opendir($this->conf->localEnvironmentAppPath());
-        $counter = 0;
-        $files = array();
-        while (($file = readdir($dh)) !== false) {
-            if ($file[0] !== '.') {
-                $counter++;
-                $files[] = $file;
-            }
-        }
-        $this->assertEquals(\count($contents), $counter);
-
-        foreach($files as $key => $file) {
-            $this->assertEquals($contents[$key]['filename'], $file);
-        }
-
+        
+        $this->assertEquals(\count($contents), 1);
+        $this->assertEquals($contents[0]['filename'], basename(__FILE__));
     }
 
     /**
