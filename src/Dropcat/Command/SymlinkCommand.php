@@ -85,6 +85,20 @@ To override config in dropcat.yml, using options:
                         'SSH key password',
                         $this->configuration->localEnvironmentSshKeyPassword()
                     ),
+                    new InputOption(
+                        'web_root',
+                        'w',
+                        InputOption::VALUE_OPTIONAL,
+                        'Web root',
+                        $this->configuration->remoteEnvironmentWebRoot()
+                    ),
+                    new InputOption(
+                        'alias',
+                        'aa',
+                        InputOption::VALUE_OPTIONAL,
+                        'Symlink alias',
+                        $this->configuration->remoteEnvironmentAlias()
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -98,10 +112,11 @@ To override config in dropcat.yml, using options:
         $user = $input->getOption('user');
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
+        $web_root = $input->getOption('web_root');
+        $alias = $input->getOption('alias');
 
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
-
 
         $ssh = new SSH2($server, $port);
         $auth = new RSA();
@@ -113,7 +128,7 @@ To override config in dropcat.yml, using options:
         if (!$ssh->login($user, $auth)) {
             exit('Login Failed');
         }
-        $ssh->exec('ln -s ' . $original . ' ' . $symlink);
+        $ssh->exec('ln -snf ' . $original . ' ' . $symlink);
 
         $output->writeln('<info>Task: symlink finished</info>');
     }
