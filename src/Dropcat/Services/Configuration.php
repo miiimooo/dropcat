@@ -20,7 +20,7 @@ class Configuration
     public function __construct()
     {
         $input = new ArgvInput();
-        $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
+        $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
         $running_path = getcwd();
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
