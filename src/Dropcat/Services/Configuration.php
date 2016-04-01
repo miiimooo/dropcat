@@ -221,7 +221,7 @@ class Configuration
     {
         return $this->configuration['remote']['environment']['target_dir'];
     }
-
+    
     /**
      * Gets the drush alias.
      */

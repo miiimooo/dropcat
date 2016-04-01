@@ -51,13 +51,6 @@ To override config in dropcat.yml, using options:
                       'Profile',
                       $this->configuration->siteEnvironmentProfile()
                   ),
-                  new InputOption(
-                      'options',
-                      'o',
-                      InputOption::VALUE_OPTIONAL,
-                      'Options',
-                      $this->configuration->siteEnvironmentProfileOptions()
-                  ),
               )
           )
           ->setHelp($HelpText);
@@ -66,12 +59,13 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $drush_alias = $input->getOption('drush_alias');
-        $config_name = $input->getOption('config_name');
-        $process = new Process("drush @$drush_alias cim $config_name -y");
+        $profile = $input->getOption('profile');
+
+        $process = new Process("drush @$drush_alias si $profile --account-name=admin --account-pass=admin -y");
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            throw new ProcessFailedException($proceshels);
         }
         echo $process->getOutput();
 

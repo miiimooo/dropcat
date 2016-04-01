@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ConfigImportCommand extends Command
 {
@@ -47,7 +48,7 @@ To override config in dropcat.yml, using options:
                       'config_name',
                       'c',
                       InputOption::VALUE_OPTIONAL,
-                      'Id',
+                      'Name of config to import',
                       $this->configuration->siteEnvironmentConfigName()
                   ),
               )
@@ -59,18 +60,15 @@ To override config in dropcat.yml, using options:
     {
         $drush_alias = $input->getOption('drush_alias');
         $config_name = $input->getOption('config_name');
+        if ($output->isVerbose()) {
+            echo 'using drush alias: ' . $drush_alias . "\n";
+            echo 'using config: ' . $config_name . "\n";
+        }
         $process = new Process("drush @$drush_alias cim $config_name -y");
         $process->run();
-        // executes after the command finishes
+        // Executes after the command finishes.
         if (!$process->isSuccessful()) {
-
-            /** @var \PEAR_Error $error_object */
-            $error_object = $process->error_object;
-            $exceptionMessage = sprintf(
-                "Unable to import config, Error message:\n%s\n\n",
-                $error_object->message
-            );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
+            throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
 

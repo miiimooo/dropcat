@@ -34,11 +34,10 @@ class AboutCommand extends Command
         $style = new OutputFormatterStyle('black', 'green', array('blink', 'bold'));
         $output = new ConsoleOutput();
 
-        $output->getFormatter()->setStyle('mjau', $style);
+        $output->getFormatter()->setStyle('meow', $style);
+        $io->newLine(1);
 
-        $io->newLine(2);
-
-        $output->writeln('<mjau>
+        $output->writeln('<meow>
 
           ____                              __
          / __ \_________  ____  _________ _/ /_
@@ -47,9 +46,9 @@ class AboutCommand extends Command
       /_____/_/   \____/ .___/\___/\__,_/\__/
                       /__/
 
-      Dropcat is a deploy tool for Drupal 8 sites, developed by Wunderkraut Sweden, say Mjau!
-      </mjau>');
-        $io->newLine(2);
+      Dropcat is a deploy tool for Drupal 8 sites, developed by Wunderkraut Sweden. Meow!
+      </meow>');
+        $io->newLine(1);
 
 
     }
