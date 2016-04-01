@@ -22,11 +22,11 @@ with deploys, more fit to our normal needs. So we started to test out some tools
 out there that almost worked for us, but we realized that it should take us 
 longer to adapt a tool that almost fits, then to develop our own.
 
-### Symfony
+## Symfony
 We deciedied to develop the tool using symfony components, because Drupal uses 
 some of them already, and therefor a good fit. 
 
-### Dont't reproduce, re-use
+## Dont't reproduce, re-use
 The aim is not to replace an existing tool that do things perfect (or almost), 
 the aim is to be the glue between the other tools. So in our deploy flow we use
 composer (instead of drush make that we have used for all drupal 7 sites in 
@@ -34,7 +34,15 @@ Wunderkraut Sweden), dropcat and drush, with jenkins (but we could also run our
 deploys localy, using whatever tools you want to run commands, like your own 
 terminal).
 
-### Commands
+### Wrapping drush, why?
+Some of the commands are just wrappers around drush, like `dropcat backup` and 
+`dropcat site-install`. We have dropcat as an wrapper because we could use 
+variables from yaml-files in a consitant way. Some parts could be changed to be 
+wrappers for drupal console instead in the future, or changed to use our own 
+defined functions instead - the idea is to keep dropcat consitant, but 
+changing what it is built on on the way if needed.
+
+## Commands
 We have now a bunch of commands to use with dropcat, and we are adding more in 
 the near future.
 
@@ -49,9 +57,11 @@ the near future.
 * init: uses our template to create a drupal 8 site with a profile
 * about: what is a terminal app without an about?
 
-## Drupal 8
+## First Drupal 8, then 7
 The first target for this tool is to deploy drupal 8 sites, on the list is also 
-to deploy drupal 7 sites, and maybe also other types of sites after that.
+to deploy drupal 7 sites, and maybe also other types of sites after that. "It is 
+all just a bunch of files in different languages", like a bulgarian web developer 
+said once.
 
 ## Run it
 `dropcat backup`
@@ -95,7 +105,6 @@ dropcat configimport
 
 ```
 All config for the deploy is in dropcat.stage.yml in application folder.
-
 
 ## Config examples
 Dropcat need as a minimum a dropcat.yml in the running directory. Example is 
