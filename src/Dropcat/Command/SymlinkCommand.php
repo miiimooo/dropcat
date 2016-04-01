@@ -128,8 +128,8 @@ To override config in dropcat.yml, using options:
         if (!$ssh->login($user, $auth)) {
             exit('Login Failed');
         }
-        $ssh->exec('mv ' . $symlink . ' /tmp/');
-        $ssh->exec('ln -snf ' . $original . ' ' . $symlink);
+        $ssh->exec("mv $symlink $symlink.backup");
+        $ssh->exec('ln --backup -snf ' . $original . ' ' . $symlink);
 
         $output->writeln('<info>Task: symlink finished</info>');
     }
