@@ -72,7 +72,7 @@ class Configuration
     {
         $buildId = null;
         $buildNumber = getenv('BUILD_NUMBER');
-        $buildDate = getenv('BUILD_NUMBER');
+        $buildDate = getenv('BUILD_DATE');
         if (isset($buildNumber)) {
             $buildId = $buildNumber;
             if (isset($buildDate)) {
