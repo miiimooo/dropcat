@@ -71,13 +71,15 @@ class Configuration
     public function localEnvironmentBuildId()
     {
         $buildId = null;
-        if (isset(getenv('BUILD_NUMBER'))) {
-            $buildId = getenv('BUILD_NUMBER');
-            if (isset(getenv('BUILD_DATE'))) {
-                $buildId .= '_' . getenv('BUILD_DATE');
+        $buildNumber = getenv('BUILD_NUMBER');
+        $buildDate = getenv('BUILD_NUMBER');
+        if (isset($buildNumber)) {
+            $buildId = $buildNumber;
+            if (isset($buildDate)) {
+                $buildId .= '_' . $buildDate;
             }
-        } elseif (isset(getenv('BUILD_DATE'))) {
-            $buildId = getenv('BUILD_DATE');
+        } elseif (isset($buildDate)) {
+            $buildId = $buildDate;
         } elseif (isset($this->configuration['local']['environment']['build_id'])) {
             $buildId = $this->configuration['local']['environment']['build_id'];
         }
