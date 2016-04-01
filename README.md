@@ -37,21 +37,25 @@ deploys localy, using whatever tools you want to run commands, like bash).
 We have now a bunch of commands to use with dropcat, and we are adding more in 
 the near future.
 
+* prepare: creates drush-alias for site and db on host.
 * tar: tar:s a folder so it could be uploaded later
-* upload: uplaods a tar-folder to destination, using sftp (right now)
+* upload: uploads a tar-folder to destination
 * deploy: unpacks a tar-folder and put it in place
 * symlink: creates a symlink to target folder - use case should be files-folder
-as an example.
-* configimport: Imports configuration (wrapper for drush config-import)
+* site-install: install a site 
+* configimport: imports configuration (wrapper for drush config-import)
+* init: uses our template to create a drupal 8 site with a profile
+* about: what is a terminal app without an about?
 
 ## Drupal 8
 The first target for this tool is to deploy drupal 8 sites, on the list is also 
 to deploy drupal 7 sites, and maybe also other types of sites after that.
 
 ## Run it
-`dropcat backup --env=dev`
-This uses the default settings in dropcat.yml and the overrides, if the exists, 
-in dropcat.dev.yml. The config files must exits in the folder that dropcat is
+`dropcat backup
+This uses the default settings in dropcat.yml. If the system variable DROPCAT_ENV 
+is set to dev, dropcat uses dropcat.dev.yml, if that exists. 
+The config yaml-file must exits in the folder that dropcat is
 runned from.
 
 ## Different commands for different tasks
@@ -67,26 +71,28 @@ We are using dropcat from jenkins, in a excuted shell. In this example dropcat
 is installed as required in composer.json (and placed in vednor/bin by default) 
 for the drupal site (also a drush alias is setup for the site:
 ```
-export BACKUPNAME="${JOB_NAME}_${BUILD_NUMBER}"
-export ALIAS="mysite_latest_stage"
-export ENV='stage'
-export SITEALIAS="mysite"
+export DROPCAT_ENV=stage
+export ENV=stage
+export BUILD_DATE="$(date +"%Y%m%d")"
+
+# got to application dir, that is our web folder
+cd application
 
 composer install
 
-vendor/bin/dropcat backup
-vendor/bin/dropcat tar
-vendor/bin/dropcat upload
-vendor/bin/dropcat deploy
+# only need to be runned once (creates drush alias on deploy server and database 
+# on dbhost
+dropcat prepare
 
-drush @${SITEALIAS} si myprofile --account-name="admin" --account-pass="xxx" -y
-drush @${SITEALIAS} cim staging -y
-drush @${SITEALIAS} entup -y
-drush @${SITEALIAS} updb -y
-drush @${SITEALIAS} uli -y
+dropcat tar --folder=${WORKSPACE}/application --temp-path=${WORKSPACE}/ -v
+dropcat upload --tar_dir=${WORKSPACE}/
+dropcat deploy -v
+dropcat symlink
+dropcat site-install
+dropcat configimport
 
 ```
-All config for the deploy is in dropcat.stage.yml.
+All config for the deploy is in dropcat.stage.yml in application folder.
 
 
 ## Config examples
