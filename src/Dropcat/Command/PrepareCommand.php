@@ -158,7 +158,7 @@ To override config in dropcat.yml, using options:
 $aliases["' . $site_name . '"] = array (
         "remote-host" => "' . $server . '",
         "remote-user" => "' . $user . '",
-        "root" => "' . $web_root . '/' . $alias . '",
+        "root" => "' . $web_root . '/' . $alias . '/web",
         "uri"  => "' . $url . '",
     );
         ';

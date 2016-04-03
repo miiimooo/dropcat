@@ -65,7 +65,7 @@ To override config in dropcat.yml, using options:
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($proceshels);
+            throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
 

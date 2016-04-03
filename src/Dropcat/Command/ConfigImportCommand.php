@@ -33,7 +33,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat configimport -d mysite -c myconfig</info>';
 
-        $this->setName("configimport")
+        $this->setName("config-import")
           ->setDescription("Configuration import")
           ->setDefinition(
               array(
@@ -64,7 +64,12 @@ To override config in dropcat.yml, using options:
             echo 'using drush alias: ' . $drush_alias . "\n";
             echo 'using config: ' . $config_name . "\n";
         }
-        $process = new Process("drush @$drush_alias cim $config_name -y");
+        if ($output->isVerbose()) {
+            $process = new Process("drush @$drush_alias cim $config_name -y");
+        } else {
+            $process = new Process("drush @$drush_alias cim $config_name -q -y");
+        }
+
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {

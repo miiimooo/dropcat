@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Filesystem\Filesystem;
 
 
 class UploadCommand extends Command
@@ -121,6 +122,12 @@ To override config in dropcat.yml, using options:
                         'Timeout',
                         $this->configuration->timeOut()
                     ),
+                    new InputOption(
+                        'keeptar',
+                        'dt',
+                        InputOption::VALUE_NONE,
+                        'Keep tar after upload  (defaults to no)'
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -141,6 +148,7 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
         $timeout = $input->getOption('timeout');
+        $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
 
         if (isset($tar)) {
             $tarfile = $tar;
@@ -162,5 +170,20 @@ To override config in dropcat.yml, using options:
         $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
 
         $output->writeln('<info>Task: upload finished</info>');
+        if ($output->isVerbose()) {
+            echo 'Tar is going to be saved ' . $keeptar . "\n";
+            echo 'Path to tar ' . "$tar_dir$tarfile" . "\n";
+        }
+        if ($keeptar === TRUE) {
+            if ($output->isVerbose()) {
+                echo "tar file is not deleted \n";
+            }
+        } else {
+                unlink("$tar_dir$tarfile");
+                if ($output->isVerbose()) {
+                    echo "tar file is deleted \n";
+                }
+
+        }
     }
 }

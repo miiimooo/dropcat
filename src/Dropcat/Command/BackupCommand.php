@@ -10,6 +10,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
 
 class BackupCommand extends Command
 {
@@ -78,13 +81,7 @@ To override config in dropcat.yml, using options:
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            /** @var \PEAR_Error $error_object */
-            $error_object = $process->error_object;
-            $exceptionMessage = sprintf(
-                "Unable to make backup, Error message:\n%s\n\n",
-                $error_object->message
-            );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
+            throw new ProcessFailedException($process);
         }
 
         echo $process->getOutput();
