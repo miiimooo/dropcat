@@ -10,8 +10,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Filesystem\Filesystem;
-
 
 class UploadCommand extends Command
 {
@@ -124,7 +122,7 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'keeptar',
-                        'dt',
+                        'kt',
                         InputOption::VALUE_NONE,
                         'Keep tar after upload  (defaults to no)'
                     ),
@@ -152,8 +150,7 @@ To override config in dropcat.yml, using options:
 
         if (isset($tar)) {
             $tarfile = $tar;
-        }
-        else {
+        } else {
             $tarfile = $app_name . $seperator . $build_id . '.tar';
         }
 
@@ -174,15 +171,15 @@ To override config in dropcat.yml, using options:
             echo 'Tar is going to be saved ' . $keeptar . "\n";
             echo 'Path to tar ' . "$tar_dir$tarfile" . "\n";
         }
-        if ($keeptar === TRUE) {
+        if ($keeptar === true) {
             if ($output->isVerbose()) {
                 echo "tar file is not deleted \n";
             }
         } else {
-                unlink("$tar_dir$tarfile");
-                if ($output->isVerbose()) {
-                    echo "tar file is deleted \n";
-                }
+            unlink("$tar_dir$tarfile");
+            if ($output->isVerbose()) {
+                echo "tar file is deleted \n";
+            }
 
         }
     }

@@ -131,6 +131,13 @@ To override config in dropcat.yml, using options:
                         'Mysql password',
                         $this->configuration->mysqlEnvironmentPassword()
                     ),
+                    new InputOption(
+                        'timeout',
+                        'to',
+                        InputOption::VALUE_OPTIONAL,
+                        'Timeout',
+                        $this->configuration->timeOut()
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -152,6 +159,8 @@ To override config in dropcat.yml, using options:
         $mysql_db = $input->getOption('mysql_db');
         $mysql_user = $input->getOption('mysql_user');
         $mysql_password = $input->getOption('mysql_password');
+        $timeout = $input->getOption('timeout');
+
 
         $alias_content = '<?php
 
@@ -173,6 +182,7 @@ $aliases["' . $site_name . '"] = array (
         $process = new Process(
             "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
         );
+        $process->setTimeout($timeout);
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {

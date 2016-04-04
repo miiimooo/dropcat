@@ -51,6 +51,13 @@ To override config in dropcat.yml, using options:
                       'Name of config to import',
                       $this->configuration->siteEnvironmentConfigName()
                   ),
+                  new InputOption(
+                      'timeout',
+                      'to',
+                      InputOption::VALUE_OPTIONAL,
+                      'Timeout',
+                      $this->configuration->timeOut()
+                  ),
               )
           )
           ->setHelp($HelpText);
@@ -60,6 +67,8 @@ To override config in dropcat.yml, using options:
     {
         $drush_alias = $input->getOption('drush_alias');
         $config_name = $input->getOption('config_name');
+        $timeout = $input->getOption('timeout');
+
         if ($output->isVerbose()) {
             echo 'using drush alias: ' . $drush_alias . "\n";
             echo 'using config: ' . $config_name . "\n";
@@ -69,7 +78,7 @@ To override config in dropcat.yml, using options:
         } else {
             $process = new Process("drush @$drush_alias cim $config_name -q -y");
         }
-
+        $process->setTimeout($timeout);
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {

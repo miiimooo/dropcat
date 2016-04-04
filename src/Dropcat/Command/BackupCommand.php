@@ -13,7 +13,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-
 class BackupCommand extends Command
 {
 
@@ -60,6 +59,13 @@ To override config in dropcat.yml, using options:
                         'Time stamp',
                         $this->configuration->timeStamp()
                     ),
+                    new InputOption(
+                        'time_out',
+                        'to',
+                        InputOption::VALUE_OPTIONAL,
+                        'Time out',
+                        $this->configuration->timeOut()
+                    ),
                 )
             )
           ->setHelp($HelpText);
@@ -71,6 +77,7 @@ To override config in dropcat.yml, using options:
         $drush_alias      = $input->getOption('drush_alias');
         $timestamp        = $input->getOption('time_stamp');
         $backup_path      = $input->getOption('backup_path');
+        $timeout          = $input->getOption('time_out');
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
@@ -78,6 +85,7 @@ To override config in dropcat.yml, using options:
         $process = new Process(
             "drush @$drush_alias sql-dump > $backup_path" . '/' . "$drush_alias" . '_' . "$timestamp.sql"
         );
+        $process->setTimeout($timeout);
         $process->run();
         // executes after the command finishes
         if (!$process->isSuccessful()) {

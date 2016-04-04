@@ -34,7 +34,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat dbimport -d mysite -i /var/dump -t 120</info>';
 
-        $this->setName("dbimport")
+        $this->setName("db-import")
             ->setDescription("Import DB to site")
             ->setDefinition(
                 array(
@@ -54,7 +54,7 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'time_out',
-                        't',
+                        'to',
                         InputOption::VALUE_OPTIONAL,
                         'Time out',
                         $this->configuration->timeOut()
@@ -67,9 +67,9 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $drush_alias = $input->getOption('drush_alias');
-        $path_to_db = $input->getOption('db_import');
-        $timeout = $input->getOption('time_out');
+        $drush_alias      = $input->getOption('drush_alias');
+        $path_to_db       = $input->getOption('db_import');
+        $timeout          = $input->getOption('time_out');
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
