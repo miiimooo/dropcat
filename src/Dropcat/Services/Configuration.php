@@ -365,4 +365,28 @@ class Configuration
         $ignore_files = rtrim($ignore_files);
         return $ignore_files;
     }
+
+    /**
+     * Gets Jenkins server
+     */
+    public function deployJenkinsServer()
+    {
+        if (isset($this->configuration['deploy']['jenkins_server'])) {
+            return $this->configuration['deploy']['jenkins_server'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets Jenkins job
+     */
+    public function deployJenkinsJob()
+    {
+        if (isset(return $this->configuration['deploy']['jenkins_job'])) {
+            return $this->configuration['deploy']['jenkins_job']
+        } else {
+            return null;
+        }
+    }
 }

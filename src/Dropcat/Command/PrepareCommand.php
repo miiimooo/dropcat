@@ -169,8 +169,8 @@ $aliases["' . $site_name . '"] = array (
         "remote-user" => "' . $user . '",
         "root" => "' . $web_root . '/' . $alias . '/web",
         "uri"  => "' . $url . '",
-    );
-        ';
+);
+';
 
         $drush_file = new Filesystem();
         try {

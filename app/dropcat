@@ -23,6 +23,8 @@ if (file_exists(CLI_ROOT . '/vendor/autoload.php')) {
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Console\Input\InputOption;
 
 $container = new ContainerBuilder();
 $loader = new YamlFileLoader($container,
@@ -37,8 +39,21 @@ $commandsToInit = array();
 foreach ($commands as $id => $tags) {
     $commandsToInit[] = $container->get($id);
 }
-
 // Add them to the application.
 $application->addCommands($commandsToInit);
+
+// Adding a global option (env).
+$dispatcher = new EventDispatcher();
+$application->setDispatcher($dispatcher);
+$application->getDefinition()->addOptions([
+    new InputOption(
+        'env',
+        'e',
+        InputOption::VALUE_OPTIONAL,
+        'The environment to operate in.',
+        'dev'
+    )
+]);
+
 
 $application->run(null, $output);

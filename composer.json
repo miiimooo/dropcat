@@ -17,8 +17,10 @@
     "phpseclib/phpseclib": "^2.0",
     "symfony/config": "2.7.*",
     "symfony/dependency-injection": "2.7.*",
+    "symfony/event-dispatcher": "2.7.*",
     "pear/archive_tar": "^1.4",
-    "padraic/phar-updater": "^1.0"
+    "padraic/phar-updater": "^1.0",
+    "wkse/jenkins-php-api": "^0.1.13"
   },
   "bin": [
     "app/dropcat"

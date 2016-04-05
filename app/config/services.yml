@@ -3,7 +3,7 @@ services:
       class: Symfony\Component\Console\Application
       arguments:
         - 'Dropcat'
-        - '0.1.0'
+        - '0.2.0'
     symfony.console_output:
       class: Symfony\Component\Console\Output\ConsoleOutput
     dropcat.configuration:
@@ -18,12 +18,12 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.configimport:
+    dropcat.command.config-import:
       class: Dropcat\Command\ConfigImportCommand
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.dbimport:
+    dropcat.command.db-import:
       class: Dropcat\Command\DbImportCommand
       arguments: ['@dropcat.configuration']
       tags:
@@ -58,8 +58,24 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.initabout:
+    dropcat.command.about:
       class: Dropcat\Command\AboutCommand
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.site-install:
+      class: Dropcat\Command\SiteInstallCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.reset-login:
+      class: Dropcat\Command\ResetLoginCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.jenkins-build:
+      class: Dropcat\Command\JenkinsBuildCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+
