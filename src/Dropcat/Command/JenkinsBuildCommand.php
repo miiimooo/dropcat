@@ -29,6 +29,7 @@ class JenkinsBuildCommand extends Command
 
     protected function configure()
     {
+
         $HelpText = 'The <info>jenkins-build</info> will build your site with jenkins.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):

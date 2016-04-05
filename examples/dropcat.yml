@@ -4,7 +4,7 @@ local:
     app_path: /srv/www/dropcat/dropcat-default
     tmp_path: /tmp
     build_id: 1
-    seperator: _
+    separator: _
     db_import: /mydb/backup/db.sql
     tar_name: NULL
     ssh_key_password: NULL
