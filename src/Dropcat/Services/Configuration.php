@@ -43,9 +43,27 @@ class Configuration
         }
 
         if (isset($configs)) {
+            // Settings some defaults so isset is not needed for root values.
+            $this->configuration['local'] = null;
+            $this->configuration['local']['environment'] = null;
+            $this->configuration['remote'] = null;
+            $this->configuration['remote']['environment'] = null;
+
             $this->configuration = $configs;
         } else {
             $this->configuration = null;
+        }
+    }
+
+    /**
+     * Gets the app name.
+     */
+    public function localEnvironmentAppName()
+    {
+        if (isset($this->configuration['app_name'])) {
+            return $this->configuration['app_name'];
+        } else {
+            return null;
         }
     }
 
@@ -54,16 +72,13 @@ class Configuration
      */
     public function localEnvironmentAppPath()
     {
-        return $this->configuration['local']['environment']['app_path'];
+        if (isset($this->configuration['local']['environment']['app_path'])) {
+            return $this->configuration['local']['environment']['app_path'];
+        } else {
+            return null;
+        }
     }
 
-    /**
-     * Gets the app name.
-     */
-    public function localEnvironmentAppName()
-    {
-        return $this->configuration['app_name'];
-    }
 
     /**
      * Get build id, prefderable overriden with option.
@@ -91,23 +106,36 @@ class Configuration
      */
     public function localEnvironmentTmpPath()
     {
-        return $this->configuration['local']['environment']['tmp_path'];
+        if (isset($this->configuration['local']['environment']['tmp_path'])) {
+            return $this->configuration['local']['environment']['tmp_path'];
+        } else {
+            return null;
+        }
     }
 
     /**
-     * Gets the seperator in names.
+     * Gets the separator in names.
      */
-    public function localEnvironmentSeperator()
+    public function localEnvironmentSeparator()
     {
-        return $this->configuration['local']['environment']['seperator'];
+        if (isset($this->configuration['local']['environment']['separator'])) {
+            return $this->configuration['local']['environment']['separator'];
+        } else {
+            return null;
+        }
+
     }
 
     /**
-     * Gets the seperator in names.
+     * Gets the db to import.
      */
     public function localEnvironmentDbImport()
     {
-        return $this->configuration['local']['environment']['db_import'];
+        if (isset($this->configuration['local']['environment']['db_import'])) {
+            return $this->configuration['local']['environment']['db_import'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -115,27 +143,35 @@ class Configuration
      */
     public function localEnvironmentTarName()
     {
-        return $this->configuration['local']['environment']['tar_name'];
+        if (isset($this->configuration['local']['environment']['tar_name'])) {
+            return $this->configuration['local']['environment']['tar_name'];
+        } else {
+            return null;
+        }
     }
 
     /**
-     * Get name of tar to deploy.
+     * Get name of dir that tar is in.
      */
     public function localEnvironmentTarDir()
     {
         if (isset($this->configuration['local']['environment']['tar_dir'])) {
             return $this->configuration['local']['environment']['tar_dir'];
         } else {
-            return;
+            return null;
         }
     }
 
     /**
-     * Get name of tar to deploy.
+     * Get ssh-key password
      */
     public function localEnvironmentSshKeyPassword()
     {
-        return $this->configuration['local']['environment']['ssh_key_password'];
+        if (isset($this->configuration['local']['environment']['ssh_key_password'])) {
+            return $this->configuration['local']['environment']['ssh_key_password'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -146,7 +182,7 @@ class Configuration
         if (isset($this->configuration['local']['environment']['drush_folder'])) {
             return $this->configuration['local']['environment']['drush_folder'];
         } else {
-            return;
+            return null;
         }
     }
 
@@ -155,7 +191,11 @@ class Configuration
      */
     public function remoteEnvironmentServerName()
     {
-        return $this->configuration['remote']['environment']['server'];
+        if (isset($this->configuration['remote']['environment']['server'])) {
+            return $this->configuration['remote']['environment']['server'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -163,7 +203,11 @@ class Configuration
      */
     public function remoteEnvironmentSshUser()
     {
-        return $this->configuration['remote']['environment']['ssh_user'];
+        if (isset($this->configuration['remote']['environment']['ssh_user'])) {
+            return $this->configuration['remote']['environment']['ssh_user'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -171,7 +215,11 @@ class Configuration
      */
     public function remoteEnvironmentTargetPath()
     {
-        return $this->configuration['remote']['environment']['target_path'];
+        if (isset($this->configuration['remote']['environment']['target_path'])) {
+            return $this->configuration['remote']['environment']['target_path'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -179,7 +227,11 @@ class Configuration
      */
     public function remoteEnvironmentSshPort()
     {
-        return $this->configuration['remote']['environment']['ssh_port'];
+        if (isset($this->configuration['remote']['environment']['ssh_port'])) {
+            return $this->configuration['remote']['environment']['ssh_port'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -187,7 +239,11 @@ class Configuration
      */
     public function remoteEnvironmentIdentifyFile()
     {
-        return $this->configuration['remote']['environment']['identity_file'];
+        if (isset($this->configuration['remote']['environment']['identity_file'])) {
+            return $this->configuration['remote']['environment']['identity_file'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -195,7 +251,11 @@ class Configuration
      */
     public function remoteEnvironmentWebRoot()
     {
-        return $this->configuration['remote']['environment']['web_root'];
+        if (isset($this->configuration['remote']['environment']['web_root'])) {
+            return $this->configuration['remote']['environment']['web_root'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -203,7 +263,11 @@ class Configuration
      */
     public function remoteEnvironmentTempFolder()
     {
-        return $this->configuration['remote']['environment']['temp_folder'];
+        if (isset($this->configuration['remote']['environment']['temp_folder'])) {
+            return $this->configuration['remote']['environment']['temp_folder'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -211,7 +275,11 @@ class Configuration
      */
     public function remoteEnvironmentAlias()
     {
-        return $this->configuration['remote']['environment']['alias'];
+        if (isset($this->configuration['remote']['environment']['alias'])) {
+            return $this->configuration['remote']['environment']['alias'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -219,7 +287,11 @@ class Configuration
      */
     public function remoteEnvironmentTargetDir()
     {
-        return $this->configuration['remote']['environment']['target_dir'];
+        if (isset($this->configuration['remote']['environment']['target_dir'])) {
+            return $this->configuration['remote']['environment']['target_dir'];
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -227,7 +299,11 @@ class Configuration
      */
     public function siteEnvironmentDrushAlias()
     {
-        return $this->configuration['site']['environment']['drush_alias'];
+        if (isset($this->configuration['site']['environment']['drush_alias'])) {
+            return $this->configuration['site']['environment']['drush_alias'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -235,7 +311,11 @@ class Configuration
      */
     public function siteEnvironmentBackupPath()
     {
-        return $this->configuration['site']['environment']['backup_path'];
+        if (isset($this->configuration['site']['environment']['backup_path'])) {
+            return $this->configuration['site']['environment']['backup_path'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -243,7 +323,11 @@ class Configuration
      */
     public function siteEnvironmentConfigName()
     {
-        return $this->configuration['site']['environment']['config_name'];
+        if (isset($this->configuration['site']['environment']['config_name'])) {
+            return $this->configuration['site']['environment']['config_name'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -251,7 +335,11 @@ class Configuration
      */
     public function siteEnvironmentOriginalPath()
     {
-        return $this->configuration['site']['environment']['original_path'];
+        if (isset($this->configuration['site']['environment']['original_path'])) {
+            return $this->configuration['site']['environment']['original_path'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -259,7 +347,11 @@ class Configuration
      */
     public function siteEnvironmentSymLink()
     {
-        return $this->configuration['site']['environment']['symlink'];
+        if (isset($this->configuration['site']['environment']['symlink'])) {
+            return $this->configuration['site']['environment']['symlink'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -267,7 +359,11 @@ class Configuration
      */
     public function siteEnvironmentUrl()
     {
-        return $this->configuration['site']['environment']['url'];
+        if (isset($this->configuration['site']['environment']['url'])) {
+            return $this->configuration['site']['environment']['url'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -275,7 +371,11 @@ class Configuration
      */
     public function siteEnvironmentName()
     {
-        return $this->configuration['site']['environment']['name'];
+        if (isset($this->configuration['site']['environment']['name'])) {
+            return $this->configuration['site']['environment']['name'];
+        } else {
+            return null;
+        }
     }
 
 
@@ -284,11 +384,15 @@ class Configuration
      */
     public function siteEnvironmentProfile()
     {
-        return $this->configuration['site']['environment']['profile'];
+        if (isset($this->configuration['site']['environment']['profile'])) {
+            return $this->configuration['site']['environment']['profile'];
+        } else {
+            return null;
+        }
     }
 
     /**
-     * Gets the sites backup path.
+     * Set a timestamp.
      */
     public function timeStamp()
     {
@@ -297,7 +401,7 @@ class Configuration
     }
 
     /**
-     * Gets the sites backup path.
+     * Sets timeout for processes.
      */
     public function timeOut()
     {
@@ -309,7 +413,11 @@ class Configuration
      */
     public function deployIgnoreFiles()
     {
-        return $this->configuration['deploy']['ignore'];
+        if (isset($this->configuration['deploy']['ignore'])) {
+            return $this->configuration['deploy']['ignore'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -317,7 +425,11 @@ class Configuration
      */
     public function mysqlEnvironmentHost()
     {
-        return $this->configuration['mysql']['environment']['host'];
+        if (isset($this->configuration['mysql']['environment']['host'])) {
+            return $this->configuration['mysql']['environment']['host'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -325,7 +437,11 @@ class Configuration
      */
     public function mysqlEnvironmentDataBase()
     {
-        return $this->configuration['mysql']['environment']['database'];
+        if (isset($this->configuration['mysql']['environment']['database'])) {
+            return $this->configuration['mysql']['environment']['database'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -333,7 +449,11 @@ class Configuration
      */
     public function mysqlEnvironmentUser()
     {
-        return $this->configuration['mysql']['environment']['user'];
+        if (isset($this->configuration['mysql']['environment']['user'])) {
+            return $this->configuration['mysql']['environment']['user'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -341,7 +461,11 @@ class Configuration
      */
     public function mysqlEnvironmentPort()
     {
-        return $this->configuration['mysql']['environment']['port'];
+        if (isset($this->configuration['mysql']['environment']['port'])) {
+            return $this->configuration['mysql']['environment']['port'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -349,21 +473,11 @@ class Configuration
      */
     public function mysqlEnvironmentPassword()
     {
-        return $this->configuration['mysql']['environment']['password'];
-    }
-
-    /**
-     * Gets all ignore-files formatted for tar-excluding.
-     */
-    public function deployIgnoreFilesTarString()
-    {
-        $ignore_files_array = $this->deployIgnoreFiles();
-        $ignore_files = null;
-        foreach ($ignore_files_array as $ignore_file) {
-            $ignore_files .= "--exclude='$ignore_file' ";
+        if (isset($this->configuration['mysql']['environment']['password'])) {
+            return $this->configuration['mysql']['environment']['password'];
+        } else {
+            return null;
         }
-        $ignore_files = rtrim($ignore_files);
-        return $ignore_files;
     }
 
     /**
@@ -388,5 +502,18 @@ class Configuration
         } else {
             return null;
         }
+    }
+    /**
+     * Gets all ignore-files formatted for tar-excluding.
+     */
+    public function deployIgnoreFilesTarString()
+    {
+        $ignore_files_array = $this->deployIgnoreFiles();
+        $ignore_files = null;
+        foreach ($ignore_files_array as $ignore_file) {
+            $ignore_files .= "--exclude='$ignore_file' ";
+        }
+        $ignore_files = rtrim($ignore_files);
+        return $ignore_files;
     }
 }

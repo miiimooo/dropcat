@@ -62,11 +62,11 @@ To override config in dropcat.yml, using options:
                       $this->configuration->localEnvironmentAppName()
                   ),
                   new InputOption(
-                      'seperator',
+                      'separator',
                       'se',
                       InputOption::VALUE_OPTIONAL,
-                      'Name seperator',
-                      $this->configuration->localEnvironmentSeperator()
+                      'Name separator',
+                      $this->configuration->localEnvironmentSeparator()
                   ),
               )
           )
@@ -80,9 +80,9 @@ To override config in dropcat.yml, using options:
         $build_id         = $input->getOption('build-id');
         $temp_path        = $input->getOption('temp-path');
         $app_name         = $input->getOption('app-name');
-        $seperator        = $input->getOption('seperator');
+        $separator        = $input->getOption('separator');
 
-        $path_to_tar_file = $temp_path . $app_name . $seperator . $build_id . '.tar';
+        $path_to_tar_file = $temp_path . $app_name . $separator . $build_id . '.tar';
         $basepath_for_tar = $path_to_app;
         
         $tar = new Archive_Tar($path_to_tar_file, true);

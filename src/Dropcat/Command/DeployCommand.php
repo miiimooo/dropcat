@@ -52,11 +52,11 @@ To override config in dropcat.yml, using options:
                         $this->configuration->localEnvironmentBuildId()
                     ),
                     new InputOption(
-                        'seperator',
+                        'separator',
                         'se',
                         InputOption::VALUE_OPTIONAL,
-                        'Name seperator',
-                        $this->configuration->localEnvironmentSeperator()
+                        'Name separator',
+                        $this->configuration->localEnvironmentSeparator()
                     ),
                     new InputOption(
                         'tar',
@@ -137,7 +137,7 @@ To override config in dropcat.yml, using options:
     {
         $app_name = $input->getOption('app-name');
         $build_id = $input->getOption('build-id');
-        $seperator = $input->getOption('seperator');
+        $separator = $input->getOption('separator');
         $tar = $input->getOption('tar');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
@@ -164,9 +164,9 @@ To override config in dropcat.yml, using options:
         if (isset($tar)) {
             $tarfile = $tar;
         } else {
-            $tarfile = $app_name . $seperator . $build_id . '.tar';
+            $tarfile = $app_name . $separator . $build_id . '.tar';
         }
-        $deploy_folder = "$app_name$seperator$build_id";
+        $deploy_folder = "$app_name$separator$build_id";
 
         if ($output->isVerbose()) {
             echo "deploy folder: $deploy_folder\n";

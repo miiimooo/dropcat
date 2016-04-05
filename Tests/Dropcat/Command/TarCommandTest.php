@@ -45,7 +45,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
 
         $filename = $this->conf->localEnvironmentTmpPath() .
             $this->conf->localEnvironmentAppName() .
-            $this->conf->localEnvironmentSeperator() .
+            $this->conf->localEnvironmentSeparator() .
             $this->conf->localEnvironmentBuildId() . '.tar';
         $this->tester->execute(
             array(
