@@ -13,6 +13,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use JenkinsApi\Jenkins;
+use Unish\outputFormatCase;
 
 class JenkinsBuildCommand extends Command
 {
@@ -64,12 +65,18 @@ To override config in dropcat.yml, using options:
         $jenkins_server   = $input->getOption('jenkins_server');
         $jenkins_job      = $input->getOption('jenkins_job');
 
+        $output = new ConsoleOutput();
+
         $jenkins = new Jenkins($jenkins_server);
 
-        echo "running deploy, this will take some time\n";
+        $output->writeln('<info>running deploy, this will take some time</info>');
         $job = $jenkins->getJob($jenkins_job)->launchAndWait();
-        echo " and we are done.\n";
-        $output = new ConsoleOutput();
+        $output->writeln('<info>and we are done</info>');
+
+        $latestJobStatus =$jenkins->getJob($jenkins_job)->getLastBuild();
+        $result = $latestJobStatus->getResult();
+        $output->writeln("<info>the status of build is $result</info>");
+
         $output->writeln('<info>Task: Jenkins build done</info>');
     }
 }
