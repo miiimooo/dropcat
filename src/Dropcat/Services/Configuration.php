@@ -383,8 +383,8 @@ class Configuration
      */
     public function deployJenkinsJob()
     {
-        if (isset(return $this->configuration['deploy']['jenkins_job'])) {
-            return $this->configuration['deploy']['jenkins_job']
+        if (isset($this->configuration['deploy']['jenkins_job'])) {
+            return $this->configuration['deploy']['jenkins_job'];
         } else {
             return null;
         }
