@@ -69,14 +69,23 @@ To override config in dropcat.yml, using options:
 
         $jenkins = new Jenkins($jenkins_server);
 
-        $output->writeln('<info>running deploy, this will take some time</info>');
+        $resultTime = null;
+        $jobLatest = $jenkins->getJob($jenkins_job)->getLastSuccessfulBuild();
+        $resultTime = $jobLatest->getEstimatedDuration();
+        if (isset($resultTime)) {
+            $time = ', approx. ' . $resultTime;
+        }
+        $output->writeln("<info>running deploy, this will take some time$time</info>");
+
+
         $job = $jenkins->getJob($jenkins_job)->launchAndWait();
         $output->writeln('<info>and we are done</info>');
 
         $latestJobStatus =$jenkins->getJob($jenkins_job)->getLastBuild();
         $result = $latestJobStatus->getResult();
         $output->writeln("<info>the status of build is $result</info>");
-
+        $resultText = $latestJobStatus->getConsoleTextBuild();
+        $output->writeln("<info>$resultText</info>");
         $output->writeln('<info>Task: Jenkins build done</info>');
     }
 }
