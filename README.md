@@ -56,6 +56,7 @@ the near future.
 * configimport: imports configuration (wrapper for drush config-import)
 * init: uses our template to create a drupal 8 site with a profile
 * about: what is a terminal app without an about?
+* jenkins-build: Build a jenkins job
 
 ## First Drupal 8, then 7
 The first target for this tool is to deploy drupal 8 sites, on the list is also 
