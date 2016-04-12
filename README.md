@@ -50,7 +50,7 @@ the near future.
 * prepare: creates drush-alias for site and db on host.
 * tar: tar:s a folder so it could be uploaded later
 * upload: uploads a tar-folder to destination
-* deploy: unpacks a tar-folder and put it in place
+* move: unpacks a tar-folder and put it in place
 * symlink: creates a symlink to target folder - use case should be files-folder
 * site-install: install a site 
 * configimport: imports configuration (wrapper for drush config-import)
