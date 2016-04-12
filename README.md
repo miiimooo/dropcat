@@ -12,7 +12,7 @@ After that you could run dropcat as: `vendor/bin/dropcat`
 
 `sudo mv dropcat.phar /usr/local/bin/dropcat`
 
-`dropcat --version`
+`dropcat about`
 
 ## What does it do and why should anybody need it?
 In the history we, Wunderkraut Sweden (former NodeOne) have used a combination 
