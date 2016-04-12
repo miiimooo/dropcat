@@ -28,8 +28,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.deploy:
-      class: Dropcat\Command\DeployCommand
+    dropcat.command.move:
+      class: Dropcat\Command\MoveCommand
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}

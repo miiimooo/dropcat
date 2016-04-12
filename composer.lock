@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8040841722edb252d639502cb3f4e67f",
-    "content-hash": "1bf7d070002a7ec0f21d6b3a33e8b9a0",
+    "hash": "af24a65f5eb52a0a3376cd1a08149431",
+    "content-hash": "e091b31d96692caeabe4808db75c4c93",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1026,6 +1026,66 @@
             "time": "2016-03-10 10:49:29"
         },
         {
+            "name": "symfony/event-dispatcher",
+            "version": "v2.7.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
+                "reference": "b7c955d4a2fa79fca9caccdaaa5434e3799e3b51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b7c955d4a2fa79fca9caccdaaa5434e3799e3b51",
+                "reference": "b7c955d4a2fa79fca9caccdaaa5434e3799e3b51",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~2.0,>=2.0.5",
+                "symfony/dependency-injection": "~2.6",
+                "symfony/expression-language": "~2.6",
+                "symfony/stopwatch": "~2.3"
+            },
+            "suggest": {
+                "symfony/dependency-injection": "",
+                "symfony/http-kernel": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony EventDispatcher Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-03-06 17:01:13"
+        },
+        {
             "name": "symfony/filesystem",
             "version": "v2.8.4",
             "source": {
@@ -1293,6 +1353,38 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2016-03-04 07:55:57"
+        },
+        {
+            "name": "wkse/jenkins-php-api",
+            "version": "0.1.13",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.wklive.net/mikke-schiren/jenkins-php-api.git",
+                "reference": "f12094490606daa7eb27e41341b4b5e9867a6f2b"
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JenkinsApi": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Christopher Biel",
+                    "email": "christopher.biel89@gmail.com"
+                }
+            ],
+            "description": "Library to control Jenkins via PHP through JSON api",
+            "homepage": "https://github.com/chbiel/jenkins-php-api",
+            "time": "2016-04-05 06:00:53"
         }
     ],
     "packages-dev": [

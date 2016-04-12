@@ -74,7 +74,8 @@ To override config in dropcat.yml, using options:
         $jobLatest = $jenkins->getJob($jenkins_job)->getLastSuccessfulBuild();
         $resultTime = $jobLatest->getEstimatedDuration();
         if (isset($resultTime)) {
-            $time = ', approx. ' . $resultTime;
+            $convert_time =  gmdate("H:i:s", $resultTime);
+            $time = ', last build were approx. ' . $convert_time;
         }
         $output->writeln("<info>running deploy, this will take some time$time</info>");
 
