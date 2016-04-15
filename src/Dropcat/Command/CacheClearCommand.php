@@ -13,7 +13,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class ResetLoginCommand extends Command
+class CacheClearCommand extends Command
 {
     /** @var Configuration configuration */
     private $configuration;
@@ -26,15 +26,15 @@ class ResetLoginCommand extends Command
 
     protected function configure()
     {
-        $HelpText = 'The <info>reset-login</info> command resets admin login for a drupal site.
+        $HelpText = 'The <info>cache-clear</info> command clear caches on a drupal site.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat reset-login</info>
+<info>dropcat cache-clear</info>
 To override config in dropcat.yml, using options:
-<info>dropcat reset-login -d mysite</info>';
+<info>dropcat cache-clear -d mysite</info>';
 
-        $this->setName("reset-login")
-            ->setDescription("Reset login")
+        $this->setName("cache-clear")
+            ->setDescription("Clears cache (d6, d7)")
             ->setDefinition(
                 array(
                     new InputOption(
@@ -55,7 +55,7 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo 'using drush alias: ' . $drush_alias . "\n";
         }
-        $process = new Process("drush @$drush_alias uli");
+        $process = new Process("drush @$drush_alias cc all");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
@@ -64,7 +64,7 @@ To override config in dropcat.yml, using options:
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>Task: reset-login finished</info>');
+        $output->writeln('<info>Task: entity-update finished</info>');
 
     }
 }

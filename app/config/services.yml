@@ -78,4 +78,23 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-
+    dropcat.command.entity-update:
+      class: Dropcat\Command\EntityUpdateCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.cache-recreate:
+      class: Dropcat\Command\CacheRecreateCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.cache-clear:
+      class: Dropcat\Command\CacheClearCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.update-database:
+      class: Dropcat\Command\UpdateDatabaseCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
