@@ -14,6 +14,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use mysqli;
 
 class PrepareCommand extends Command
 {
@@ -179,17 +180,27 @@ $aliases["' . $site_name . '"] = array (
             echo "An error occurred while creating your file at ".$e->getPath();
         }
 
-        $process = new Process(
-            "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
-        );
-        $process->setTimeout($timeout);
-        $process->run();
-        // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        try {
+            $mysqli = new mysqli("$mysql_host", "$mysql_user", "$mysql_password");
+        } catch (\Exception $e) {
+            echo $e->getMessage(), PHP_EOL;
         }
-        echo $process->getOutput();
-
+        // If db does not exist
+        if ($mysqli->select_db("$mysql_db") === false) {
+            $process = new Process(
+                "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
+            );
+            $process->setTimeout($timeout);
+            $process->run();
+            // Executes after the command finishes.
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            echo $process->getOutput();
+            $output->writeln('<info>Database created</info>');
+        } else {
+            $output->writeln('<info>Database exists</info>');
+        }
         $output->writeln('<info>Task: prepare finished</info>');
     }
 }
