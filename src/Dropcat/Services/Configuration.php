@@ -4,6 +4,7 @@ namespace Dropcat\Services;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Dropcat\Lib\UUID;
 
 /**
  * Class AppConfiguration
@@ -503,6 +504,33 @@ class Configuration
             return null;
         }
     }
+
+
+    /**
+     * Get admin pass for site.
+     */
+    public function siteEnvironmentAdminPass()
+    {
+        if (isset($this->configuration['site']['environment']['admin_pass'])) {
+            return $this->configuration['site']['environment']['admin_pass'];
+        } else {
+            $password = mt_rand();
+            return $password;
+        }
+    }
+
+    /**
+     * Get admin pass for site.
+     */
+    public function siteEnvironmentAdminUser()
+    {
+        if (isset($this->configuration['site']['environment']['admin_user'])) {
+            return $this->configuration['site']['environment']['admin_user'];
+        } else {
+            return 'admin';
+        }
+    }
+    
     /**
      * Gets all ignore-files formatted for tar-excluding.
      */
