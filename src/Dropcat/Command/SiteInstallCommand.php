@@ -58,6 +58,20 @@ To override config in dropcat.yml, using options:
                       'Time out',
                       $this->configuration->timeOut()
                   ),
+                  new InputOption(
+                      'admin_pass',
+                      'ap',
+                      InputOption::VALUE_OPTIONAL,
+                      'Admin pass',
+                      $this->configuration->siteEnvironmentAdminPass()
+                  ),
+                  new InputOption(
+                      'admin_user',
+                      'au',
+                      InputOption::VALUE_OPTIONAL,
+                      'Admin user',
+                      $this->configuration->siteEnvironmentAdminUser()
+                  ),
               )
           )
           ->setHelp($HelpText);
@@ -68,8 +82,11 @@ To override config in dropcat.yml, using options:
         $drush_alias      = $input->getOption('drush_alias');
         $profile          = $input->getOption('profile');
         $timeout          = $input->getOption('time_out');
-
-        $process = new Process("drush @$drush_alias si $profile --account-name=admin --account-pass=admin -y");
+        $admin_pass       = $input->getOption('admin_pass');
+        $admin_user       = $input->getOption('admin_user');
+        $process = new Process(
+            "drush @$drush_alias si $profile --account-name=$admin_user --account-pass=$admin_pass -y"
+        );
         $process->setTimeout($timeout);
         $process->run();
         // executes after the command finishes
