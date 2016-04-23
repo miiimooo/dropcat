@@ -86,10 +86,9 @@ To override config in dropcat.yml, using options:
         $latestJobStatus =$jenkins->getJob($jenkins_job)->getLastBuild();
         $result = $latestJobStatus->getResult();
         $output->writeln("<info>the status of build is $result</info>");
-        if ($output->isVerbose()) {
-            $resultText = $latestJobStatus->getConsoleTextBuild();
-            $output->writeln("<info>$resultText</info>");
-        }
+        $resultText = $latestJobStatus->getConsoleTextBuild();
+        $output->writeln("<info>$resultText</info>");
+
         
 
         $output->writeln('<info>Task: Jenkins build done</info>');
