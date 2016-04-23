@@ -3,15 +3,12 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use mysqli;
@@ -36,8 +33,8 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat prepare -url http://mysite --drush-alias=mysite</info>';
 
-        $this->setName("prepare")
-            ->setDescription("Prepare site")
+        $this->setName('prepare')
+            ->setDescription('Prepare site')
             ->setDefinition(
                 array(
                     new InputOption(
@@ -142,7 +139,6 @@ To override config in dropcat.yml, using options:
                 )
             )
             ->setHelp($HelpText);
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -162,22 +158,21 @@ To override config in dropcat.yml, using options:
         $mysql_password = $input->getOption('mysql_password');
         $timeout = $input->getOption('timeout');
 
-
         $alias_content = '<?php
 
-$aliases["' . $site_name . '"] = array (
-        "remote-host" => "' . $server . '",
-        "remote-user" => "' . $user . '",
-        "root" => "' . $web_root . '/' . $alias . '/web",
-        "uri"  => "' . $url . '",
+$aliases["'.$site_name.'"] = array (
+        "remote-host" => "'.$server.'",
+        "remote-user" => "'.$user.'",
+        "root" => "'.$web_root.'/'.$alias.'/web",
+        "uri"  => "'.$url.'",
 );
 ';
 
         $drush_file = new Filesystem();
         try {
-            $drush_file->dumpFile($drush_folder .  '/'. $drush_alias . '.aliases.drushrc.php', $alias_content);
+            $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $alias_content);
         } catch (IOExceptionInterface $e) {
-            echo "An error occurred while creating your file at ".$e->getPath();
+            echo 'An error occurred while creating your file at '.$e->getPath();
         }
 
         try {
