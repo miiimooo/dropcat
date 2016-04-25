@@ -6,7 +6,7 @@
 After that you could run dropcat as: `vendor/bin/dropcat`
 
 ## Install globaly (Mac/Linux)
-`wget https://dropcat.org/dropcat.phar`
+`curl -OL h https://dropcat.org/dropcat.phar > dropcat.phar`
 
 `chmod +x dropcat.phar`
 
