@@ -65,6 +65,13 @@ To override config in dropcat.yml, using options:
                         'User (ssh)',
                         $this->configuration->remoteEnvironmentSshUser()
                     ),
+                    new InputOption(
+                        'ssh_port',
+                        'p',
+                        InputOption::VALUE_OPTIONAL,
+                        'SSH port',
+                        $this->configuration->remoteEnvironmentSshPort()
+                    ),
 
                     new InputOption(
                         'web_root',
@@ -91,7 +98,7 @@ To override config in dropcat.yml, using options:
                         'site_name',
                         'sn',
                         InputOption::VALUE_OPTIONAL,
-                        'Site url',
+                        'Site name',
                         $this->configuration->siteEnvironmentName()
                     ),
                     new InputOption(
@@ -147,6 +154,7 @@ To override config in dropcat.yml, using options:
         $drush_alias = $input->getOption('drush_alias');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
+        $ssh_port = $input->getOption('ssh_port');
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
         $url = $input->getOption('url');
@@ -165,6 +173,7 @@ $aliases["'.$site_name.'"] = array (
         "remote-user" => "'.$user.'",
         "root" => "'.$web_root.'/'.$alias.'/web",
         "uri"  => "'.$url.'",
+        "ssh-options" = "-p '. $ssh_port .'",
 );
 ';
 
