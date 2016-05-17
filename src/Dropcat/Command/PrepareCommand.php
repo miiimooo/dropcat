@@ -74,7 +74,13 @@ To override config in dropcat.yml, using options:
                         'SSH port',
                         $this->configuration->remoteEnvironmentSshPort()
                     ),
-
+                    new InputOption(
+                        'identity_file',
+                        'i',
+                        InputOption::VALUE_OPTIONAL,
+                        'Identify file',
+                        $this->configuration->remoteEnvironmentIdentifyFile()
+                    ),
                     new InputOption(
                         'web_root',
                         'w',
@@ -180,6 +186,8 @@ To override config in dropcat.yml, using options:
         $server = $input->getOption('server');
         $user = $input->getOption('user');
         $ssh_port = $input->getOption('ssh_port');
+        $identity_file = $input->getOption('identity_file');
+        $identity_file_content = file_get_contents($identity_file);
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
         $url = $input->getOption('url');
@@ -271,7 +279,7 @@ $aliases["'.$site_name.'"] = array (
         $originalPath = $this->configuration->siteEnvironmentOriginalPath();
         if (isset($originalPath)) {
             // Create original folder if it does not exists
-            $ssh = new SSH2($server, $port);
+            $ssh = new SSH2($server, $ssh_port);
             $auth = new RSA();
             if (isset($ssh_key_password)) {
                 $auth->setPassword($ssh_key_password);
