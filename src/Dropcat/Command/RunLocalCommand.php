@@ -19,12 +19,12 @@ class RunLocalCommand extends RunCommand
 
     protected function configure()
     {
-        $HelpText = 'The <info>run-local</info> command will import.
+        $HelpText = 'The <info>run:local</info> command will run script or command.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat symlink</info>
+<info>dropcat run:local</info>
 To override config in dropcat.yml, using options:
-<info>dropcat dbimport  -o /var/www/test --symlink=/var/www/foo</info>';
+<info>dropcat run:local --input=script.sh</info>';
 
         $this->setName("run-local")
             ->setDescription("run command or script on local environment")
