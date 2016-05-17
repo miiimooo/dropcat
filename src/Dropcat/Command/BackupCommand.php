@@ -66,6 +66,12 @@ To override config in dropcat.yml, using options:
                         'Time out',
                         $this->configuration->timeOut()
                     ),
+                    new InputOption(
+                        'backup_site',
+                        'bs',
+                        InputOption::VALUE_NONE,
+                        'Backup whole site'
+                    ),
                 )
             )
           ->setHelp($HelpText);
@@ -78,22 +84,35 @@ To override config in dropcat.yml, using options:
         $timestamp        = $input->getOption('time_stamp');
         $backup_path      = $input->getOption('backup_path');
         $timeout          = $input->getOption('time_out');
+        $backup_site      = $input->getOption('backup_site');
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
-        $process = new Process(
-            "drush @$drush_alias sql-dump > $backup_path" . '/' . "$drush_alias" . '_' . "$timestamp.sql"
+        $backupDb= new Process(
+            "drush @$drush_alias sql-dump > $backup_path/$drush_alias/$timestamp.sql"
         );
-        $process->setTimeout($timeout);
-        $process->run();
+        $backupDb->setTimeout($timeout);
+        $backupDb->run();
         // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        if (!$backupDb->isSuccessful()) {
+            throw new ProcessFailedException($backupDb);
         }
 
-        echo $process->getOutput();
+        echo $backupDb->getOutput();
 
+        if ($backup_site == true) {
+            $backupSite = new Process(
+                "drush rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ -y"
+            );
+            $backupSite->setTimeout($timeout);
+            $backupSite->run();
+            // executes after the command finishes
+            if (!$backupSite->isSuccessful()) {
+                throw new ProcessFailedException($backupSite);
+            }
+            echo $backupSite->getOutput();
+        }
         $output = new ConsoleOutput();
         $output->writeln('<info>Task: backup finished</info>');
     }
