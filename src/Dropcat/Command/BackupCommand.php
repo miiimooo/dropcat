@@ -122,7 +122,7 @@ To override config in dropcat.yml, using options:
 
             $backupSite = new Process(
                 "mkdir -p $backup_path/$drush_alias &&
-                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ $options"
+                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ $options --include-conf --include-vcs"
             );
             $backupSite->setTimeout($timeout);
             $backupSite->run();
