@@ -53,6 +53,11 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.self-rollback:
+      class: Dropcat\Command\SelfRollbackCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
     dropcat.command.init:
       class: Dropcat\Command\InitCommand
       arguments: ['@dropcat.configuration']
@@ -95,6 +100,11 @@ services:
         - {name: console.command}
     dropcat.command.update-database:
       class: Dropcat\Command\UpdateDatabaseCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.run-local:
+      class: Dropcat\Command\RunLocalCommand
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
