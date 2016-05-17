@@ -173,7 +173,7 @@ $aliases["'.$site_name.'"] = array (
         "remote-user" => "'.$user.'",
         "root" => "'.$web_root.'/'.$alias.'/web",
         "uri"  => "'.$url.'",
-        "ssh-options" = "-p '. $ssh_port .'",
+        "ssh-options" => "-p '. $ssh_port .'",
 );
 ';
 
