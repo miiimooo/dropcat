@@ -11,20 +11,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Dropcat\Command\RunCommand;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Dropcat\Command\RunCommand;
 
 class RunLocalCommand extends RunCommand
 {
 
     protected function configure()
     {
-        $HelpText = 'The <info>run:local</info> command will run script or command.
+        $HelpText = 'The <info>run-local</info> command will run script or command.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat run:local</info>
+<info>dropcat run-local</info>
 To override config in dropcat.yml, using options:
-<info>dropcat run:local --input=script.sh</info>';
+<info>dropcat run-local --input=script.sh</info>';
 
         $this->setName("run-local")
             ->setDescription("run command or script on local environment")
