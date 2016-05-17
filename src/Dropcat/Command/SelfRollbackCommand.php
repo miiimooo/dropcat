@@ -1,5 +1,4 @@
 <?php
-
 namespace Dropcat\Command;
 
 use Humbug\SelfUpdate\Updater;
@@ -33,9 +32,16 @@ class SelfRollbackCommand extends Command
         $updater = new Updater(null, false);
         try {
             $result = $updater->rollback();
-            $result ? exit('Success!') : exit('Failure!');
+            $output = new ConsoleOutput();
+            if ($result) {
+                $output->writeln("<info>Succesfully roll-backed version.</info>");
+            } else {
+                $output->writeln("<info>Roll-back failed.</info>");
+            }
+
         } catch (\Exception $e) {
-            exit('Something went wrong, sorry.');
+            $output = new ConsoleOutput();
+            $output->writeln("<info>Something went wrong, sorry.</info>");
         }
     }
 }
