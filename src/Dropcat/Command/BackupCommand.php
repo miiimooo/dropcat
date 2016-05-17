@@ -70,7 +70,15 @@ To override config in dropcat.yml, using options:
                         'backup_site',
                         'bs',
                         InputOption::VALUE_NONE,
-                        'Backup whole site'
+                        'Backup whole site',
+                        null
+                    ),
+                    new InputOption(
+                        'links',
+                        'l',
+                        InputOption::VALUE_NONE,
+                        'Keep symlinks',
+                        null
                     ),
                 )
             )
@@ -85,6 +93,8 @@ To override config in dropcat.yml, using options:
         $backup_path      = $input->getOption('backup_path');
         $timeout          = $input->getOption('time_out');
         $backup_site      = $input->getOption('backup_site');
+        $links            = $input->getOption('links');
+
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
@@ -105,9 +115,14 @@ To override config in dropcat.yml, using options:
         $output->writeln('<info>Successfully backed up db</info>');
 
         if ($backup_site === true) {
+            $options = '';
+            if ($links === true) {
+                $options = '--links ';
+            }
+
             $backupSite = new Process(
                 "mkdir -p $backup_path/$drush_alias &&
-                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/"
+                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ $options"
             );
             $backupSite->setTimeout($timeout);
             $backupSite->run();
