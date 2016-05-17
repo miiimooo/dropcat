@@ -90,7 +90,8 @@ To override config in dropcat.yml, using options:
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
         $backupDb= new Process(
-            "drush @$drush_alias sql-dump > $backup_path/$drush_alias/$timestamp.sql"
+            "mkdir -p $backup_path/$drush_alias &&
+            drush @$drush_alias sql-dump > $backup_path/$drush_alias/$timestamp.sql"
         );
         $backupDb->setTimeout($timeout);
         $backupDb->run();
@@ -100,10 +101,13 @@ To override config in dropcat.yml, using options:
         }
 
         echo $backupDb->getOutput();
+        $output = new ConsoleOutput();
+        $output->writeln('<info>Successfully backed up db</info>');
 
-        if ($backup_site == true) {
+        if ($backup_site === true) {
             $backupSite = new Process(
-                "drush rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ -y"
+                "mkdir -p $backup_path/$drush_alias &&
+                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/"
             );
             $backupSite->setTimeout($timeout);
             $backupSite->run();
@@ -111,6 +115,7 @@ To override config in dropcat.yml, using options:
             if (!$backupSite->isSuccessful()) {
                 throw new ProcessFailedException($backupSite);
             }
+            $output->writeln('<info>Successfully backed up site</info>');
             echo $backupSite->getOutput();
         }
         $output = new ConsoleOutput();
