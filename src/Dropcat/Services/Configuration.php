@@ -198,7 +198,7 @@ class Configuration
             return null;
         }
     }
-    
+
 
     /**
      * Get remote server name.
@@ -303,6 +303,19 @@ class Configuration
     {
         if (isset($this->configuration['remote']['environment']['target_dir'])) {
             return $this->configuration['remote']['environment']['target_dir'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get command, script to run remote.
+     */
+
+    public function remoteEnvironmentRun()
+    {
+        if (isset($this->configuration['remote']['environment']['run'])) {
+            return $this->configuration['remote']['environment']['run'];
         } else {
             return null;
         }

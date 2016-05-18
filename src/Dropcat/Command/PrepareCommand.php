@@ -72,7 +72,6 @@ To override config in dropcat.yml, using options:
                         'SSH port',
                         $this->configuration->remoteEnvironmentSshPort()
                     ),
-
                     new InputOption(
                         'web_root',
                         'w',
