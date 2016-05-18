@@ -1,6 +1,6 @@
 # Deploy tool for Drupal
 
-[Please read are blog-series about dropcat](https://wunderkraut.se/dropcat)
+[Please read our blog-series about dropcat](https://wunderkraut.se/dropcat)
 
 ## Install with composer
 `composer require dropcat/dropcat:dev-master`
