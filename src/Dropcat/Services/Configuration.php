@@ -188,6 +188,19 @@ class Configuration
     }
 
     /**
+     * Get path to drush folder.
+     */
+    public function localEnvironmentRun()
+    {
+        if (isset($this->configuration['local']['environment']['run'])) {
+            return $this->configuration['local']['environment']['run'];
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
      * Get remote server name.
      */
     public function remoteEnvironmentServerName()
@@ -294,7 +307,20 @@ class Configuration
             return null;
         }
     }
-    
+
+    /**
+     * Get command, script to run remote.
+     */
+
+    public function remoteEnvironmentRun()
+    {
+        if (isset($this->configuration['remote']['environment']['run'])) {
+            return $this->configuration['remote']['environment']['run'];
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Gets the drush alias.
      */
@@ -530,7 +556,7 @@ class Configuration
             return 'admin';
         }
     }
-    
+
     /**
      * Gets all ignore-files formatted for tar-excluding.
      */
