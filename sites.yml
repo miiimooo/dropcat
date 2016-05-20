@@ -1,0 +1,8 @@
+-	
+  name: foo.mysite.net
+  url: http://foo1.mysite.net
+  db: foo1_db1
+-
+  name: foo2.mysite.net
+  url: http://foo2.mysite.net
+  db: foo2_db1

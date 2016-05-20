@@ -113,3 +113,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.site:check:
+      class: Dropcat\Command\SiteCheckCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
