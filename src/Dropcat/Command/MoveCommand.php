@@ -150,17 +150,6 @@ To override config in dropcat.yml, using options:
         $alias = $input->getOption('alias');
         $temp_folder = $input->getOption('temp_folder');
 
-        $ssh = new SSH2($server, $port);
-        $auth = new RSA();
-        if (isset($ssh_key_password)) {
-            $auth->setPassword($ssh_key_password);
-        }
-        $auth->loadKey($identity_file_content);
-
-        if (!$ssh->login($user, $auth)) {
-            exit('Login Failed');
-        }
-
         if (isset($tar)) {
             $tarfile = $tar;
         } else {
@@ -171,6 +160,25 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo "deploy folder: $deploy_folder\n";
             echo "tarfile: $tarfile\n";
+        }
+
+        $ssh = new SSH2($server, $port);
+        stream_set_timeout($ssh->fsock, 99999999);
+        $auth = new RSA();
+        if (isset($ssh_key_password)) {
+            $auth->setPassword($ssh_key_password);
+        }
+        $auth->loadKey($identity_file_content);
+
+        try {
+            $login = $ssh->login($user, $auth);
+            if (!$login) {
+                throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server
+                . ' ' . $ssh->getLastError());
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit(1);
         }
 
         $ssh->exec("mkdir $temp_folder/$deploy_folder");

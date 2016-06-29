@@ -15,7 +15,9 @@ use Exception;
 class UploadCommand extends Command
 {
 
-    /** @var Configuration configuration */
+    /**
+     * @var Configuration configuration
+     */
     private $configuration;
 
     public function __construct(Configuration $conf)
@@ -156,6 +158,8 @@ To override config in dropcat.yml, using options:
         }
 
         $sftp = new SFTP($server, $port, $timeout);
+        stream_set_timeout($sftp->fsock, 99999999);
+
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
@@ -163,28 +167,18 @@ To override config in dropcat.yml, using options:
         $auth->loadKey($identity_file_content);
 
         try {
-            $sftp->login($user, $auth);
-            if (!$sftp->login($user, $auth)) {
-                throw new Exception(
-                    'Login Failed using ' . $identity_file . ' 
-                    and user ' . $user . ' at ' . $server . ' ' . $sftp->getErrors()
-                );
+            $login = $sftp->login($user, $auth);
+            if (!$login) {
+                throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+            }
+            $transfer = $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
+            if (!$transfer) {
+                throw new Exception('Upload failed of ' . $tarfile);
             }
         } catch (Exception $e) {
             echo $e->getMessage();
             exit(1);
         }
-        try {
-            $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
-            if (!$sftp->login($user, $auth)) {
-                throw new Exception('Upload failed of ' . $tarfile . ' ' .
-                  $sftp->getErrors());
-            }
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            exit(1);
-        }
-
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {
             echo 'Tar is going to be saved ' . $keeptar . "\n";
