@@ -165,22 +165,26 @@ To override config in dropcat.yml, using options:
         try {
             $sftp->login($user, $auth);
             if (!$sftp->login($user, $auth)) {
-                throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+                throw new Exception(
+                    'Login Failed using ' . $identity_file . ' 
+                    and user ' . $user . ' at ' . $server . ' ' . $sftp->getErrors()
+                );
             }
         } catch (Exception $e) {
             echo $e->getMessage();
-            exit;
+            exit(1);
         }
         try {
             $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
             if (!$sftp->login($user, $auth)) {
-                throw new Exception('Upload failed of ' . $tarfile);
+                throw new Exception('Upload failed of ' . $tarfile . ' ' .
+                  $sftp->getErrors());
             }
         } catch (Exception $e) {
             echo $e->getMessage();
-            exit;
+            exit(1);
         }
-        
+
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {
             echo 'Tar is going to be saved ' . $keeptar . "\n";
@@ -195,7 +199,6 @@ To override config in dropcat.yml, using options:
             if ($output->isVerbose()) {
                 echo "tar file is deleted \n";
             }
-
         }
     }
 }
