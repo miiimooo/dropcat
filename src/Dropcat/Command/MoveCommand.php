@@ -163,7 +163,7 @@ To override config in dropcat.yml, using options:
         }
 
         $ssh = new SSH2($server, $port);
-        stream_set_timeout($ssh->fsock, 99999999);
+        $ssh->setTimeout(999);
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
