@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Exception;
 
 class UploadCommand extends Command
 {
@@ -160,12 +161,26 @@ To override config in dropcat.yml, using options:
             $auth->setPassword($ssh_key_password);
         }
         $auth->loadKey($identity_file_content);
-        if (!$sftp->login($user, $auth)) {
-            exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+
+        try {
+            $sftp->login($user, $auth);
+            if (!$sftp->login($user, $auth)) {
+                throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
         }
-
-        $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
-
+        try {
+            $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
+            if (!$sftp->login($user, $auth)) {
+                throw new Exception('Upload failed of ' . $tarfile);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+        
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {
             echo 'Tar is going to be saved ' . $keeptar . "\n";
