@@ -199,6 +199,65 @@ class Configuration
         }
     }
 
+    /**
+     * Get server for backups.
+     */
+    public function localEnvironmentBackupServer()
+    {
+        if (isset($this->configuration['local']['environment']['remote_backup_server'])) {
+            return $this->configuration['local']['environment']['remote_backup_server'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get port for server for backups.
+     */
+    public function localEnvironmentBackupServerPort()
+    {
+        if (isset($this->configuration['local']['environment']['remote_backup_server_port'])) {
+            return $this->configuration['local']['environment']['remote_backup_server_port'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get user to login to server for backups.
+     */
+    public function localEnvironmentBackupServerUser()
+    {
+        if (isset($this->configuration['local']['environment']['remote_backup_server_user'])) {
+            return $this->configuration['local']['environment']['remote_backup_server_user'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get path to backups
+     */
+    public function localEnvironmentBackupPath()
+    {
+        if (isset($this->configuration['local']['environment']['remote_backup_path'])) {
+            return $this->configuration['local']['environment']['remote_backup_path'];
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Get user to login to server for backups.
+     */
+    public function localEnvironmentBackupDbName()
+    {
+        if (isset($this->configuration['local']['environment']['remote_db_backup_name'])) {
+            return $this->configuration['local']['environment']['remote_db_backup_name'];
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * Get remote server name.
