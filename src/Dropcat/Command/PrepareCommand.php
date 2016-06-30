@@ -180,7 +180,7 @@ $aliases["'.$site_name.'"] = array (
         try {
             $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $alias_content);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your file at '.$e->getPath();
+            echo 'An error occurred while creating your file at '.$e->getPath() . '\n\r';
         }
 
         try {
