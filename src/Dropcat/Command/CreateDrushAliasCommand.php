@@ -76,6 +76,6 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             echo 'An error occurred while creating your file at '.$e->getPath();
         }
 
-        $output->writeln('<info>Task: create-drush-alias finished</info>');*/
+        $output->writeln('<info>Task: create-drush-alias finished</info>');
     }
 }
