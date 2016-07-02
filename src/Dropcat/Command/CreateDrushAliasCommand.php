@@ -35,7 +35,7 @@ class CreateDrushAliasCommand extends Command
 To run with default options (using config from dropcat.yml in the current dir):
 <info>dropcat create-drush-alias</info>
 To override config in dropcat.yml, using options, creates alias to stage env.
-<info>dropcat create-drush-alias --dropcat-env=stage</info>';
+<info>dropcat create-drush-alias --env=stage</info>';
 
         $this->setName("create-drush-alias")
         ->setDescription("run command or script on local environment")
@@ -52,9 +52,6 @@ To override config in dropcat.yml, using options, creates alias to stage env.
         $alias = $this->configuration->remoteEnvironmentAlias();
         $url =  $this->configuration->siteEnvironmentUrl();
         $sshport = $this->configuration->remoteEnvironmentSshPort();
-
-      // for naming file
-      //
 
         $drushAlias = new CreateDrushAlias();
         $drushAlias->setName($siteName);
@@ -79,16 +76,6 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             echo 'An error occurred while creating your file at '.$e->getPath();
         }
 
-      //var_dump($drushAlias->getValue());
-
-        die('the end');
-
-      /*$process = new Process("$input");
-      $process->run();
-      if (!$process->isSuccessful()) {
-        throw new ProcessFailedException($process);
-      }
-
-      $output->writeln('<info>Task: run:local finished</info>');*/
+        $output->writeln('<info>Task: create-drush-alias finished</info>');*/
     }
 }
