@@ -113,3 +113,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.create-drush-alias:
+      class: Dropcat\Command\CreateDrushAliasCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
