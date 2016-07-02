@@ -58,7 +58,7 @@ To override config in dropcat.yml, using options, creates alias to stage env.
         $drushAlias->setServer($server);
         $drushAlias->setUser($user);
         $drushAlias->setWebRoot($webroot);
-        $drushAlias->setAlias($alias);
+        $drushAlias->setSitePath($alias);
         $drushAlias->setUrl($url);
         $drushAlias->setSSHPort($sshport);
 

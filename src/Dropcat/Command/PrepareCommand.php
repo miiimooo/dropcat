@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
+use Dropcat\Lib\CreateDrushAlias;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -165,24 +166,23 @@ To override config in dropcat.yml, using options:
         $mysql_password = $input->getOption('mysql_password');
         $timeout = $input->getOption('timeout');
 
-        $alias_content = '<?php
-
-$aliases["'.$site_name.'"] = array (
-        "remote-host" => "'.$server.'",
-        "remote-user" => "'.$user.'",
-        "root" => "'.$web_root.'/'.$alias.'/web",
-        "uri"  => "'.$url.'",
-        "ssh-options" => "-p '. $ssh_port .'",
-);
-';
+        $drushAlias = new CreateDrushAlias();
+        $drushAlias->setName($site_name);
+        $drushAlias->setServer($server);
+        $drushAlias->setUser($user);
+        $drushAlias->setWebRoot($web_root);
+        $drushAlias->setSitePath($alias);
+        $drushAlias->setUrl($url);
+        $drushAlias->setSSHPort($ssh_port);
 
         $drush_file = new Filesystem();
+
         try {
-            $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $alias_content);
+            $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $drushAlias->getValue());
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your file at '.$e->getPath();
         }
-
+      
         try {
             $mysqli = new mysqli("$mysql_host", "$mysql_user", "$mysql_password");
         } catch (\Exception $e) {
