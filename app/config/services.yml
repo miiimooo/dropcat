@@ -103,8 +103,13 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.check-connection:
-      class: Dropcat\Command\CheckConnectionCommand
+ #   dropcat.command.check-connection:
+ #     class: Dropcat\Command\CheckConnectionCommand
+ #     arguments: ['@dropcat.configuration']
+ #     tags:
+ #       - {name: console.command}
+    dropcat.command.locale-update:
+      class: Dropcat\Command\LocaleUpdateCommand
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
