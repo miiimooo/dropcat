@@ -88,6 +88,5 @@ To override config in dropcat.yml, using options:
 
         $output = new ConsoleOutput();
         $output->writeln('<info>Task: configimport finished</info>');
-
     }
 }
