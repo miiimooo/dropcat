@@ -1,8 +1,10 @@
 <?php
+namespace Dropcat\tests;
 
 use Dropcat\Command\TarCommand;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -56,7 +58,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
             $this->conf->localEnvironmentSeparator() .
             $this->conf->localEnvironmentBuildId() . '.tar';
         $options  = array(
-            'verbosity' => Symfony\Component\Console\Output\OutputInterface::VERBOSITY_VERBOSE
+            'verbosity' => OutputInterface::VERBOSITY_VERBOSE
         );
         # Testing output since verbose is enabled.
         $this->expectOutputString("Build number from CI server is: \nBuild date from CI server is: \n");
@@ -72,7 +74,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertFileExists($filename);
 
-        $tar_library = new Archive_Tar($filename);
+        $tar_library = new \Archive_Tar($filename);
 
         $contents = $tar_library->listContent();
 
