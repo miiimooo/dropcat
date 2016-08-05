@@ -15,7 +15,7 @@ class ConfigImportCommandTest extends \PHPUnit_Framework_TestCase
         $this->conf = $configuration = new Configuration();
         $application = new Application();
         $application->add(new ConfigImportCommand($this->conf));
-        $command = $application->find('configimport');
+        $command = $application->find('config-import');
         $this->tester =  new CommandTester($command);
     }
 
