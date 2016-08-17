@@ -119,15 +119,24 @@ To override config in dropcat.yml, using options:
         $identity_file_content = file_get_contents($identity_file);
 
         $ssh = new SSH2($server, $port);
+        $ssh->setTimeout(999);
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
         $auth->loadKey($identity_file_content);
 
-        if (!$ssh->login($user, $auth)) {
-            exit('Login Failed');
+        try {
+          $login = $ssh->login($user, $auth);
+          if (!$login) {
+            throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server
+              . ' ' . $ssh->getLastError());
+          }
+        } catch (Exception $e) {
+          echo $e->getMessage();
+          exit(1);
         }
+
         $ssh->exec("rm $symlink.backup");
         $ssh->exec("mv -b $symlink $symlink.backup");
         $ssh->exec('ln --backup -snf ' . $original . ' ' . $symlink);
