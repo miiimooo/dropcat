@@ -66,6 +66,20 @@ To override config in dropcat.yml, using options:
                         'Time out',
                         $this->configuration->timeOut()
                     ),
+                    new InputOption(
+                        'backup_site',
+                        'bs',
+                        InputOption::VALUE_NONE,
+                        'Backup whole site',
+                        null
+                    ),
+                    new InputOption(
+                        'links',
+                        'l',
+                        InputOption::VALUE_NONE,
+                        'Keep symlinks',
+                        null
+                    ),
                 )
             )
           ->setHelp($HelpText);
@@ -78,22 +92,47 @@ To override config in dropcat.yml, using options:
         $timestamp        = $input->getOption('time_stamp');
         $backup_path      = $input->getOption('backup_path');
         $timeout          = $input->getOption('time_out');
+        $backup_site      = $input->getOption('backup_site');
+        $links            = $input->getOption('links');
+
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
-        $process = new Process(
-            "drush @$drush_alias sql-dump > $backup_path" . '/' . "$drush_alias" . '_' . "$timestamp.sql"
+        $backupDb= new Process(
+            "mkdir -p $backup_path/$drush_alias &&
+            drush @$drush_alias sql-dump > $backup_path/$drush_alias/$timestamp.sql"
         );
-        $process->setTimeout($timeout);
-        $process->run();
+        $backupDb->setTimeout($timeout);
+        $backupDb->run();
         // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        if (!$backupDb->isSuccessful()) {
+            throw new ProcessFailedException($backupDb);
         }
 
-        echo $process->getOutput();
+        echo $backupDb->getOutput();
+        $output = new ConsoleOutput();
+        $output->writeln('<info>Successfully backed up db</info>');
 
+        if ($backup_site === true) {
+            $options = '';
+            if ($links === true) {
+                $options = '--links ';
+            }
+
+            $backupSite = new Process(
+                "mkdir -p $backup_path/$drush_alias &&
+                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ $options --include-conf --include-vcs"
+            );
+            $backupSite->setTimeout($timeout);
+            $backupSite->run();
+            // executes after the command finishes
+            if (!$backupSite->isSuccessful()) {
+                throw new ProcessFailedException($backupSite);
+            }
+            $output->writeln('<info>Successfully backed up site</info>');
+            echo $backupSite->getOutput();
+        }
         $output = new ConsoleOutput();
         $output->writeln('<info>Task: backup finished</info>');
     }

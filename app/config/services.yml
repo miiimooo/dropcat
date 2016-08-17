@@ -103,8 +103,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.run-local:
-      class: Dropcat\Command\RunLocalCommand
+    dropcat.command.check-connection:
+      class: Dropcat\Command\CheckConnectionCommand
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}

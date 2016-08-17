@@ -10,11 +10,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Exception;
 
 class UploadCommand extends Command
 {
 
-    /** @var Configuration configuration */
+    /**
+     * @var Configuration configuration
+     */
     private $configuration;
 
     public function __construct(Configuration $conf)
@@ -155,17 +158,27 @@ To override config in dropcat.yml, using options:
         }
 
         $sftp = new SFTP($server, $port, $timeout);
+        $sftp->setTimeout(999);
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
         $auth->loadKey($identity_file_content);
-        if (!$sftp->login($user, $auth)) {
-            exit('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+
+        try {
+            $login = $sftp->login($user, $auth);
+            if (!$login) {
+                throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+            }
+            $transfer = $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
+            if (!$transfer) {
+                throw new Exception('Upload failed of ' . $tarfile);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit(1);
         }
-
-        $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
-
+        $sftp->disconnect();
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {
             echo 'Tar is going to be saved ' . $keeptar . "\n";
@@ -180,7 +193,6 @@ To override config in dropcat.yml, using options:
             if ($output->isVerbose()) {
                 echo "tar file is deleted \n";
             }
-
         }
     }
 }

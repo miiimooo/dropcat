@@ -1,5 +1,7 @@
 # Deploy tool for Drupal
 
+[Please read our blog-series about dropcat](https://wunderkraut.se/dropcat)
+
 ## Install with composer
 `composer require dropcat/dropcat:dev-master`
 
@@ -102,7 +104,7 @@ dropcat upload --tar_dir=${WORKSPACE}/
 dropcat deploy -v
 dropcat symlink
 dropcat site-install
-dropcat configimport
+dropcat config-import
 
 ```
 All config for the deploy is in dropcat.stage.yml in application folder.

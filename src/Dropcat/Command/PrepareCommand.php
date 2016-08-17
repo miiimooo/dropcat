@@ -74,6 +74,7 @@ To override config in dropcat.yml, using options:
                         'SSH port',
                         $this->configuration->remoteEnvironmentSshPort()
                     ),
+
                     new InputOption(
                         'identity_file',
                         'i',
@@ -81,6 +82,7 @@ To override config in dropcat.yml, using options:
                         'Identify file',
                         $this->configuration->remoteEnvironmentIdentifyFile()
                     ),
+
                     new InputOption(
                         'web_root',
                         'w',

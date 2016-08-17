@@ -1,9 +1,11 @@
 <?php
+namespace Dropcat\tests;
 
 use Dropcat\Command\ConfigImportCommand;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+
 
 /**
  * Created by SOPA
@@ -11,25 +13,29 @@ use Symfony\Component\Console\Tester\CommandTester;
 class ConfigImportCommandTest extends \PHPUnit_Framework_TestCase
 {
 
-    function setUp() {
-        $this->conf = $configuration = new Configuration();
+    public function setUp()
+    {
+        $this->conf  = $configuration = new Configuration();
         $application = new Application();
         $application->add(new ConfigImportCommand($this->conf));
-        $command = $application->find('configimport');
-        $this->tester =  new CommandTester($command);
+        $command      = $application->find('config-import');
+        $this->tester = new CommandTester($command);
     }
 
-    function testConfigImport()
+    public function testConfigImport()
     {
+        $this->expectException('\Symfony\Component\Process\Exception\ProcessFailedException');
         $this->tester->execute(
-          array(
-            'command' => 'configimport',
-            '-d'      => 'mysite',
-            '-c'      => 'myconfig'
-          )
+            array(
+                'command' => 'configimport',
+                '-d'      => 'mysite',
+                '-c'      => 'myconfig'
+            )
         );
-        $this->assertEquals($this->tester->getDisplay(),
-                'Task: configimport finished' . "\n");
-      // @todo more testing needed
+        $this->assertEquals(
+            $this->tester->getDisplay(),
+            'Task: configimport finished' . "\n"
+        );
+        // @todo more testing needed
     }
 }
