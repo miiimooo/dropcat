@@ -181,12 +181,14 @@ $aliases["'.$site_name.'"] = array (
             $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $alias_content);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your file at '.$e->getPath();
+            exit(1);
         }
 
         try {
             $mysqli = new mysqli("$mysql_host", "$mysql_user", "$mysql_password");
         } catch (\Exception $e) {
             echo $e->getMessage(), PHP_EOL;
+            exit(1);
         }
         // If db does not exist
         if ($mysqli->select_db("$mysql_db") === false) {
