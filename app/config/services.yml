@@ -108,3 +108,8 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.get:db-backup:
+      class: Dropcat\Command\GetDatabaseBackupCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
