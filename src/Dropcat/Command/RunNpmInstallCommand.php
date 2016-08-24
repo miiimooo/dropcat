@@ -3,8 +3,6 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
-use phpseclib\Net\SSH2;
-use phpseclib\Crypt\RSA;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,28 +15,33 @@ use Dropcat\Command\RunCommand;
 
 class RunNpmInstallCommand extends RunCommand
 {
-
     protected function configure()
     {
-        $HelpText = 'The <info>run:npm-install</info> command will run npm install.
+        $HelpText = 'The <info>node:npm-install</info> command will run npm install.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat run:npm-install</info>
+<info>dropcat node:npm-install</info>
 To override config in dropcat.yml, using options:
-<info>dropcat run-local --input=script.sh</info>';
+<info>dropcat run-local --package-json=/foo/bar/package.json</info>';
 
-        $this->setName("run:npm-install")
-            ->setDescription("run npm install")
+        $this->setName("node:npm-install")
+            ->setDescription("do a npm install")
             ->setDefinition(
                 array(
                     new InputOption(
-                        'input',
-                        'i',
-                        InputOption::VALUE_OPTIONAL,
-                        'Input',
-                        $this->configuration->localEnvironmentRun()
+                        'nvm-dir',
+                        'nd',
+                        InputOption::VALUE_REQUIRED,
+                        'NVM directory',
+                        $this->configuration->nodeNvmDirectory()
                     ),
-
+                    new InputOption(
+                        'package-json',
+                        'pj',
+                        InputOption::VALUE_OPTIONAL,
+                        'Path to package.json',
+                        $this->configuration->nodePackageJsonFile()
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -46,13 +49,29 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $input = $input->getOption('input');
-        $packageJson = file_get_contents('package.json');
-        $json = json_decode($packageJson);
-        if (isset($json->{'nodeVersion'})) {
-            $nodeVersion = $json->{'nodeVersion'};
-            exec("nvm install $nodeVersion");
+        $nvmDir = $input->getOption('nvm-dir');
+        $packageJsonFile = $input->getOption('package-json');
+        if ($packageJsonFile === null) {
+            $packageJsonFile = 'package.json';
         }
-        $output->writeln('<info>Task: run:npm-install finished</info>');
+        if (file_exists($packageJsonFile)) {
+            $packageJson = file_get_contents($packageJsonFile);
+            $decodeJson = json_decode($packageJson);
+            if (isset($decodeJson->{'nodeVersion'})) {
+                $nodeVersion = $decodeJson->{'nodeVersion'};
+                $output->writeln('<info>Installing/setting node version ' . $nodeVersion . '</info>');
+                $npmInstall = new Process(". $nvmDir/nvm.sh && nvm install $nodeVersion && npm install");
+                $npmInstall->setTimeout(3600);
+                $npmInstall->run();
+                echo $npmInstall->getOutput();
+                if (!$npmInstall->isSuccessful()) {
+                    throw new ProcessFailedException($npmInstall);
+                }
+            }
+        } else {
+            $output->writeln('<info>No package.json file found, please check your configuration.</info>');
+            exit(1);
+        }
+        $output->writeln('<info>Task: node:npm-install finished</info>');
     }
 }
