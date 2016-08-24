@@ -118,4 +118,9 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-        
+    dropcat.command.run:npm-install:
+      class: Dropcat\Command\RunNpmInstallCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+
