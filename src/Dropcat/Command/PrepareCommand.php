@@ -180,12 +180,18 @@ To override config in dropcat.yml, using options:
         try {
             $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $drushAlias->getValue());
         } catch (IOExceptionInterface $e) {
+
             $output->writeln('<info>An error occurred while creating your file at ' . $e->getPath() . '</info>');
+
+            echo 'An error occurred while creating your file at '.$e->getPath();
+            exit(1);
+
         }
         try {
             $mysqli = new mysqli("$mysql_host", "$mysql_user", "$mysql_password");
         } catch (\Exception $e) {
             echo $e->getMessage(), PHP_EOL;
+            exit(1);
         }
         // If db does not exist
         if ($mysqli->select_db("$mysql_db") === false) {

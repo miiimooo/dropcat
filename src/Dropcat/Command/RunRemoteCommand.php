@@ -89,8 +89,6 @@ To override config in dropcat.yml, using options:
         $ssh_key_password = $input->getOption('ssh_key_password');
         $input = $input->getOption('input');
 
-        var_dump($input);
-
         $ssh = new SSH2($server, $ssh_port);
         $auth = new RSA();
         if (isset($ssh_key_password)) {
@@ -102,7 +100,6 @@ To override config in dropcat.yml, using options:
             exit('Login Failed');
         }
         $ssh->exec($input);
-        $ssh->exec('mkdir -p /tmp/nisse5');
 
         $output->writeln('<info>Task: run-remote finished</info>');
     }
