@@ -657,6 +657,15 @@ class Configuration
             return '';
         }
     }
+    public function nodeEnvironment() {
+        if (isset($this->configuration['node']['environment'])){
+            $nodeEnvironment = $this->configuration['node']['environment'];
+            return $nodeEnvironment;
+        }
+        else {
+            return null;
+        }
+    }
 }
 
 

@@ -56,6 +56,13 @@ class RunGulpCommand extends RunCommand
                     'Gulp options',
                     $this->configuration->gulpOptions()
                 ),
+                new InputOption(
+                  'node-env',
+                  'ne',
+                  InputOption::VALUE_OPTIONAL,
+                  'Node environment',
+                  $this->configuration->nodeEnvironment()
+                ),
               )
           )
           ->setHelp($HelpText);
@@ -67,6 +74,8 @@ class RunGulpCommand extends RunCommand
           $packageJsonFile = $input->getOption('package-json');
           $gulpDir = $input->getOption('gulp-dir');
           $gulpOptions = $input->getOption('gulp-options');
+          $nodeEnv = $input->getOption('node-env');
+
           if ($gulpDir === null) {
               $gulpDir = '.';
           }
@@ -76,10 +85,17 @@ class RunGulpCommand extends RunCommand
           if (file_exists($packageJsonFile)) {
               $packageJson = file_get_contents($packageJsonFile);
               $decodeJson = json_decode($packageJson);
+
               if (isset($decodeJson->{'nodeVersion'})) {
+                  $env = null;
+                  if (isset($nodeEnv)) {
+                    $env = 'NODE_ENV=' . $nodeEnv;
+                  }
                   $output->writeln('<info>Installing gulp stuff</info>');
                   $nodeVersion = $decodeJson->{'nodeVersion'};
-                  $gulp = new Process(". $nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && gulp $gulpOptions");
+                  echo "$nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && $env gulp $gulpOptions";
+                  die();
+                  $gulp = new Process(". $nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && $env gulp $gulpOptions");
                   $gulp->setTimeout(3600);
                   $gulp->run();
                   echo $gulp->getOutput();
