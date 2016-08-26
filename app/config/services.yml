@@ -20,7 +20,7 @@ services:
         - {name: console.command}
     dropcat.command.config-import:
       class: Dropcat\Command\ConfigImportCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.db-import:
@@ -118,4 +118,3 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
-        
