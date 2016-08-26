@@ -151,6 +151,9 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $drush_folder = $input->getOption('drush_folder');
+        if (!$drush_folder) {
+            $drush_folder = \Dropcat\Lib\CreateDrushAlias::drushServerHome();
+        }
         $drush_alias = $input->getOption('drush_alias');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
