@@ -629,4 +629,43 @@ class Configuration
         $ignore_files = rtrim($ignore_files);
         return $ignore_files;
     }
+    public function nodeNvmDirectory() {
+        if (isset($this->configuration['node']['nvm_directory'])) {
+            return $this->configuration['node']['nvm_directory'];
+        } else {
+            return null;
+        }
+    }
+    public function nodePackageJsonFile() {
+        if (isset($this->configuration['node']['package_json_file'])) {
+            return $this->configuration['node']['package_json_file'];
+        } else {
+            return null;
+        }
+    }
+    public function gulpDirectory() {
+        if (isset($this->configuration['node']['gulp_directory'])) {
+            return $this->configuration['node']['gulp_directory'];
+        } else {
+            return null;
+        }
+    }
+    public function gulpOptions() {
+        if (isset($this->configuration['node']['gulp_options'])) {
+            return $this->configuration['node']['gulp_options'];
+        } else {
+            return '';
+        }
+    }
+    public function nodeEnvironment() {
+        if (isset($this->configuration['node']['environment'])){
+            $nodeEnvironment = $this->configuration['node']['environment'];
+            return $nodeEnvironment;
+        }
+        else {
+            return null;
+        }
+    }
 }
+
+

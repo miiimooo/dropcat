@@ -20,10 +20,8 @@ class CheckConnectionCommand extends Command
 
   /** @var Configuration configuration */
   private $configuration;
-  private $rsa;
   public function __construct(Configuration $conf)
   {
-    $this->rsa = $rsa;
     $this->configuration = $conf;
     parent::__construct();
   }
@@ -90,7 +88,7 @@ To run with default options (using config from dropcat.yml in the current dir):
     $ssh_key_password = $input->getOption('ssh_key_password');
 
     $ssh = new SSH2($server, $ssh_port);
-    $auth = $rsa;
+    $auth = new RSA();
     if (isset($ssh_key_password)) {
       $auth->setPassword($ssh_key_password);
     }

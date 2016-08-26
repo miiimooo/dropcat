@@ -3,7 +3,6 @@ namespace Dropcat\Lib;
 
 class CreateDrushAlias
 {
-
     private $sitename;
     private $server;
     private $user;
