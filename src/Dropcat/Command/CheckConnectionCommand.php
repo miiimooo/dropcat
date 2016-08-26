@@ -23,7 +23,7 @@ class CheckConnectionCommand extends Command
   private $rsa;
   public function __construct(Configuration $conf)
   {
-    $this->rsa = $rsa;
+    //$this->rsa = $rsa;
     $this->configuration = $conf;
     parent::__construct();
   }
