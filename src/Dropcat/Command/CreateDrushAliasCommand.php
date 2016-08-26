@@ -45,6 +45,7 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+      if ($this->configuration->configuration){
         $siteName = $this->configuration->siteEnvironmentName();
         $server = $this->configuration->remoteEnvironmentServerName();
         $user = $this->configuration->remoteEnvironmentSshUser();
@@ -70,12 +71,16 @@ To override config in dropcat.yml, using options, creates alias to stage env.
         $drush_file = new Filesystem();
 
         try {
-            $drush_file->dumpFile($home_dir.'/.drush/'.$drush_alias_name.
-              '.aliases.drushrc.php', $drushAlias->getValue());
+          $drush_file->dumpFile($home_dir.'/.drush/'.$drush_alias_name.
+            '.aliases.drushrc.php', $drushAlias->getValue());
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your file at '.$e->getPath();
+          echo 'An error occurred while creating your file at '.$e->getPath();
         }
 
         $output->writeln('<info>Task: create-drush-alias finished</info>');
+      }
+      else {
+        echo 'I cannot create any alias, please check your --env parameter';
+      }
     }
 }
