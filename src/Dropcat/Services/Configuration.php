@@ -666,6 +666,24 @@ class Configuration
             return null;
         }
     }
+    public function localEnvironmentRsyncFrom() {
+        if (isset($this->configuration['local']['environment']['rsync_from'])){
+            $from = $this->configuration['local']['environment']['rsync_from'];
+            return $from;
+        }
+        else {
+            return null;
+        }
+    }
+    public function remoteEnvironmentRsyncTo() {
+        if (isset($this->configuration['remote']['environment']['rsync_to'])){
+            $from = $this->configuration['remote']['environment']['rsync_to'];
+            return $from;
+        }
+        else {
+            return null;
+        }
+    }
 }
 
 
