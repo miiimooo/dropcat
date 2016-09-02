@@ -89,13 +89,4 @@ To override config in dropcat.yml, using options:
         $output->writeln('<info>Task: configimport finished</info>');
     }
 
-    /**
-     * @param $command
-     * @codeCoverageIgnore
-     * @return \Symfony\Component\Process\Process
-     */
-    protected function runProcess($command)
-    {
-        return new Process($command);
-    }
 }
