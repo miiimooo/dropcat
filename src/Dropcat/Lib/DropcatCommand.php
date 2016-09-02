@@ -5,6 +5,20 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 
+/**
+ * Class DropcatCommand
+ *
+ * This class collects the construct and runProcess which should share
+ * a common structure for our commands.
+ *
+ * __construct, here, makse sure we get the container injected as well as
+ * receive the configuration.
+ *
+ * The method runProcess is there so we can more easily test running a process
+ * by mocking the method when testing.
+ *
+ * @package Dropcat\Lib
+ */
 class DropcatCommand extends Command
 {
 
