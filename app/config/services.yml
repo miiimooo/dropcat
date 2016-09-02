@@ -129,3 +129,13 @@ services:
       arguments: ['@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.command.rsync:
+      class: Dropcat\Command\RsyncCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
+    dropcat.command.run-remote:
+      class: Dropcat\Command\RunRemoteCommand
+      arguments: ['@dropcat.configuration']
+      tags:
+        - {name: console.command}
