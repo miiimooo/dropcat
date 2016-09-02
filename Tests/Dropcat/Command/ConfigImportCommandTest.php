@@ -26,33 +26,53 @@ class ConfigImportCommandTest extends \PHPUnit_Framework_TestCase
     {
         // building the container!
         $this->container = new ContainerBuilder();
+
+        // Setting DropcatContainer to the DI-container we use.
+        // This way, it will be available to the command.
         $this->container->set('DropcatContainer', $this->container);
 
         $this->conf = $configuration = new Configuration();
 
-        // new ConfigImportCommand($container, $this->conf);
         $this->application = new Application();
+
+        // We mock the command so that we later on can test Process.
         $this->mock        = $this->getMockBuilder('\Dropcat\Command\ConfigImportCommand')
             ->setConstructorArgs(array($this->container, $this->conf));
     }
 
     public function testDrushCommand()
     {
-        $p = $this->createMock('Symfony\Component\Process\Process');
-        $p->method('isSuccessful')
+        // We mock the Process so that we can test commands without
+        // actually running them. And test if the command was succesfull
+        // or not.
+        $process_mock = $this->createMock('Symfony\Component\Process\Process');
+
+        // We mock the method "isSuccessful" to return true
+        // faking that it worked, in other words.
+        $process_mock->method('isSuccessful')
             ->willReturn(true);
 
-        $m = $this->mock->setMethods(['runProcess'])
+        // We then mock the runProcess method so we can make sure
+        // that we return or mock of process, above.
+        $command_mock = $this->mock->setMethods(['runProcess'])
             ->getMock();
 
-        $m->expects($this->once())
+        // Here we set up an assertion that
+        // + runProcess once
+        // + That when run, the parameter is 'drush @mysite cim myconfig -q -y
+        // + and that we return the mocked process, above.
+        $command_mock->expects($this->once())
             ->method('runProcess')
             ->with($this->equalTo('drush @mysite cim myconfig -q -y'))
-            ->willReturn($p);
+            ->willReturn($process_mock);
 
-        $this->application->add($m);
+        // Add our mocked command from above.
+        $this->application->add($command_mock);
 
-        $this->tester = new CommandTester($m);
+        // Initiate the tester.
+        $this->tester = new CommandTester($command_mock);
+
+        // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
                 'command' => 'configimport',
