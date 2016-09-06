@@ -125,8 +125,8 @@ To override config in dropcat.yml, using options:
         $newRsync->run();
         echo $newRsync->getOutput();
         if (!$newRsync->isSuccessful()) {
-          throw new ProcessFailedException($newRsync);
-          exit(1);
+            throw new ProcessFailedException($newRsync);
+            exit(1);
         }
 
 

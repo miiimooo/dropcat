@@ -29,7 +29,8 @@ class AboutCommand extends Command
             ->setDescription("About dropcat")
             ->setHelp($HelpText);
     }
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $io = new SymfonyStyle($input, $output);
         $style = new OutputFormatterStyle('black', 'green', array('blink', 'bold'));
         $output = new ConsoleOutput();

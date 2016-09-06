@@ -38,7 +38,6 @@ class SelfRollbackCommand extends Command
             } else {
                 $output->writeln("<info>Roll-back failed.</info>");
             }
-
         } catch (\Exception $e) {
             $output = new ConsoleOutput();
             $output->writeln("<info>Something went wrong, sorry.</info>");
