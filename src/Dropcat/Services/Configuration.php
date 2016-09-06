@@ -393,6 +393,20 @@ class Configuration
     }
 
     /**
+     * Gets site install drush extra options.
+     */
+    public function siteEnvironmentDrushInstallOptions()
+    {
+        if (isset($this->configuration['site']['environment']['drush_install_options'])) {
+            return $this->configuration['site']['environment']['drush_install_options'];
+        } else {
+            return null;
+        }
+    }
+
+
+
+    /**
      * Gets the sites backup path.
      */
     public function siteEnvironmentBackupPath()
