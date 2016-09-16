@@ -11,6 +11,7 @@ services:
     dropcat.command.tar:
         class: Dropcat\Command\TarCommand
         arguments: ['@DropcatContainer','@dropcat.configuration']
+        lazy: true
         tags:
           - {name: console.command}
     dropcat.command.backup:
@@ -21,6 +22,7 @@ services:
     dropcat.command.config-import:
       class: Dropcat\Command\ConfigImportCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
+        lazy: true
       tags:
         - {name: console.command}
     dropcat.command.db-import:

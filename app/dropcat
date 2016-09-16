@@ -20,6 +20,7 @@ if (file_exists(CLI_ROOT . '/vendor/autoload.php')) {
     require CLI_ROOT . '/../../../autoload.php';
 }
 
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,12 +28,16 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Console\Input\InputOption;
 
 $container = new ContainerBuilder();
-
 // In order to have the container be available, or actually injected,
 // into the commands, I set the 'DropcatContainer' to be the container it self.
 // In services.yml we use '@DropcatContainer' to inject it into the command.
 $container->set('DropcatContainer', $container);
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
+
+$container->setProxyInstantiator(new RuntimeInstantiator());
+$loader = new YamlFileLoader($container,
+    new FileLocator(__DIR__ . '/config'));
+
 $loader->load('services.yml');
 
 $output = $container->get('symfony.console_output');
