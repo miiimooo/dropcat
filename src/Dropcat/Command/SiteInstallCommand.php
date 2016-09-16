@@ -64,6 +64,15 @@ To override config in dropcat.yml, using options:
                       'Admin user',
                       $this->configuration->siteEnvironmentAdminUser()
                   ),
+                  new InputOption(
+                      'install_options',
+                      'io',
+                      InputOption::VALUE_OPTIONAL,
+                      'Drush install options',
+                      $this->configuration->siteEnvironmentDrushInstallOptions()
+                  ),
+
+
               )
           )
           ->setHelp($HelpText);
@@ -76,8 +85,10 @@ To override config in dropcat.yml, using options:
         $timeout          = $input->getOption('time_out');
         $admin_pass       = $input->getOption('admin_pass');
         $admin_user       = $input->getOption('admin_user');
+        $install_options  = $input->getOption('install_options');
+
         $process = new Process(
-            "drush @$drush_alias si $profile --account-name=$admin_user --account-pass=$admin_pass -y"
+            "drush @$drush_alias si $profile --account-name=$admin_user --account-pass=$admin_pass -y $install_options"
         );
         $process->setTimeout($timeout);
         $process->run();

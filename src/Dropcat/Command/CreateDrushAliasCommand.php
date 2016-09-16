@@ -36,42 +36,42 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      if ($this->configuration->configuration){
-        $siteName = $this->configuration->siteEnvironmentName();
-        $server = $this->configuration->remoteEnvironmentServerName();
-        $user = $this->configuration->remoteEnvironmentSshUser();
-        $webroot = $this->configuration->remoteEnvironmentWebRoot();
-        $alias = $this->configuration->remoteEnvironmentAlias();
-        $url =  $this->configuration->siteEnvironmentUrl();
-        $sshport = $this->configuration->remoteEnvironmentSshPort();
+        if ($this->configuration->configuration) {
+            $siteName = $this->configuration->siteEnvironmentName();
+            $server = $this->configuration->remoteEnvironmentServerName();
+            $user = $this->configuration->remoteEnvironmentSshUser();
+            $webroot = $this->configuration->remoteEnvironmentWebRoot();
+            $alias = $this->configuration->remoteEnvironmentAlias();
+            $url =  $this->configuration->siteEnvironmentUrl();
+            $sshport = $this->configuration->remoteEnvironmentSshPort();
 
-        $drushAlias = new CreateDrushAlias();
-        $drushAlias->setName($siteName);
-        $drushAlias->setServer($server);
-        $drushAlias->setUser($user);
-        $drushAlias->setWebRoot($webroot);
-        $drushAlias->setSitePath($alias);
-        $drushAlias->setUrl($url);
-        $drushAlias->setSSHPort($sshport);
+            $drushAlias = new CreateDrushAlias();
+            $drushAlias->setName($siteName);
+            $drushAlias->setServer($server);
+            $drushAlias->setUser($user);
+            $drushAlias->setWebRoot($webroot);
+            $drushAlias->setSitePath($alias);
+            $drushAlias->setUrl($url);
+            $drushAlias->setSSHPort($sshport);
 
-        $home = new CreateDrushAlias();
-        $home_dir = $home->drushServerHome();
+            $home = new CreateDrushAlias();
+            $home_dir = $home->drushServerHome();
 
-        $drush_alias_name = $this->configuration->siteEnvironmentDrushAlias();
+            $drush_alias_name = $this->configuration->siteEnvironmentDrushAlias();
 
-        $drush_file = new Filesystem();
+            $drush_file = new Filesystem();
 
-        try {
-          $drush_file->dumpFile($home_dir.'/.drush/'.$drush_alias_name.
-            '.aliases.drushrc.php', $drushAlias->getValue());
-        } catch (IOExceptionInterface $e) {
-          echo 'An error occurred while creating your file at '.$e->getPath();
+            try {
+                $drush_file->dumpFile($home_dir.'/.drush/'.$drush_alias_name.
+                '.aliases.drushrc.php', $drushAlias->getValue());
+            } catch (IOExceptionInterface $e) {
+                echo 'An error occurred while creating your file at '.$e->getPath();
+            }
+
+            $output->writeln('<info>Task: create-drush-alias finished. You could now use:</info>');
+            $output->writeln('<info>drush @' . $siteName .  '</info>');
+        } else {
+            echo 'I cannot create any alias, please check your --env parameter';
         }
-
-        $output->writeln('<info>Task: create-drush-alias finished</info>');
-      }
-      else {
-        echo 'I cannot create any alias, please check your --env parameter';
-      }
     }
 }

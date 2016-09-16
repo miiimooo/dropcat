@@ -57,11 +57,11 @@ class RunGulpCommand extends RunCommand
                     $this->configuration->gulpOptions()
                 ),
                 new InputOption(
-                  'node-env',
-                  'ne',
-                  InputOption::VALUE_OPTIONAL,
-                  'Node environment',
-                  $this->configuration->nodeEnvironment()
+                    'node-env',
+                    'ne',
+                    InputOption::VALUE_OPTIONAL,
+                    'Node environment',
+                    $this->configuration->nodeEnvironment()
                 ),
               )
           )
@@ -76,32 +76,32 @@ class RunGulpCommand extends RunCommand
           $gulpOptions = $input->getOption('gulp-options');
           $nodeEnv = $input->getOption('node-env');
 
-          if ($gulpDir === null) {
-              $gulpDir = '.';
-          }
-          if ($packageJsonFile === null) {
+        if ($gulpDir === null) {
+            $gulpDir = '.';
+        }
+        if ($packageJsonFile === null) {
             $packageJsonFile = 'package.json';
-          }
-          if (file_exists($packageJsonFile)) {
-              $packageJson = file_get_contents($packageJsonFile);
-              $decodeJson = json_decode($packageJson);
+        }
+        if (file_exists($packageJsonFile)) {
+            $packageJson = file_get_contents($packageJsonFile);
+            $decodeJson = json_decode($packageJson);
 
-              if (isset($decodeJson->{'nodeVersion'})) {
-                  $env = null;
-                  if (isset($nodeEnv)) {
+            if (isset($decodeJson->{'nodeVersion'})) {
+                $env = null;
+                if (isset($nodeEnv)) {
                     $env = 'NODE_ENV=' . $nodeEnv;
-                  }
-                  $output->writeln('<info>Installing gulp stuff</info>');
-                  $nodeVersion = $decodeJson->{'nodeVersion'};
-                  $gulp = new Process(". $nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && $env gulp $gulpOptions");
-                  $gulp->setTimeout(3600);
-                  $gulp->run();
-                  echo $gulp->getOutput();
-                  if (!$gulp->isSuccessful()) {
-                      throw new ProcessFailedException($gulp);
-                  }
-              }
-          }
+                }
+                $output->writeln('<info>Installing gulp stuff</info>');
+                $nodeVersion = $decodeJson->{'nodeVersion'};
+                $gulp = new Process(". $nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && $env gulp $gulpOptions");
+                $gulp->setTimeout(3600);
+                $gulp->run();
+                echo $gulp->getOutput();
+                if (!$gulp->isSuccessful()) {
+                    throw new ProcessFailedException($gulp);
+                }
+            }
+        }
           $output->writeln('<info>Task: node:gulp finished</info>');
     }
 }
