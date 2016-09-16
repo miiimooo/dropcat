@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use Dropcat\Lib\CreateDrushAlias;
 use Symfony\Component\Console\Command\Command;
@@ -14,17 +15,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use mysqli;
 
-class PrepareCommand extends Command
+class PrepareCommand extends DropcatCommand
 {
-    /** @var Configuration configuration */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>prepare</info> command setups what is needed for a drupal site on a remote server.

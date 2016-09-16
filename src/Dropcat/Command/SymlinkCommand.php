@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use phpseclib\Net\SSH2;
 use phpseclib\Crypt\RSA;
@@ -12,17 +13,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class SymlinkCommand extends Command
+class SymlinkCommand extends DropcatCommand
 {
-
-    /** @var Configuration configuration */
-    private $configuration;
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>symlink</info> command will import.

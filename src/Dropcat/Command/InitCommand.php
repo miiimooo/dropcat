@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use Dropcat\Lib\UUID;
 use Symfony\Component\Filesystem\Filesystem;
@@ -18,17 +19,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use SplFileObject;
 use Exception;
 
-class InitCommand extends Command
+class InitCommand extends DropcatCommand
 {
-    /** @var Configuration configuration */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
 
     protected function configure()
     {

@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SFTP;
@@ -12,20 +13,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Exception;
 
-class UploadCommand extends Command
+class UploadCommand extends DropcatCommand
 {
-
-    /**
-     * @var Configuration configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>upload</info> connects to remote server and upload tar and unpack it in path.

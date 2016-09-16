@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 
 use Symfony\Component\Console\Command\Command;
@@ -14,17 +15,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-class DbImportCommand extends Command
+class DbImportCommand extends DropcatCommand
 {
-    /** @var Configuration configuration */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>dbimport</info> command will import.

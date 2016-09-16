@@ -10,12 +10,12 @@ services:
       class: Dropcat\Services\Configuration
     dropcat.command.tar:
         class: Dropcat\Command\TarCommand
-        arguments: ['@dropcat.configuration']
+        arguments: ['@DropcatContainer','@dropcat.configuration']
         tags:
           - {name: console.command}
     dropcat.command.backup:
       class: Dropcat\Command\BackupCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.config-import:
@@ -25,117 +25,116 @@ services:
         - {name: console.command}
     dropcat.command.db-import:
       class: Dropcat\Command\DbImportCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.move:
       class: Dropcat\Command\MoveCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.symlink:
       class: Dropcat\Command\SymlinkCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.upload:
       class: Dropcat\Command\UploadCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.prepare:
       class: Dropcat\Command\PrepareCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.self-update:
       class: Dropcat\Command\SelfUpdaterCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.self-rollback:
       class: Dropcat\Command\SelfRollbackCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.init:
       class: Dropcat\Command\InitCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.about:
       class: Dropcat\Command\AboutCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.site-install:
       class: Dropcat\Command\SiteInstallCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.reset-login:
       class: Dropcat\Command\ResetLoginCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.jenkins-build:
       class: Dropcat\Command\JenkinsBuildCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.entity-update:
       class: Dropcat\Command\EntityUpdateCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.cache-recreate:
       class: Dropcat\Command\CacheRecreateCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.cache-clear:
       class: Dropcat\Command\CacheClearCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.update-database:
       class: Dropcat\Command\UpdateDatabaseCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.check-connection:
       class: Dropcat\Command\CheckConnectionCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.create-drush-alias:
       class: Dropcat\Command\CreateDrushAliasCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.get:db-backup:
       class: Dropcat\Command\GetDatabaseBackupCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
-        - {name: console.command}
         - {name: console.command}
     dropcat.command.node:npm-install:
       class: Dropcat\Command\RunNpmInstallCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.node:gulp:
       class: Dropcat\Command\RunGulpCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.rsync:
       class: Dropcat\Command\RsyncCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
     dropcat.command.run-remote:
       class: Dropcat\Command\RunRemoteCommand
-      arguments: ['@dropcat.configuration']
+      arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}

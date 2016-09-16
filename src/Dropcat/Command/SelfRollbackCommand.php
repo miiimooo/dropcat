@@ -1,6 +1,7 @@
 <?php
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Humbug\SelfUpdate\Updater;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
@@ -8,18 +9,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class SelfRollbackCommand extends Command
+class SelfRollbackCommand extends DropcatCommand
 {
-    /** @var Configuration configuration */
-    private $configuration;
-
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $this

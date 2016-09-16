@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,17 +14,8 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class ResetLoginCommand extends Command
+class ResetLoginCommand extends DropcatCommand
 {
-    /** @var Configuration configuration */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>reset-login</info> command resets admin login for a drupal site.

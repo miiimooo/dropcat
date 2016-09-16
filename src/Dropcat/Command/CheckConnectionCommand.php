@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use phpseclib\Net\SSH2;
 use phpseclib\Crypt\RSA;
@@ -15,17 +16,8 @@ use Dropcat\Command\RunCommand;
 use Exception;
 
 
-class CheckConnectionCommand extends Command
+class CheckConnectionCommand extends DropcatCommand
 {
-
-  /** @var Configuration configuration */
-  private $configuration;
-  public function __construct(Configuration $conf)
-  {
-    $this->configuration = $conf;
-    parent::__construct();
-  }
-
   protected function configure()
   {
     $HelpText = 'The <info>check-connection</info> command will check connection for env.

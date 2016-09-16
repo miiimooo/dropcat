@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
+use Dropcat\Lib\DropcatCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,17 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class AboutCommand extends Command
+class AboutCommand extends DropcatCommand
 {
-    /** @var Configuration configuration */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = '<info>Display the about</info>';

@@ -2,6 +2,7 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\DropcatCommand;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SSH2;
 use Dropcat\Services\Configuration;
@@ -14,16 +15,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class MoveCommand extends Command
+class MoveCommand extends DropcatCommand
 {
-
-    /** @var Configuration configuration */
-    private $configuration;
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
 
     protected function configure()
     {

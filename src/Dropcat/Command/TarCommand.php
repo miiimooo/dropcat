@@ -2,24 +2,15 @@
 namespace Dropcat\Command;
 
 use Archive_Tar;
+use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class TarCommand extends Command
+class TarCommand extends DropcatCommand
 {
-
-    /** @var Configuration configuration */
-    private $configuration;
-
-    public function __construct(Configuration $conf)
-    {
-        $this->configuration = $conf;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $HelpText = 'The <info>tar</info> command will create a gzipped tar.
