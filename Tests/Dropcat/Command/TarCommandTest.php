@@ -6,6 +6,7 @@ use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Created by PhpStorm.
@@ -43,9 +44,14 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         }
         $this->conf->method('deployIgnoreFiles')->willReturn($files_to_ignore);
 
+      $this->container = new ContainerBuilder();
+
+      // Setting DropcatContainer to the DI-container we use.
+      // This way, it will be available to the command.
+      $this->container->set('DropcatContainer', $this->container);
 
         $application = new Application();
-        $application->add(new TarCommand($this->conf));
+        $application->add(new TarCommand($this->container, $this->conf));
         $command      = $application->find('tar');
         $this->tester = new CommandTester($command);
     }
