@@ -4,6 +4,7 @@ namespace Dropcat\Lib;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Process\Process;
 
 /**
  * Class DropcatCommand
