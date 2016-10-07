@@ -8,8 +8,6 @@
 
 namespace Dropcat\Lib;
 
-use phpseclib\Net\SSH2;
-
 /**
  * Class DropcatFactories
  *

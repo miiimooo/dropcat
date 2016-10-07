@@ -1,6 +1,7 @@
 <?php
 namespace Dropcat\tests;
 
+use Dropcat\Command\CheckConnectionCommand;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,18 +32,6 @@ class CheckConnectionCommandTest extends \PHPUnit_Framework_TestCase
         // This way, it will be available to the command.
         $this->container->set('DropcatContainer', $this->container);
 
-
-        // mock our nice factory for SSH & RSA
-        // for SSH
-        $definition = new Definition('phpseclib\Net\SSH2');
-        $definition->setShared(false);
-        $this->container->setDefinition('ssh', $definition);
-
-        // for RSA
-        $definition = new Definition('phpseclib\Crypt\RSA');
-        $definition->setShared(false);
-        $this->container->setDefinition('rsa', $definition);
-
         $this->conf = $configuration = new Configuration();
 
         $this->application = new Application();
@@ -54,80 +43,93 @@ class CheckConnectionCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckConnection()
     {
-        // We mock the Process so that we can test commands without
-        // actually running them. And test if the command was succesfull
-        // or not.
-        $process_mock = $this->createMock('Symfony\Component\Process\Process');
 
-        // We mock the method "isSuccessful" to return true
-        // faking that it worked, in other words.
-        $process_mock->method('isSuccessful')
+        $this->container->setParameter('factory.libs.ssh', "phpseclib\\Net\\SSH2");
+        $sshmock_placeholder = $this->getMockBuilder($this->container->getParameter('factory.libs.ssh'))
+            ->setConstructorArgs(['Cathost', '1234']);
+
+
+        $sshMock = $sshmock_placeholder->setMethods(
+            [
+                'login',
+                'exec',
+                'disconnect',
+            ]
+        )->getMock();
+
+        $sshMock->method('disconnect')
             ->willReturn(true);
 
-        // We then mock the runProcess method so we can make sure
-        // that we return or mock of process, above.
-        $command_mock = $this->mock->setMethods(['runProcess'])
-            ->getMock();
+        $sshMock->expects($this->at(0))->method('login')
+            ->willReturn(true);
 
-        // Here we set up an assertion that
-        // + runProcess once
-        // + That when run, the parameter is 'drush @mysite cim myconfig -q -y
-        // + and that we return the mocked process, above.
-        $command_mock->expects($this->once())
-            ->method('runProcess')
-            ->with($this->equalTo('drush @sitetorecreatecachefor cr'))
-            ->willReturn($process_mock);
+        $sshMock->expects($this->at(1))
+            ->method('exec')
+            ->with($this->equalTo('/usr/bin/whoami'))
+            ->willReturn('Catuser');
+
+        $sshMock->expects($this->at(2))
+            ->method('exec')
+            ->with($this->equalTo('/bin/hostname'))
+            ->willReturn('Cathost');
+
+        $factories_mock = $this->createMock('Dropcat\Lib\DropcatFactories');
+
+        $factories_mock->method('ssh')
+            ->willReturn($sshMock);
+
+        $this->container->set('dropcat.factory', $factories_mock);
+
+        $rsaMock_placeholder = $this->getMockBuilder("phpseclib\\Crypt\\RSA");
+
+        $rsaMock = $rsaMock_placeholder->setMethods(
+            [
+                'setPassword',
+                'loadKey'
+            ]
+        )->getMock();
+
+        $rsaMock->expects($this->once())
+            ->method('setPassword')
+            ->willReturn(true);
+
+        $rsaMock->expects($this->once())
+            ->method('loadKey')
+            ->willReturn(true);
+
+        $this->container->set('rsa', $rsaMock);
+
 
         // Add our mocked command from above.
-        $this->application->add($command_mock);
+        $this->application->add(
+            new CheckConnectionCommand(
+                $this->container,
+                $this->conf
+            )
+        );
 
         // Initiate the tester.
-        $this->tester = new CommandTester($command_mock);
+        $this->tester = new CommandTester($this->application->find('check-connection'));
 
-        $options  = array(
+        $this->expectOutputString("Successfully logged in to server as user Catuser on Cathost.\n");
+        $options = array(
             'verbosity' => OutputInterface::VERBOSITY_VERBOSE
         );
 
         // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'configimport',
-                '-d'      => 'sitetorecreatecachefor'
+                'command' => 'check-connection',
+                '-s' => 'Cathost',
+                '-u' => 'Catuser',
+                '-p' => '667',
+                '-skp' => 'file-passwd',
+                '-if' => '/dev/null'
+
             ),
             $options
         );
-    }
-    public function testCacheRecreateFailed()
-    {
-        $process_mock = $this->createMock('Symfony\Component\Process\Process');
-        $process_mock->method('isSuccessful')
-            ->willReturn(false);
 
-        $command_mock = $this->mock->setMethods(['runProcess'])
-            ->getMock();
-
-        $command_mock->expects($this->once())
-            ->method('runProcess')
-            ->with($this->equalTo('drush @sitetorecreatecachefor cr'))
-            ->willReturn($process_mock);
-
-        $this->expectException('Symfony\Component\Process\Exception\ProcessFailedException');
-
-        $this->application->add($command_mock);
-
-        $this->tester = new CommandTester($command_mock);
-
-        $options  = array(
-            'verbosity' => OutputInterface::VERBOSITY_VERBOSE
-        );
-
-        // Execute the test, with our mocked stuff.
-        $this->tester->execute(
-            array(
-                'command' => 'configimport',
-                '-d'      => 'sitetorecreatecachefor'
-            ),
-            $options
-        );
+        echo $this->tester->getDisplay();
     }
 }
