@@ -47,7 +47,7 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo 'using drush alias: ' . $drush_alias . "\n";
         }
-        $process = new Process("drush @$drush_alias cc all");
+        $process = $this->runProcess("drush @$drush_alias cc all");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
