@@ -24,21 +24,6 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
     /** @var  CommandTester */
     private $tester;
 
-    protected function initiateContainer()
-    {
-        $this->container = new ContainerBuilder();
-        $this->container->setProxyInstantiator(new RuntimeInstantiator());
-        $loader = new YamlFileLoader(
-            $this->container,
-            new FileLocator(__DIR__ . '/../../../app/config')
-        );
-
-        $loader->load('services.yml');
-        // Setting DropcatContainer to the DI-container we use.
-        // This way, it will be available to the command.
-        $this->container->set('DropcatContainer', $this->container);
-    }
-
     public function setUp()
     {
 
@@ -62,8 +47,22 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         }
         $this->conf->method('deployIgnoreFiles')->willReturn($files_to_ignore);
 
+        // Setting up the container
+        $this->container = new ContainerBuilder();
+        $this->container->setProxyInstantiator(new RuntimeInstantiator());
+        $loader = new YamlFileLoader(
+            $this->container,
+            new FileLocator(__DIR__ . '/../../../app/config')
+        );
+
+        $loader->load('services.yml');
+        // Setting DropcatContainer to the DI-container we use.
+        // This way, it will be available to the command.
+        $this->container->set('DropcatContainer', $this->container);
+
+        $this->container->set('dropcat.configuration', $this->conf);
+
         $application = new Application();
-        $this->initiateContainer();
         $application->add($this->container->get('dropcat.command.tar'));
         $command      = $application->find('tar');
         $this->tester = new CommandTester($command);
@@ -78,10 +77,6 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
             $this->conf->localEnvironmentSeparator() .
             $this->conf->localEnvironmentBuildId() . '.tar';
 
-        var_dump($this->conf->localEnvironmentTmpPath());
-        var_dump($this->conf->localEnvironmentAppName());
-        var_dump($this->conf->localEnvironmentBuildId());
-        var_dump($filename);
         $options  = array(
             'verbosity' => OutputInterface::VERBOSITY_VERBOSE
         );
