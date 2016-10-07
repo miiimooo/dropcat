@@ -91,7 +91,7 @@ To override config in dropcat.yml, using options:
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
-        $backupDb= new Process(
+        $backupDb= $this->runProcess(
             "mkdir -p $backup_path/$drush_alias &&
             drush @$drush_alias sql-dump > $backup_path/$drush_alias/$timestamp.sql"
         );
@@ -112,7 +112,7 @@ To override config in dropcat.yml, using options:
                 $options = '--links ';
             }
 
-            $backupSite = new Process(
+            $backupSite = $this->runProcess(
                 "mkdir -p $backup_path/$drush_alias &&
                 drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ $options --include-conf --include-vcs"
             );
