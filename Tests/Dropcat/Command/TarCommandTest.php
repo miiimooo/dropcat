@@ -65,6 +65,12 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->add($this->container->get('dropcat.command.tar'));
         $command      = $application->find('tar');
+
+        // Silly assertion - is it a _proxy_ we have? For lazy-loading-check
+        $this->assertEquals(
+            substr(get_class($command), 0, 26),
+            'ProxyManagerGeneratedProxy'
+        );
         $this->tester = new CommandTester($command);
     }
 
