@@ -35,8 +35,7 @@ $container->set('DropcatContainer', $container);
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
 
 $container->setProxyInstantiator(new RuntimeInstantiator());
-$loader = new YamlFileLoader($container,
-    new FileLocator(__DIR__ . '/config'));
+$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
 
 $loader->load('services.yml');
 
