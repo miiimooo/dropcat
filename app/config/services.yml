@@ -147,3 +147,6 @@ services:
     rsa:
       class: phpseclib\Crypt\RSA
       shared: false
+    filesystem:
+      class: Symfony\Component\Filesystem\Filesystem
+      shared: false

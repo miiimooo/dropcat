@@ -36,7 +36,7 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->configuration->configuration) {
+        if (!empty($this->configuration->siteEnvironmentName())) {
             $siteName = $this->configuration->siteEnvironmentName();
             $server = $this->configuration->remoteEnvironmentServerName();
             $user = $this->configuration->remoteEnvironmentSshUser();
@@ -59,7 +59,7 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
             $drush_alias_name = $this->configuration->siteEnvironmentDrushAlias();
 
-            $drush_file = new Filesystem();
+            $drush_file = $this->container->get('filesystem');
 
             try {
                 $drush_file->dumpFile($home_dir.'/.drush/'.$drush_alias_name.

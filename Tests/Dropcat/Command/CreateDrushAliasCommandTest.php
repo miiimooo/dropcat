@@ -1,9 +1,8 @@
 <?php
 namespace Dropcat\tests;
 
-use Dropcat\Services\Configuration;
+use Dropcat\Command\CreateDrushAliasCommand;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -23,6 +22,10 @@ class CreateDrushAliasCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+
+        putenv("HOME=/tmp");
+        putenv("DROPCAT_ENV=stage");
+
         // building the container!
         $this->container = new ContainerBuilder();
 
@@ -30,107 +33,101 @@ class CreateDrushAliasCommandTest extends \PHPUnit_Framework_TestCase
         // This way, it will be available to the command.
         $this->container->set('DropcatContainer', $this->container);
 
-        $this->conf = $configuration = new Configuration();
+        // Mock filesystem
+        $this->filesystem_mock = $this->getMockBuilder('Symfony\Component\Filesystem\Filesystem')
+            ->getMock();
+
+        $this->conf = $this->getMockBuilder('Dropcat\Services\Configuration')
+            ->getMock();
+
+
+        $this->conf->method('remoteEnvironmentServerName')->willReturn('servername');
+        $this->conf->method('remoteEnvironmentSshUser')->willReturn('sshuser');
+        $this->conf->method('remoteEnvironmentWebRoot')->willReturn('webroot');
+        $this->conf->method('remoteEnvironmentAlias')->willReturn('envAlias');
+        $this->conf->method('siteEnvironmentUrl')->willReturn('envUrl');
+        $this->conf->method('remoteEnvironmentSshPort')->willReturn('sshPort');
 
         $this->application = new Application();
 
-        // We mock the command so that we later on can test Process.
-        $this->mock        = $this->getMockBuilder('\Dropcat\Command\ConfigImportCommand')
-            ->setConstructorArgs(array($this->container, $this->conf));
     }
 
-    public function testDrushCommand()
+    public function testAlias()
     {
-        // We mock the Process so that we can test commands without
-        // actually running them. And test if the command was succesfull
-        // or not.
-        $process_mock = $this->createMock('Symfony\Component\Process\Process');
+        $this->conf->method('siteEnvironmentName')->willReturn('something');
+        // Expected generated command:
+        $expected_drush_command = <<<EOF
+<?php 
+  \$aliases["something"] = array (
+    "remote-host" => "servername",
+    "remote-user" => "sshuser",
+    "root" => "webroot/envAlias/web",
+    "uri"  => "envUrl",
+    "ssh-options" => "-p sshPort",
+);
+EOF;
 
-        // We mock the method "isSuccessful" to return true
-        // faking that it worked, in other words.
-        $process_mock->method('isSuccessful')
+        $this->filesystem_mock->expects($this->once())
+            ->method('dumpFile')
+            ->with($this->equalTo('/tmp/.drush/.aliases.drushrc.php'), $this->equalTo($expected_drush_command))
             ->willReturn(true);
 
-        // We then mock the runProcess method so we can make sure
-        // that we return or mock of process, above.
-        $command_mock = $this->mock->setMethods(['runProcess'])
-            ->getMock();
+        $this->container->set('filesystem', $this->filesystem_mock);
 
-        // Here we set up an assertion that
-        // + runProcess once
-        // + That when run, the parameter is 'drush @mysite cim myconfig -q -y
-        // + and that we return the mocked process, above.
-        $command_mock->expects($this->once())
-            ->method('runProcess')
-            ->with($this->equalTo('drush @mysite cim myconfig -q -y'))
-            ->willReturn($process_mock);
-
-        // Add our mocked command from above.
-        $this->application->add($command_mock);
+        $command = new CreateDrushAliasCommand($this->container, $this->conf);
+        $this->application->add($command);
 
         // Initiate the tester.
-        $this->tester = new CommandTester($command_mock);
+        $this->tester = new CommandTester($command);
 
         // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'configimport',
-                '-d'      => 'mysite',
-                '-c'      => 'myconfig'
+                'command' => 'create-drush-alias'
             )
         );
     }
 
-    public function testVerboseDrushCommand()
+    public function testAliasErrorWriteFile()
     {
-        $p = $this->createMock('Symfony\Component\Process\Process');
-        $p->method('isSuccessful')
-            ->willReturn(true);
+        $this->conf->method('siteEnvironmentName')->willReturn('something');
+        $this->filesystem_mock->expects($this->once())
+            ->method('dumpFile')
+            ->will($this->throwException(new \Symfony\Component\Filesystem\Exception\IOException('')));
 
-        $m = $this->mock->setMethods(['runProcess'])
-            ->getMock();
+        $this->expectOutputString('An error occurred while creating your file at ');
+        $this->container->set('filesystem', $this->filesystem_mock);
 
-        $m->expects($this->once())
-            ->method('runProcess')
-            ->with($this->equalTo('drush @mysite cim myconfig -y'))
-            ->willReturn($p);
+        $command = new CreateDrushAliasCommand($this->container, $this->conf);
+        $this->application->add($command);
 
-        $this->application->add($m);
+        // Initiate the tester.
+        $this->tester = new CommandTester($command);
 
-        $this->tester = new CommandTester($m);
+        // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'configimport',
-                '-d'      => 'mysite',
-                '-c'      => 'myconfig',
-            ),
-            array(
-                'verbosity' => OutputInterface::VERBOSITY_VERBOSE
+                'command' => 'create-drush-alias'
             )
         );
     }
-
-    public function testCommandFail()
+    public function testAliasErrorConfig()
     {
-        $p = $this->createMock('Symfony\Component\Process\Process');
-        $p->method('isSuccessful')
-            ->willReturn(false);
+        $this->conf->method('siteEnvironmentName')->willReturn('');
 
-        $m = $this->mock->setMethods(['runProcess'])
-            ->getMock();
+        $this->expectOutputString('I cannot create any alias, please check your --env parameter');
+        $this->container->set('filesystem', $this->filesystem_mock);
 
-        $m->expects($this->once())
-            ->method('runProcess')
-            ->willReturn($p);
+        $command = new CreateDrushAliasCommand($this->container, $this->conf);
+        $this->application->add($command);
 
-        $this->application->add($m);
-        $this->expectException('\Symfony\Component\Process\Exception\ProcessFailedException');
-        $this->tester = new CommandTester($m);
+        // Initiate the tester.
+        $this->tester = new CommandTester($command);
+
+        // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'configimport',
-                '-d'      => 'mysite',
-                '-c'      => 'myconfig',
+                'command' => 'create-drush-alias'
             )
         );
     }
