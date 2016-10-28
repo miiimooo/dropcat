@@ -60,7 +60,7 @@ class EntityUpdateCommandTest extends \PHPUnit_Framework_TestCase
         // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'entity-updat',
+                'command' => 'entity-update',
                 '-d'      => 'mysite',
             )
         );
@@ -91,7 +91,7 @@ class EntityUpdateCommandTest extends \PHPUnit_Framework_TestCase
         // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'entity-updat',
+                'command' => 'entity-update',
                 '-d'      => 'mysite',
             ),
             array(

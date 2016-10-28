@@ -75,8 +75,8 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         $remote_backup_server_user = $input->getOption('remote_backup_server_user');
         $remote_backup_server_port = $input->getOption('remote_backup_server_port');
 
-        exec("scp -C -P $remote_backup_server_port $remote_backup_server_user@$remote_backup_server:$remote_backup_path/$remote_db_backup_name .");
-
+        $process = $this->runProcess("scp -C -P $remote_backup_server_port $remote_backup_server_user@$remote_backup_server:$remote_backup_path/$remote_db_backup_name .");
+        $process->run();
         $output->writeln('<info>Task: ' . $remote_db_backup_name . ' copied to current folder</info>');
     }
 }
