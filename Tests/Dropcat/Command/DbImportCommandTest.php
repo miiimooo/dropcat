@@ -9,9 +9,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 
-/**
- * Created by SOPA
- */
 class DbImportCommandTest extends \PHPUnit_Framework_TestCase
 {
 

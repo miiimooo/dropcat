@@ -8,10 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-
-/**
- * Created by SOPA
- */
 class ConfigImportCommandTest extends \PHPUnit_Framework_TestCase
 {
 
