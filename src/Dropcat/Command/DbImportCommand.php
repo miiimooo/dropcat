@@ -66,7 +66,7 @@ To override config in dropcat.yml, using options:
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
-        $process = new Process(
+        $process = $this->runProcess(
             "drush @$drush_alias sql-drop -y &&
             drush @$drush_alias sql-cli < $path_to_db"
         );
