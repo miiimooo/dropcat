@@ -78,8 +78,10 @@ To run with default options (using config from dropcat.yml in the current dir):
         $identity_file_content = file_get_contents($identity_file);
         $ssh_key_password = $input->getOption('ssh_key_password');
 
-        $ssh = new SSH2($server, $ssh_port);
-        $auth = new RSA();
+        $ssh = $this->container->get('dropcat.factory')
+            ->ssh($server, $ssh_port);
+
+        $auth = $this->container->get('rsa');
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }

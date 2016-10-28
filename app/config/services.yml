@@ -1,3 +1,6 @@
+parameters:
+    factory.libs.ssh: "phpseclib\\Net\\SSH2"
+
 services:
     symfony.application:
       class: Symfony\Component\Console\Application
@@ -138,3 +141,9 @@ services:
       arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
+    dropcat.factory:
+      class: Dropcat\Lib\DropcatFactories
+      arguments:  ['@DropcatContainer']
+    rsa:
+      class: phpseclib\Crypt\RSA
+      shared: false
