@@ -66,7 +66,7 @@ To override config in dropcat.yml, using options:
         $io->confirm('This will add files for setting up a drupal site in current folder, continue?', true);
 
         // (startdir is needed for application)
-        $process = new Process("git clone git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init");
+        $process = $this->runProcess("git clone git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init");
 
         $process->run();
         // Executes after the command finishes.
