@@ -60,7 +60,7 @@ To override config in dropcat.yml, using options:
             if (isset($decodeJson->{'nodeVersion'})) {
                 $nodeVersion = $decodeJson->{'nodeVersion'};
                 $output->writeln('<info>Installing/setting node version ' . $nodeVersion . '</info>');
-                $npmInstall = new Process(". $nvmDir/nvm.sh && nvm install $nodeVersion && npm install");
+                $npmInstall = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm install $nodeVersion && npm install");
                 $npmInstall->setTimeout(3600);
                 $npmInstall->run();
                 echo $npmInstall->getOutput();
