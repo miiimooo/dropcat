@@ -93,7 +93,7 @@ class RunGulpCommand extends RunCommand
                 }
                 $output->writeln('<info>Installing gulp stuff</info>');
                 $nodeVersion = $decodeJson->{'nodeVersion'};
-                $gulp = new Process(". $nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && $env gulp $gulpOptions");
+                $gulp = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm use $nodeVersion && cd $gulpDir && $env gulp $gulpOptions");
                 $gulp->setTimeout(3600);
                 $gulp->run();
                 echo $gulp->getOutput();

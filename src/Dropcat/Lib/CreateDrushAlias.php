@@ -49,13 +49,13 @@ class CreateDrushAlias
 
     public function getValue()
     {
-        $aliasOut = '<?php 
+        $aliasOut = '<?php
   $aliases["' . $this->setName . '"] = array (
     "remote-host" => "' . $this->setServer . '",
     "remote-user" => "' . $this->setUser . '",
     "root" => "' . $this->setWebRoot . '/' . $this->setSitePath . '/web",
     "uri"  => "' . $this->setUrl . '",
-    "ssh-options" => "-p ' . $this->setSSHPort . '",
+    "ssh-options" => "-q -p ' . $this->setSSHPort . '",
 );';
         return ($aliasOut);
     }
