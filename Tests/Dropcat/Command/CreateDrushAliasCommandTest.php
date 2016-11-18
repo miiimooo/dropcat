@@ -57,13 +57,13 @@ class CreateDrushAliasCommandTest extends \PHPUnit_Framework_TestCase
         $this->conf->method('siteEnvironmentName')->willReturn('something');
         // Expected generated command:
         $expected_drush_command = <<<EOF
-<?php 
+<?php
   \$aliases["something"] = array (
     "remote-host" => "servername",
     "remote-user" => "sshuser",
     "root" => "webroot/envAlias/web",
     "uri"  => "envUrl",
-    "ssh-options" => "-p sshPort",
+    "ssh-options" => "-q -p sshPort",
 );
 EOF;
 
