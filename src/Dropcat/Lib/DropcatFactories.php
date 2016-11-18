@@ -30,7 +30,22 @@ class DropcatFactories
 
     public function ssh($server, $ssh_port)
     {
-        $class = $this->container->getParameter('factory.libs.ssh');
-        return new $class($server, $ssh_port);
+        return $this->__call(__FUNCTION__, func_get_args());
+    }
+
+    public function symfonystyle()
+    {
+        return $this->__call(__FUNCTION__, func_get_args());
+    }
+
+    public function splfileobject()
+    {
+        return $this->__call(__FUNCTION__, func_get_args());
+    }
+
+    public function __call($name, $args) {
+        $name = strtolower($name);
+        $class = new \ReflectionClass($this->container->getParameter('factory.libs.' . $name));
+        return $class->newInstanceArgs($args);
     }
 }

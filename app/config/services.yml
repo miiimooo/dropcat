@@ -1,5 +1,7 @@
 parameters:
     factory.libs.ssh: "phpseclib\\Net\\SSH2"
+    factory.libs.symfonystyle: "Symfony\\Component\\Console\\Style\\SymfonyStyle"
+    factory.libs.splfileobject: "\\SplFileObject"
 
 services:
     symfony.application:
