@@ -78,7 +78,7 @@ To override config in dropcat.yml, using options:
         $io->note('Wk Drupal Template cloned to web_init/web');
 
         // Rename files and functions
-        $fs = new Filesystem();
+        $fs = $this->container->get('filesystem');
 
         // Rename profile to project name
         $fs->rename('web_init/web/profiles/wk-standard', 'web_init/web/profiles/' . $my_profile);
