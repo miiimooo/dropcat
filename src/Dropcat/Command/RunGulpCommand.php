@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -82,25 +83,25 @@ class RunGulpCommand extends RunCommand
         if ($packageJsonFile === null) {
             $packageJsonFile = 'package.json';
         }
-        if (file_exists($packageJsonFile)) {
-            $packageJson = file_get_contents($packageJsonFile);
-            $decodeJson = json_decode($packageJson);
-
-            if (isset($decodeJson->{'nodeVersion'})) {
-                $env = null;
-                if (isset($nodeEnv)) {
-                    $env = 'NODE_ENV=' . $nodeEnv;
-                }
-                $output->writeln('<info>Installing gulp stuff</info>');
-                $gulp = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
-                $gulp->setTimeout(3600);
-                $gulp->run();
-                echo $gulp->getOutput();
-                if (!$gulp->isSuccessful()) {
-                    throw new ProcessFailedException($gulp);
-                }
-            }
+        if (!file_exists($packageJsonFile)) {
+            throw new Exception('Not package.json found.');
         }
-          $output->writeln('<info>Task: node:gulp finished</info>');
+        if (!file_exists('.nvmrc')) {
+            throw new Exception('No .nvmrc file found.');
+        }
+
+        $env = null;
+        if (isset($nodeEnv)) {
+            $env = 'NODE_ENV=' . $nodeEnv;
+        }
+        $output->writeln('<info>Installing gulp stuff</info>');
+        $gulp = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
+        $gulp->setTimeout(3600);
+        $gulp->run();
+        echo $gulp->getOutput();
+        if (!$gulp->isSuccessful()) {
+            throw new ProcessFailedException($gulp);
+        }
+        $output->writeln('<info>Task: node:gulp finished</info>');
     }
 }

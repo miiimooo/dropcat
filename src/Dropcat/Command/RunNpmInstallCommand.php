@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,24 +55,21 @@ To override config in dropcat.yml, using options:
         if ($packageJsonFile === null) {
             $packageJsonFile = 'package.json';
         }
-        if (file_exists($packageJsonFile)) {
-            $packageJson = file_get_contents($packageJsonFile);
-            $decodeJson = json_decode($packageJson);
-            if (isset($decodeJson->{'nodeVersion'})) {
-                $nodeVersion = $decodeJson->{'nodeVersion'};
-                $output->writeln('<info>Installing/setting node version ' . $nodeVersion . '</info>');
-                $npmInstall = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm install $nodeVersion && npm install");
-                $npmInstall->setTimeout(3600);
-                $npmInstall->run();
-                echo $npmInstall->getOutput();
-                if (!$npmInstall->isSuccessful()) {
-                    throw new ProcessFailedException($npmInstall);
-                }
-            }
-        } else {
-            $output->writeln('<info>No package.json file found, please check your configuration.</info>');
-            exit(1);
+        if (!file_exists($packageJsonFile)) {
+            throw new Exception('Not package.json found.');
         }
+        if (!file_exists('.nvmrc')) {
+            throw new Exception('No .nvmrc file found.');
+        }
+
+        $npmInstall = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm install && npm install");
+        $npmInstall->setTimeout(3600);
+        $npmInstall->run();
+        echo $npmInstall->getOutput();
+        if (!$npmInstall->isSuccessful()) {
+            throw new ProcessFailedException($npmInstall);
+        }
+
         $output->writeln('<info>Task: node:npm-install finished</info>');
     }
 }
