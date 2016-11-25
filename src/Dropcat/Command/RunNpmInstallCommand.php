@@ -23,7 +23,7 @@ class RunNpmInstallCommand extends RunCommand
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat node:npm-install</info>
 To override config in dropcat.yml, using options:
-<info>dropcat run-local --package-json=/foo/bar/package.json</info>';
+<info>dropcat run-local --nvmrc=/foo/bar/.nvmrc</info>';
 
         $this->setName("node:npm-install")
             ->setDescription("do a npm install")
@@ -37,11 +37,11 @@ To override config in dropcat.yml, using options:
                         $this->configuration->nodeNvmDirectory()
                     ),
                     new InputOption(
-                        'package-json',
-                        'pj',
+                        'nvmrc',
+                        'nc',
                         InputOption::VALUE_OPTIONAL,
-                        'Path to package.json',
-                        $this->configuration->nodePackageJsonFile()
+                        'Path to .nvmrc file',
+                        $this->configuration->nodeNvmRcFile()
                     ),
                 )
             )
@@ -51,18 +51,14 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $nvmDir = $input->getOption('nvm-dir');
-        $packageJsonFile = $input->getOption('package-json');
-        if ($packageJsonFile === null) {
-            $packageJsonFile = 'package.json';
+        $nodeNvmRcFile = $input->getOption('nvmrc');
+        if ($nodeNvmRcFile === null) {
+            $nodeNvmRcFile = getcwd() . '/.nvmrc';
         }
-        if (!file_exists($packageJsonFile)) {
-            throw new Exception('No package.json found.');
-        }
-        if (!file_exists('.nvmrc')) {
+        if (!file_exists($nodeNvmRcFile)) {
             throw new Exception('No .nvmrc file found.');
         }
-
-        $npmInstall = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm install && npm install");
+        $npmInstall = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm install && npm install");
         $npmInstall->setTimeout(3600);
         $npmInstall->run();
         echo $npmInstall->getOutput();

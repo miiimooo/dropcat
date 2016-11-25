@@ -23,7 +23,7 @@ class RunGulpCommand extends RunCommand
     To run with default options (using config from dropcat.yml in the currrent dir):
     <info>dropcat node:gulp</info>
     To override config in dropcat.yml, using options:
-    <info>dropcat node:gulp --gulp-dir=/foo/bar</info>';
+    <info>dropcat node:gulp --gulp-dir=/foo/bar --nvmrc=/foo/bar/.nvmrc</info>';
 
         $this->setName("node:gulp")
           ->setDescription("run gulp")
@@ -44,11 +44,11 @@ class RunGulpCommand extends RunCommand
                     $this->configuration->nodeNvmDirectory()
                 ),
                 new InputOption(
-                    'package-json',
-                    'pj',
+                    'nvmrc',
+                    'nc',
                     InputOption::VALUE_OPTIONAL,
-                    'Path to package.json',
-                    $this->configuration->nodePackageJsonFile()
+                    'Path to .nvmrc file',
+                    $this->configuration->nodeNvmRcFile()
                 ),
                 new InputOption(
                     'gulp-options',
@@ -71,22 +71,19 @@ class RunGulpCommand extends RunCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-          $nvmDir = $input->getOption('nvm-dir');
-          $packageJsonFile = $input->getOption('package-json');
-          $gulpDir = $input->getOption('gulp-dir');
-          $gulpOptions = $input->getOption('gulp-options');
-          $nodeEnv = $input->getOption('node-env');
+        $nvmDir = $input->getOption('nvm-dir');
+        $gulpDir = $input->getOption('gulp-dir');
+        $gulpOptions = $input->getOption('gulp-options');
+        $nodeEnv = $input->getOption('node-env');
+        $nodeNvmRcFile = $input->getOption('nvmrc');
 
         if ($gulpDir === null) {
             $gulpDir = '.';
         }
-        if ($packageJsonFile === null) {
-            $packageJsonFile = 'package.json';
+        if ($nodeNvmRcFile === null) {
+            $nodeNvmRcFile = getcwd() . '/.nvmrc';
         }
-        if (!file_exists($packageJsonFile)) {
-            throw new Exception('No package.json found.');
-        }
-        if (!file_exists('.nvmrc')) {
+        if (!file_exists($nodeNvmRcFile)) {
             throw new Exception('No .nvmrc file found.');
         }
 
@@ -95,7 +92,7 @@ class RunGulpCommand extends RunCommand
             $env = 'NODE_ENV=' . $nodeEnv;
         }
         $output->writeln('<info>Installing gulp stuff</info>');
-        $gulp = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
+        $gulp = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
         $gulp->setTimeout(3600);
         $gulp->run();
         echo $gulp->getOutput();
