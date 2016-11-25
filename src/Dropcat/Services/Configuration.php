@@ -650,13 +650,15 @@ class Configuration
             return null;
         }
     }
-    public function nodePackageJsonFile() {
-        if (isset($this->configuration['node']['package_json_file'])) {
-            return $this->configuration['node']['package_json_file'];
+    
+    public function nodeNvmRcFile() {
+        if (isset($this->configuration['node']['nvmrc_file'])) {
+            return $this->configuration['node']['nvmrc_file'];
         } else {
             return null;
         }
     }
+
     public function gulpDirectory() {
         if (isset($this->configuration['node']['gulp_directory'])) {
             return $this->configuration['node']['gulp_directory'];
@@ -672,7 +674,7 @@ class Configuration
         }
     }
     public function nodeEnvironment() {
-        if (isset($this->configuration['node']['environment'])){
+          if (isset($this->configuration['node']['environment'])){
             $nodeEnvironment = $this->configuration['node']['environment'];
             return $nodeEnvironment;
         }
@@ -699,5 +701,3 @@ class Configuration
         }
     }
 }
-
-

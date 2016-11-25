@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Services\Configuration;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +23,7 @@ class RunNpmInstallCommand extends RunCommand
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat node:npm-install</info>
 To override config in dropcat.yml, using options:
-<info>dropcat run-local --package-json=/foo/bar/package.json</info>';
+<info>dropcat run-local --nvmrc=/foo/bar/.nvmrc</info>';
 
         $this->setName("node:npm-install")
             ->setDescription("do a npm install")
@@ -36,11 +37,11 @@ To override config in dropcat.yml, using options:
                         $this->configuration->nodeNvmDirectory()
                     ),
                     new InputOption(
-                        'package-json',
-                        'pj',
+                        'nvmrc',
+                        'nc',
                         InputOption::VALUE_OPTIONAL,
-                        'Path to package.json',
-                        $this->configuration->nodePackageJsonFile()
+                        'Path to .nvmrc file',
+                        $this->configuration->nodeNvmRcFile()
                     ),
                 )
             )
@@ -50,28 +51,21 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $nvmDir = $input->getOption('nvm-dir');
-        $packageJsonFile = $input->getOption('package-json');
-        if ($packageJsonFile === null) {
-            $packageJsonFile = 'package.json';
+        $nodeNvmRcFile = $input->getOption('nvmrc');
+        if ($nodeNvmRcFile === null) {
+            $nodeNvmRcFile = getcwd() . '/.nvmrc';
         }
-        if (file_exists($packageJsonFile)) {
-            $packageJson = file_get_contents($packageJsonFile);
-            $decodeJson = json_decode($packageJson);
-            if (isset($decodeJson->{'nodeVersion'})) {
-                $nodeVersion = $decodeJson->{'nodeVersion'};
-                $output->writeln('<info>Installing/setting node version ' . $nodeVersion . '</info>');
-                $npmInstall = new Process("source $nvmDir/nvm.sh && . $nvmDir/nvm.sh && nvm install $nodeVersion && npm install");
-                $npmInstall->setTimeout(3600);
-                $npmInstall->run();
-                echo $npmInstall->getOutput();
-                if (!$npmInstall->isSuccessful()) {
-                    throw new ProcessFailedException($npmInstall);
-                }
-            }
-        } else {
-            $output->writeln('<info>No package.json file found, please check your configuration.</info>');
-            exit(1);
+        if (!file_exists($nodeNvmRcFile)) {
+            throw new Exception('No .nvmrc file found.');
         }
+        $npmInstall = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm install && npm install");
+        $npmInstall->setTimeout(3600);
+        $npmInstall->run();
+        echo $npmInstall->getOutput();
+        if (!$npmInstall->isSuccessful()) {
+            throw new ProcessFailedException($npmInstall);
+        }
+
         $output->writeln('<info>Task: node:npm-install finished</info>');
     }
 }
