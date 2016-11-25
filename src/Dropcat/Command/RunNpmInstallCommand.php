@@ -56,7 +56,7 @@ To override config in dropcat.yml, using options:
             $packageJsonFile = 'package.json';
         }
         if (!file_exists($packageJsonFile)) {
-            throw new Exception('Not package.json found.');
+            throw new Exception('No package.json found.');
         }
         if (!file_exists('.nvmrc')) {
             throw new Exception('No .nvmrc file found.');
