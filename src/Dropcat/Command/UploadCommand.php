@@ -148,18 +148,23 @@ To override config in dropcat.yml, using options:
 
         $sftp = new SFTP($server, $port, $timeout);
         $sftp->setTimeout(999);
+
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
         $auth->loadKey($identity_file_content);
-
         try {
             $login = $sftp->login($user, $auth);
             if (!$login) {
                 throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
             }
             $transfer = $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
+            $status = $sftp->getExitStatus();
+            if ($status !== 0) {
+                echo "Could not upload file, error code $status\n";
+                exit($status);
+            }
             if (!$transfer) {
                 throw new Exception('Upload failed of ' . $tarfile);
             }
@@ -167,6 +172,13 @@ To override config in dropcat.yml, using options:
             echo $e->getMessage();
             exit(1);
         }
+        if ($sftp->stat($targetdir/$tarfile)) {
+            echo 'upload successful' . "\n";
+        } else {
+            echo 'upload did not succeed.' . "\n";
+            exit(1);
+        }
+
         $sftp->disconnect();
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {

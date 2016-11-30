@@ -106,7 +106,6 @@ To override config in dropcat.yml, using options:
         $ssh_key_password = $input->getOption('ssh_key_password');
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
-
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
 
@@ -131,6 +130,17 @@ To override config in dropcat.yml, using options:
 
         $ssh->exec("rm $symlink.backup");
         $ssh->exec("mv -b $symlink $symlink.backup");
+        $ssh->exec("ls -l $original");
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "original folder does not exist, creating it\n";
+            $ssh->exec("mkdir -p $original");
+            $status = $ssh->getExitStatus();
+            if ($status !== 0) {
+              echo "could not create orginal folder, $original, you need to create it manually, error code $status\n";
+              exit(1);
+            }
+        }
         $ssh->exec('ln --backup -snf ' . $original . ' ' . $symlink);
 
         $output->writeln('<info>Task: symlink finished</info>');
