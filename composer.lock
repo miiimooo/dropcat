@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "535f21f47cb929252c51b7609021b7e3",
-    "content-hash": "a8490659b96231225437033fafb994d0",
+    "hash": "d56cf8abe251f37244d99569580ff385",
+    "content-hash": "34c760c7bc93955c905c1fd5f944a640",
     "packages": [
         {
             "name": "consolidation/annotated-command",
@@ -1513,16 +1513,16 @@
         },
         {
             "name": "symfony/proxy-manager-bridge",
-            "version": "v3.1.4",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/proxy-manager-bridge.git",
-                "reference": "f70d804e5ea6f8c1584d9c9d0686aaaf91c2dfed"
+                "reference": "fdd98973bc10ece7e29797a4b04841f72f20e124"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/proxy-manager-bridge/zipball/f70d804e5ea6f8c1584d9c9d0686aaaf91c2dfed",
-                "reference": "f70d804e5ea6f8c1584d9c9d0686aaaf91c2dfed",
+                "url": "https://api.github.com/repos/symfony/proxy-manager-bridge/zipball/fdd98973bc10ece7e29797a4b04841f72f20e124",
+                "reference": "fdd98973bc10ece7e29797a4b04841f72f20e124",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -1563,7 +1563,7 @@
             ],
             "description": "Symfony ProxyManager Bridge",
             "homepage": "https://symfony.com",
-            "time": "2016-07-19 10:45:57"
+            "time": "2016-10-08 18:47:22"
         },
         {
             "name": "symfony/var-dumper",
