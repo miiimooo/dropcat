@@ -185,7 +185,7 @@ To override config in dropcat.yml, using options:
             }
         } else {
             echo 'check for upload did not succeed.' . "\n";
-          //  exit(1);
+            exit(1);
         }
         $sftp->disconnect();
         $output->writeln('<info>Task: upload finished</info>');
