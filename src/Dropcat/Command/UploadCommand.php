@@ -145,7 +145,7 @@ To override config in dropcat.yml, using options:
         } else {
             $tarfile = $app_name . $separator . $build_id . '.tar';
         }
-
+        $localFileSha1 = sha1_file("$tar_dir$tarfile");
         $sftp = new SFTP($server, $port, $timeout);
         $sftp->setTimeout(999);
 
@@ -157,14 +157,9 @@ To override config in dropcat.yml, using options:
         try {
             $login = $sftp->login($user, $auth);
             if (!$login) {
-                throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
+                throw new Exception('login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
             }
             $transfer = $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
-            $status = $sftp->getExitStatus();
-            if ($status !== 0) {
-                echo "Could not upload file, error code $status\n";
-                exit($status);
-            }
             if (!$transfer) {
                 throw new Exception('Upload failed of ' . $tarfile);
             }
@@ -172,18 +167,31 @@ To override config in dropcat.yml, using options:
             echo $e->getMessage();
             exit(1);
         }
-        if ($sftp->stat($targetdir/$tarfile)) {
-            echo 'upload successful' . "\n";
-        } else {
-            echo 'upload did not succeed.' . "\n";
-            exit(1);
-        }
 
+        $tarExists = $sftp->file_exists("$tar_dir$tarfile");
+        if ($tarExists) {
+            $remoteFileSha1 = $sftp->exec("sha1sum $tar_dir$tarfile | awk '{print $1}'");
+            if ($output->isVerbose()) {
+                echo "tar is at $tar_dir$tarfile\n";
+                echo "local file hash is $localFileSha1\n";
+                echo "remote file hash is $remoteFileSha1\n";
+            }
+            if (trim($localFileSha1) == trim($remoteFileSha1)) {
+                echo "SHA1 for file match\n";
+                echo 'upload successful' . "\n";
+            } else {
+                echo "SHA1 for file do not match.";
+                exit(1);
+            }
+        } else {
+            echo 'check for upload did not succeed.' . "\n";
+          //  exit(1);
+        }
         $sftp->disconnect();
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {
-            echo 'Tar is going to be saved ' . $keeptar . "\n";
-            echo 'Path to tar ' . "$tar_dir$tarfile" . "\n";
+            echo 'tar is going to be saved ' . $keeptar . "\n";
+            echo 'path to tar ' . "$tar_dir$tarfile" . "\n";
         }
         if ($keeptar === true) {
             if ($output->isVerbose()) {
