@@ -43,6 +43,11 @@ class DropcatFactories
         return $this->__call(__FUNCTION__, func_get_args());
     }
 
+    public function sftp()
+    {
+        return $this->__call(__FUNCTION__, func_get_args());
+    }
+
     public function __call($name, $args) {
         $name = strtolower($name);
         $class = new \ReflectionClass($this->container->getParameter('factory.libs.' . $name));

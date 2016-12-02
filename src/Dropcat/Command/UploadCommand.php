@@ -131,32 +131,32 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app_name = $input->getOption('app-name');
-        $build_id = $input->getOption('build-id');
-        $separator = $input->getOption('separator');
-        $tar = $input->getOption('tar');
-        $tar_dir = $input->getOption('tar_dir');
-        $server = $input->getOption('server');
-        $user = $input->getOption('user');
-        $targetdir = $input->getOption('target_dir');
-        $port = $input->getOption('ssh_port');
-        $ssh_key_password = $input->getOption('ssh_key_password');
-        $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
-        $timeout = $input->getOption('timeout');
-        $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
-        $checksha1 = $input->getOption('dontchecksha1') ? 'FALSE' : 'TRUE';
+        $app_name              = $input->getOption('app-name');
+        $build_id              = $input->getOption('build-id');
+        $separator             = $input->getOption('separator');
+        $tar                   = $input->getOption('tar');
+        $tar_dir               = $input->getOption('tar_dir');
+        $server                = $input->getOption('server');
+        $user                  = $input->getOption('user');
+        $targetdir             = $input->getOption('target_dir');
+        $port                  = $input->getOption('ssh_port');
+        $ssh_key_password      = $input->getOption('ssh_key_password');
+        $identity_file         = $input->getOption('identity_file');
+        $identity_file_content = $this->getKeyContents($identity_file);
+        $timeout               = $input->getOption('timeout');
+        $keeptar               = $input->getOption('keeptar') ? true : false;
+        $checksha1             = $input->getOption('dontchecksha1') ? false : true;
 
         if (isset($tar)) {
             $tarfile = $tar;
         } else {
             $tarfile = $app_name . $separator . $build_id . '.tar';
         }
-        $localFileSha1 = sha1_file("$tar_dir$tarfile");
-        $sftp = new SFTP($server, $port, $timeout);
+        $localFileSha1 = $this->getSha1OfFile($tar_dir, $tarfile);
+        $sftp = $this->container->get('dropcat.factory')->sftp($server, $port, $timeout);
         $sftp->setTimeout(999);
 
-        $auth = new RSA();
+        $auth = $this->container->get('rsa');
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
@@ -172,7 +172,7 @@ To override config in dropcat.yml, using options:
             }
         } catch (Exception $e) {
             echo $e->getMessage();
-            exit(1);
+            $this->exitCommand(1);
         }
 
         $tarExists = $sftp->file_exists("$tar_dir$tarfile");
@@ -191,7 +191,7 @@ To override config in dropcat.yml, using options:
                     echo 'upload successful' . "\n";
                 } else {
                     echo "SHA1 for file do not match.";
-                    exit(1);
+                    $this->exitCommand(1);
                 }
             } else {
                 echo 'upload seems to be successful, but SHA1 for file is not checked' . "\n";
@@ -203,12 +203,12 @@ To override config in dropcat.yml, using options:
                 echo "remote file hash is $remoteFileSha1\n";
             }
             echo 'check for upload did not succeed.' . "\n";
-            exit(1);
+            $this->exitCommand(1);
         }
         $sftp->disconnect();
         $output->writeln('<info>Task: upload finished</info>');
         if ($output->isVerbose()) {
-            echo 'tar is going to be saved ' . $keeptar . "\n";
+            echo 'tar is going to be saved ' . (($keeptar) ? 'TRUE':'FALSE') . "\n";
             echo 'path to tar ' . "$tar_dir$tarfile" . "\n";
         }
         if ($keeptar === true) {
@@ -216,10 +216,45 @@ To override config in dropcat.yml, using options:
                 echo "tar file is not deleted \n";
             }
         } else {
-            unlink("$tar_dir$tarfile");
+            $this->removeTar($tar_dir, $tarfile);
             if ($output->isVerbose()) {
                 echo "tar file is deleted \n";
             }
         }
+    }
+
+    /**
+     * @param $identity_file
+     * @codeCoverageIgnore
+     *
+     * @return string
+     */
+    protected function getKeyContents($identity_file)
+    {
+        $identity_file_content = file_get_contents($identity_file);
+        return $identity_file_content;
+    }
+
+    /**
+     * @param $tar_dir
+     * @param $tarfile
+     * @codeCoverageIgnore
+     *
+     * @return string
+     */
+    protected function getSha1OfFile($tar_dir, $tarfile)
+    {
+        $localFileSha1 = sha1_file("$tar_dir$tarfile");
+        return $localFileSha1;
+    }
+
+    /**
+     * @param $tar_dir
+     * @param $tarfile
+     * @codeCoverageIgnore
+     */
+    protected function removeTar($tar_dir, $tarfile)
+    {
+        unlink("$tar_dir$tarfile");
     }
 }

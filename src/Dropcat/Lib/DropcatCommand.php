@@ -43,4 +43,9 @@ class DropcatCommand extends Command
     {
         return new Process($command);
     }
+
+    protected function exitCommand($exitCode = 1)
+    {
+        exit($exitCode);
+    }
 }
