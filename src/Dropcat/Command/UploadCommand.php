@@ -145,7 +145,7 @@ To override config in dropcat.yml, using options:
         $identity_file_content = file_get_contents($identity_file);
         $timeout = $input->getOption('timeout');
         $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
-        $checksha1 = $input->getOption('dontchecksha1') ? 'FALSE' : 'TRUE';
+        $checksha1 = $input->getOption('dontchecksha1') ? false : true;
 
         if (isset($tar)) {
             $tarfile = $tar;
@@ -194,7 +194,7 @@ To override config in dropcat.yml, using options:
                     exit(1);
                 }
             } else {
-                echo 'upload seems to be successful, but SHA1 for file is not checked' . "\n";
+                echo 'upload seems to be successful, but SHA1 for file is not checked' . " $checksha1\n";
             }
         } else {
             if ($output->isVerbose()) {
