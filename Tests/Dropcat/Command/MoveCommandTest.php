@@ -762,7 +762,7 @@ Could not create symlink to folder, error code 3
 
         $this->sshMock->expects($this->at(10))
             ->method('exec')
-            ->with($this->equalTo('mv /temp_folder/upload@2 /srv/www/webroot/upload@'))
+            ->with($this->equalTo('mv /temp_folder/upload@2 /srv/www/webroot/upload@2'))
             ->willReturn(0);
 
         $this->sshMock->expects($this->at(11))
