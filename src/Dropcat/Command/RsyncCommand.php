@@ -21,7 +21,7 @@ class RsyncCommand extends DropcatCommand
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat rsync</info>
 To override config in dropcat.yml, using options:
-<info>dropcat rsync -server 127.0.0.0 -i my_pub.key</info>';
+<info>dropcat rsync --server 127.0.0.0 -i my_pub.key</info>';
 
         $this->setName("rsync")
             ->setDescription("Rsync folders")

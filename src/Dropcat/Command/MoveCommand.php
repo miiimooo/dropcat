@@ -176,8 +176,17 @@ To override config in dropcat.yml, using options:
         }
 
         $ssh->exec("mkdir $temp_folder/$deploy_folder");
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Could not create temp folder for deploy, error code $status\n";
+            exit($status);
+        }
         $ssh->exec("mv $temp_folder/$tarfile $temp_folder/$deploy_folder/");
-
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Could not move tar to tar folder, error code $status\n";
+            exit($status);
+        }
         if ($output->isVerbose()) {
             echo "path to tar to unpack is: " . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . "\n";
         }
@@ -185,18 +194,40 @@ To override config in dropcat.yml, using options:
             'tar xvf ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile .
             ' -C' . $temp_folder . '/' . $deploy_folder
         );
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Could not untar tar, error code $status\n";
+            exit($status);
+        }
         if ($output->isVerbose()) {
             echo 'file ' . $tarfile . " unpacked\n";
         }
         $ssh->exec('rm ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Could not remove tar file, error code $status\n";
+            exit($status);
+        }
         if ($output->isVerbose()) {
             echo 'removed tar file ' . $tarfile . "\n";
         }
         $ssh->exec('mv ' . $temp_folder . '/' . $deploy_folder . ' ' . $web_root . '/' . $deploy_folder);
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Folder not in place, error code $status\n";
+            exit($status);
+        }
         if ($output->isVerbose()) {
             echo "path to deployed folder is: " . $web_root . '/' . $deploy_folder . "\n";
         }
+
         $ssh->exec('ln -sfn ' . $web_root . '/' . $deploy_folder . ' ' . $web_root . '/' . $alias);
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Could not create symlink to folder, error code $status\n";
+            exit($status);
+        }
+
         if ($output->isVerbose()) {
             echo "alias to deployed folder are: " . $web_root . '/' . $alias . "\n";
         }

@@ -1,12 +1,14 @@
 <?php
 namespace Dropcat\tests;
 
-use Dropcat\Command\TarCommand;
 use Dropcat\Services\Configuration;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Created by PhpStorm.
@@ -24,6 +26,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+
         $this->conf = $this->getMockBuilder('Dropcat\Services\Configuration')
             ->getMock();
 
@@ -44,15 +47,30 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
         }
         $this->conf->method('deployIgnoreFiles')->willReturn($files_to_ignore);
 
-      $this->container = new ContainerBuilder();
+        // Setting up the container
+        $this->container = new ContainerBuilder();
+        $this->container->setProxyInstantiator(new RuntimeInstantiator());
+        $loader = new YamlFileLoader(
+            $this->container,
+            new FileLocator(__DIR__ . '/../../../app/config')
+        );
 
-      // Setting DropcatContainer to the DI-container we use.
-      // This way, it will be available to the command.
-      $this->container->set('DropcatContainer', $this->container);
+        $loader->load('services.yml');
+        // Setting DropcatContainer to the DI-container we use.
+        // This way, it will be available to the command.
+        $this->container->set('DropcatContainer', $this->container);
+
+        $this->container->set('dropcat.configuration', $this->conf);
 
         $application = new Application();
-        $application->add(new TarCommand($this->container, $this->conf));
+        $application->add($this->container->get('dropcat.command.tar'));
         $command      = $application->find('tar');
+
+        // Silly assertion - is it a _proxy_ we have? For lazy-loading-check
+        $this->assertEquals(
+            substr(get_class($command), 0, 26),
+            'ProxyManagerGeneratedProxy'
+        );
         $this->tester = new CommandTester($command);
     }
 
@@ -60,9 +78,11 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
     {
 
         $filename = $this->conf->localEnvironmentTmpPath() .
+            $this->conf->localEnvironmentSeparator() .
             $this->conf->localEnvironmentAppName() .
             $this->conf->localEnvironmentSeparator() .
             $this->conf->localEnvironmentBuildId() . '.tar';
+
         $options  = array(
             'verbosity' => OutputInterface::VERBOSITY_VERBOSE
         );
