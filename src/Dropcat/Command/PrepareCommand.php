@@ -142,23 +142,23 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $drush_folder = $input->getOption('drush_folder');
-        $drush_alias = $input->getOption('drush_alias');
-        $server = $input->getOption('server');
-        $user = $input->getOption('user');
-        $ssh_port = $input->getOption('ssh_port');
-        $web_root = $input->getOption('web_root');
-        $alias = $input->getOption('alias');
-        $url = $input->getOption('url');
-        $site_name = $input->getOption('site_name');
-        $mysql_host = $input->getOption('mysql_host');
-        $mysql_port = $input->getOption('mysql_port');
-        $mysql_db = $input->getOption('mysql_db');
-        $mysql_user = $input->getOption('mysql_user');
+        $drush_folder   = $input->getOption('drush_folder');
+        $drush_alias    = $input->getOption('drush_alias');
+        $server         = $input->getOption('server');
+        $user           = $input->getOption('user');
+        $ssh_port       = $input->getOption('ssh_port');
+        $web_root       = $input->getOption('web_root');
+        $alias          = $input->getOption('alias');
+        $url            = $input->getOption('url');
+        $site_name      = $input->getOption('site_name');
+        $mysql_host     = $input->getOption('mysql_host');
+        $mysql_port     = $input->getOption('mysql_port');
+        $mysql_db       = $input->getOption('mysql_db');
+        $mysql_user     = $input->getOption('mysql_user');
         $mysql_password = $input->getOption('mysql_password');
-        $timeout = $input->getOption('timeout');
+        $timeout        = $input->getOption('timeout');
 
-        $drushAlias = new CreateDrushAlias();
+        $drushAlias = $this->container->get('createDrushAlias');
         $drushAlias->setName($site_name);
         $drushAlias->setServer($server);
         $drushAlias->setUser($user);
@@ -167,7 +167,7 @@ To override config in dropcat.yml, using options:
         $drushAlias->setUrl($url);
         $drushAlias->setSSHPort($ssh_port);
 
-        $drush_file = new Filesystem();
+        $drush_file = $this->container->get('filesystem');
 
         try {
             $drush_file->dumpFile($drush_folder.'/'.$drush_alias.'.aliases.drushrc.php', $drushAlias->getValue());
@@ -175,17 +175,18 @@ To override config in dropcat.yml, using options:
             $output->writeln('<info>An error occurred while creating your file at ' . $e->getPath() . '</info>');
 
             echo 'An error occurred while creating your file at '.$e->getPath();
-            exit(1);
+            $this->exitCommand(1);
         }
         try {
-            $mysqli = new mysqli("$mysql_host", "$mysql_user", "$mysql_password");
+            $mysqli = $this->container->get('dropcat.factory')
+                ->mysqli("$mysql_host", "$mysql_user", "$mysql_password");
         } catch (\Exception $e) {
             echo $e->getMessage(), PHP_EOL;
-            exit(1);
+            $this->exitCommand(1);
         }
         // If db does not exist
         if ($mysqli->select_db("$mysql_db") === false) {
-            $process = new Process(
+            $process = $this->runProcess(
                 "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
             );
             $process->setTimeout($timeout);

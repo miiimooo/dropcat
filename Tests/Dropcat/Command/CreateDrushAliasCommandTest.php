@@ -2,6 +2,7 @@
 namespace Dropcat\tests;
 
 use Dropcat\Command\CreateDrushAliasCommand;
+use Dropcat\Lib\CreateDrushAlias;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,6 +33,8 @@ class CreateDrushAliasCommandTest extends \PHPUnit_Framework_TestCase
         // Setting DropcatContainer to the DI-container we use.
         // This way, it will be available to the command.
         $this->container->set('DropcatContainer', $this->container);
+        $CDA = new CreateDrushAlias();
+        $this->container->set('createDrushAlias', $CDA);
 
         // Mock filesystem
         $this->filesystem_mock = $this->getMockBuilder('Symfony\Component\Filesystem\Filesystem')

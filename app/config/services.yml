@@ -3,6 +3,7 @@ parameters:
     factory.libs.symfonystyle: "Symfony\\Component\\Console\\Style\\SymfonyStyle"
     factory.libs.splfileobject: "\\SplFileObject"
     factory.libs.sftp: "\\phpseclib\Net\SFTP"
+    factory.libs.mysqli: "\\mysqli"
 
 services:
     symfony.application:
@@ -174,6 +175,9 @@ services:
       arguments:  ['@DropcatContainer']
     rsa:
       class: phpseclib\Crypt\RSA
+      shared: false
+    createDrushAlias:
+      class: Dropcat\Lib\CreateDrushAlias
       shared: false
     filesystem:
       class: Symfony\Component\Filesystem\Filesystem
