@@ -129,20 +129,21 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app_name = $input->getOption('app-name');
-        $build_id = $input->getOption('build-id');
-        $separator = $input->getOption('separator');
-        $tar = $input->getOption('tar');
-        $server = $input->getOption('server');
-        $user = $input->getOption('user');
-        $target_path = $input->getOption('target_path');
-        $port = $input->getOption('ssh_port');
-        $ssh_key_password = $input->getOption('ssh_key_password');
-        $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
-        $web_root = $input->getOption('web_root');
-        $alias = $input->getOption('alias');
-        $temp_folder = $input->getOption('temp_folder');
+        $app_name              = $input->getOption('app-name');
+        $build_id              = $input->getOption('build-id');
+        $separator             = $input->getOption('separator');
+        $tar                   = $input->getOption('tar');
+        $server                = $input->getOption('server');
+        $user                  = $input->getOption('user');
+        # @todo: this isn't used; is it supposed to....?
+        $target_path           = $input->getOption('target_path');
+        $port                  = $input->getOption('ssh_port');
+        $ssh_key_password      = $input->getOption('ssh_key_password');
+        $identity_file         = $input->getOption('identity_file');
+        $identity_file_content = $this->getKeyContents($identity_file);
+        $web_root              = $input->getOption('web_root');
+        $alias                 = $input->getOption('alias');
+        $temp_folder           = $input->getOption('temp_folder');
 
         if (isset($tar)) {
             $tarfile = $tar;
@@ -156,9 +157,9 @@ To override config in dropcat.yml, using options:
             echo "tarfile: $tarfile\n";
         }
 
-        $ssh = new SSH2($server, $port);
+        $ssh = $this->container->get('dropcat.factory')->ssh($server, $port);
         $ssh->setTimeout(999);
-        $auth = new RSA();
+        $auth = $this->container->get('rsa');
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
@@ -172,20 +173,20 @@ To override config in dropcat.yml, using options:
             }
         } catch (Exception $e) {
             echo $e->getMessage();
-            exit(1);
+            $this->exitCommand(1);
         }
 
         $ssh->exec("mkdir $temp_folder/$deploy_folder");
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not create temp folder for deploy, error code $status\n";
-            exit($status);
+            $this->exitCommand($status);
         }
         $ssh->exec("mv $temp_folder/$tarfile $temp_folder/$deploy_folder/");
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not move tar to tar folder, error code $status\n";
-            exit($status);
+            $this->exitCommand($status);
         }
         if ($output->isVerbose()) {
             echo "path to tar to unpack is: " . $temp_folder . '/' . $deploy_folder . '/' . $tarfile . "\n";
@@ -197,7 +198,7 @@ To override config in dropcat.yml, using options:
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not untar tar, error code $status\n";
-            exit($status);
+            $this->exitCommand($status);
         }
         if ($output->isVerbose()) {
             echo 'file ' . $tarfile . " unpacked\n";
@@ -206,7 +207,7 @@ To override config in dropcat.yml, using options:
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not remove tar file, error code $status\n";
-            exit($status);
+            $this->exitCommand($status);
         }
         if ($output->isVerbose()) {
             echo 'removed tar file ' . $tarfile . "\n";
@@ -215,7 +216,7 @@ To override config in dropcat.yml, using options:
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Folder not in place, error code $status\n";
-            exit($status);
+            $this->exitCommand($status);
         }
         if ($output->isVerbose()) {
             echo "path to deployed folder is: " . $web_root . '/' . $deploy_folder . "\n";
@@ -225,7 +226,7 @@ To override config in dropcat.yml, using options:
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not create symlink to folder, error code $status\n";
-            exit($status);
+            $this->exitCommand($status);
         }
 
         if ($output->isVerbose()) {
@@ -234,5 +235,17 @@ To override config in dropcat.yml, using options:
         $ssh->disconnect();
 
         $output->writeln('<info>Task: move finished</info>');
+    }
+
+    /**
+     * @param $identity_file
+     * @codeCoverageIgnore
+     *
+     * @return string
+     */
+    protected function getKeyContents($identity_file)
+    {
+        $identity_file_content = file_get_contents($identity_file);
+        return $identity_file_content;
     }
 }
