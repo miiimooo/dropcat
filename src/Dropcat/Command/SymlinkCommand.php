@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Exception;
 
 class SymlinkCommand extends DropcatCommand
 {
@@ -124,7 +125,7 @@ To override config in dropcat.yml, using options:
                 . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
-            echo $e->getMessage();
+            echo $e->getMessage() . "\n";
             exit(1);
         }
 
@@ -137,8 +138,8 @@ To override config in dropcat.yml, using options:
             $ssh->exec("mkdir -p $original");
             $status = $ssh->getExitStatus();
             if ($status !== 0) {
-              echo "could not create orginal folder, $original, you need to create it manually, error code $status\n";
-              exit(1);
+                echo "could not create orginal folder, $original, you need to create it manually, error code $status\n";
+                exit(1);
             }
         }
         $ssh->exec('ln --backup -snf ' . $original . ' ' . $symlink);

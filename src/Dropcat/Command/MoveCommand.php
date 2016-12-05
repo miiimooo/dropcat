@@ -171,7 +171,7 @@ To override config in dropcat.yml, using options:
                 . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
-            echo $e->getMessage();
+            echo $e->getMessage() . "\n";
             exit(1);
         }
 
