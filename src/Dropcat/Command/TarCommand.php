@@ -73,31 +73,45 @@ To override config in dropcat.yml, using options:
         $app_name         = $input->getOption('app-name');
         $separator        = $input->getOption('separator');
 
-        $path_to_tar_file = $temp_path . $app_name . $separator . $build_id . '.tar';
+        // if we dont get source folder we use current one , bad idea?
+        if (!($path_to_app)){
+          $path_to_app = '.';
+        }
+
+        $path_to_tar_file = $temp_path . DIRECTORY_SEPARATOR . $app_name . $separator . $build_id . '.tar';
         $basepath_for_tar = $path_to_app;
-        
-        $tar = new Archive_Tar($path_to_tar_file, true);
+
+        if (!(`which tar`)) {
+          throw new \RuntimeException('tar command doesn\'t exist');
+        }
+
+        $excludes_file_name = $path_to_tar_file . '.excludes';
+        $excludes_file =  fopen($excludes_file_name, "w");
+        if (isset($ignore_files)) {
+          foreach ($ignore_files as $ignore_file) {
+            fwrite($excludes_file, $ignore_file . "\n");
+          }
+        }
+        fclose($excludes_file);
 
         if ($output->isVerbose()) {
             echo "Build number from CI server is: " . getenv('BUILD_NUMBER') . "\n";
             echo "Build date from CI server is: " . getenv('BUILD_DATE') . "\n";
         }
 
-        if (isset($ignore_files)) {
-            $tar->setIgnoreList($ignore_files);
-        }
-        $success = $tar->createModify($path_to_app, '', $basepath_for_tar);
-        if (!$success) {
-            /** @var \PEAR_Error $error_object */
-            $error_object = $tar->error_object;
+        exec('tar -cf ' . $path_to_tar_file . ' -X ' . $excludes_file_name . ' ' . $basepath_for_tar,
+          $command_ouput, $command_return);
+
+        if (!($command_return==0)) {
             $exceptionMessage = sprintf(
                 "Unable to tar folder, Error message:\n%s\n\n",
-                $error_object->message
+                $command_ouput
             );
-            throw new \RuntimeException($exceptionMessage, $error_object->code);
+            throw new \RuntimeException($exceptionMessage, $command_return);
         }
-        $output->writeln('<info>Task: tar finished</info>');
 
+        unlink($excludes_file_name);
+        $output->writeln('<info>Task: tar finished</info>');
     }
 
     /**
