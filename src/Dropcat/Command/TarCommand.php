@@ -1,13 +1,12 @@
 <?php
 namespace Dropcat\Command;
 
-use Archive_Tar;
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class TarCommand extends DropcatCommand
 {
@@ -99,15 +98,12 @@ To override config in dropcat.yml, using options:
             echo "Build date from CI server is: " . getenv('BUILD_DATE') . "\n";
         }
 
-        exec('tar -cf ' . $path_to_tar_file . ' -X ' . $excludes_file_name . ' ' . $basepath_for_tar,
-          $command_ouput, $command_return);
+        $tar = new Process('tar -cf ' . $path_to_tar_file . ' -X ' . $excludes_file_name . ' ' . $basepath_for_tar);
+        $tar->setTimeout(3600);
+        $tar->run();
 
-        if (!($command_return==0)) {
-            $exceptionMessage = sprintf(
-                "Unable to tar folder, Error message:\n%s\n\n",
-                $command_ouput
-            );
-            throw new \RuntimeException($exceptionMessage, $command_return);
+        if (!$tar->isSuccessful()) {
+          throw new ProcessFailedException($tar);
         }
 
         unlink($excludes_file_name);
