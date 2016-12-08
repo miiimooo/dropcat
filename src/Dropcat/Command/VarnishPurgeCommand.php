@@ -1,0 +1,61 @@
+<?php
+namespace Dropcat\Command;
+
+use Dropcat\Lib\DropcatCommand;
+use Dropcat\Services\Configuration;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
+
+class VarnishPurgeCommand extends DropcatCommand
+{
+    protected function configure()
+    {
+        $HelpText = 'The <info>varnish purge</info> command will purge all entries on varnish.
+<info>dropcat varnish purge</info>';
+
+        $this->setName("varnishpurge")
+          ->setHelp($HelpText);
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+      // Open the socket
+      $errno = ( integer) "";
+      $errstr = ( string) "";
+      $varnish_sock = fsockopen("127.0.0.1", "80", $errno, $errstr, 10);
+
+      // Prepare the command to send
+      $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
+      $cmd .= "Host: bilda.dev\r\n";
+      $cmd .= "Connection: Close\r\n";
+      $cmd .= "\r\n";
+
+      // Send the request
+      fwrite($varnish_sock, $cmd);
+
+      $response = "";
+      while (!feof($varnish_sock)) {
+        $response .= fgets($varnish_sock, 128);
+      }
+
+      print $response;
+      // Close the socket
+      fclose($varnish_sock);
+    }
+
+}
+
+
+//
+// Varnish configuration
+//sub vcl_recv {
+//  # Allow PURGE all domain
+//  if (req.method == "DOMAINPURGE") {
+//    if (!client.ip ~ purge) {
+//      return(synth(405,"Not allowed."));
+//    }
+//    ban("obj.http.x-host == " + req.http.host);
+//    return (synth(200, "Ban added."));
+//  }
