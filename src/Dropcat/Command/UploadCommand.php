@@ -194,7 +194,7 @@ To override config in dropcat.yml, using options:
                     $this->exitCommand(1);
                 }
             } else {
-                echo 'upload seems to be successful, but SHA1 for file is not checked' . "\n";
+                echo 'upload seems to be successful, but SHA1 for file is not checked' . " $checksha1\n";
             }
         } else {
             if ($output->isVerbose()) {
