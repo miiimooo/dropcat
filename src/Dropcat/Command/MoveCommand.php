@@ -172,13 +172,8 @@ To override config in dropcat.yml, using options:
                 . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
-<<<<<<< HEAD
             echo $e->getMessage();
             $this->exitCommand(1);
-=======
-            echo $e->getMessage() . "\n";
-            exit(1);
->>>>>>> 70b83e2c818a986ed3a766f52be474dc5a8f908a
         }
 
         $ssh->exec("mkdir $temp_folder/$deploy_folder");

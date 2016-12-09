@@ -406,7 +406,7 @@ remote file hash is fel' ."\n". 'SHA1 for file do not match.');
 
         $this->application->add($command_mock);
 
-        $this->expectOutputString('upload seems to be successful, but SHA1 for file is not checked'."\n".'tar is going to be saved TRUE
+        $this->expectOutputString('upload seems to be successful, but SHA1 for file is not checked '."\n".'tar is going to be saved TRUE
 path to tar dirOfTaruploadTest@2.tar
 tar file is not deleted '."\n");
         #$this->expectException('\\Exception');
