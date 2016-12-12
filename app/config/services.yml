@@ -163,3 +163,9 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.newrelic:deploy:
+      class: Dropcat\Command\NewRelicCreateDeployCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}

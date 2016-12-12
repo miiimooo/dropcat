@@ -22,7 +22,8 @@
     "wkse/jenkins-php-api": "^0.1.13",
     "ocramius/proxy-manager": "^1.0",
     "symfony/proxy-manager-bridge": "^3.2",
-    "symfony/yaml": "^3.2"
+    "symfony/yaml": "^3.2",
+    "guzzlehttp/guzzle": "^6.2"
   },
   "bin": [
     "app/dropcat"
