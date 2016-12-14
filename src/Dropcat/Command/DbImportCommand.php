@@ -69,12 +69,18 @@ To override config in dropcat.yml, using options:
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
         if (file_exists($path_to_db)) {
+            if ($output->isVerbose()) {
+                echo "Db exists at $path_to_db \n";
+            }
             $file_type = pathinfo($path_to_db);
             switch($file_type['extension'])
             {
                 case "gz":
+                    if ($output->isVerbose()) {
+                        echo "Filetype is gz \n";
+                    }
                     $process = new Process(
-                      "gunzip $path_to_db --keep --force -c > $db_dump"
+                      "gunzip $path_to_db --force -c > $db_dump"
                     );
                     $process->setTimeout($timeout);
                     $process->run();
@@ -89,6 +95,11 @@ To override config in dropcat.yml, using options:
                     echo "only gzip (.gz) is supported for now";
                     exit(1);
                     break;
+            }
+        } else {
+            if ($output->isVerbose()) {
+                echo "Db does not exist at $path_to_db \n";
+                exit(0);
             }
         }
         $process = new Process(
