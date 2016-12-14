@@ -66,7 +66,11 @@ To override config in dropcat.yml, using options, creates alias to stage env.
                 $this->configuration->remoteEnvironmentLocalSshUser() :
                 $this->configuration->remoteEnvironmentSshUser();
             }
-
+            if ($output->isVerbose()) {
+                echo "ssh user is $user\n";
+                echo "server is $server\n";
+                echo "port is $sshport\n";
+            }
             $drushAlias = new CreateDrushAlias();
             $drushAlias->setName($siteName);
             $drushAlias->setServer($server);
