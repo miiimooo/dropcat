@@ -13,7 +13,6 @@
     "php": ">=5.5.9",
     "symfony/console": "2.8.*",
     "symfony/process": "2.8.*",
-    "drush/drush": "^8.0",
     "phpseclib/phpseclib": "^2.0",
     "symfony/config": "2.8.*",
     "symfony/dependency-injection": "2.8.*",
@@ -22,7 +21,8 @@
     "padraic/phar-updater": "^1.0",
     "wkse/jenkins-php-api": "^0.1.13",
     "ocramius/proxy-manager": "^1.0",
-    "symfony/proxy-manager-bridge": "^3.2"
+    "symfony/proxy-manager-bridge": "^3.2",
+    "symfony/yaml": "^3.2"
   },
   "bin": [
     "app/dropcat"
