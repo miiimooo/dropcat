@@ -72,11 +72,6 @@ To override config in dropcat.yml, using options:
         $app_name         = $input->getOption('app-name');
         $separator        = $input->getOption('separator');
 
-        // if we dont get source folder we use current one , bad idea?
-        if (!($path_to_app)){
-          $path_to_app = '.';
-        }
-
         $path_to_tar_file = $temp_path . DIRECTORY_SEPARATOR . $app_name . $separator . $build_id . '.tar';
         $basepath_for_tar = $path_to_app;
 
