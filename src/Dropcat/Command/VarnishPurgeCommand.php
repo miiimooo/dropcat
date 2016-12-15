@@ -13,7 +13,7 @@ class VarnishPurgeCommand extends DropcatCommand
     protected function configure()
     {
         $HelpText = 'The <info>varnish purge</info> command will purge all entries on varnish.
-<info>dropcat varnish purge</info>';
+        <info>dropcat varnish purge</info>';
 
         $this->setName("varnishpurge")
           ->setHelp($HelpText);
@@ -24,27 +24,38 @@ class VarnishPurgeCommand extends DropcatCommand
       // Open the socket
       $errno = ( integer) "";
       $errstr = ( string) "";
-      $varnish_sock = fsockopen("127.0.0.1", "80", $errno, $errstr, 10);
+      if ($this->configuration->deployVarnishIP() && $this->configuration->deployVarnishPort()){
 
-      // Prepare the command to send
-      $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
-      $cmd .= "Host: bilda.dev\r\n";
-      $cmd .= "Connection: Close\r\n";
-      $cmd .= "\r\n";
+          $varnish_sock = fsockopen(
+            $this->configuration->deployVarnishIP(),
+            $this->configuration->deployVarnishPort(),
+            $errno,
+            $errstr,
+            10
+          );
 
-      // Send the request
-      fwrite($varnish_sock, $cmd);
+          // Prepare the command to send
+          $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
+          $cmd .= "Host: ". $this->configuration->siteEnvironmentUrl() . "\r\n";
+          $cmd .= "Connection: Close\r\n";
+          $cmd .= "\r\n";
 
-      $response = "";
-      while (!feof($varnish_sock)) {
-        $response .= fgets($varnish_sock, 128);
+          // Send the request
+          fwrite($varnish_sock, $cmd);
+
+          $response = "";
+          while (!feof($varnish_sock)) {
+            $response .= fgets($varnish_sock, 128);
+          }
+
+          print $response;
+          // Close the socket
+          fclose($varnish_sock);
       }
-
-      print $response;
-      // Close the socket
-      fclose($varnish_sock);
+      else{
+        throw new \RuntimeException('No configuration related with varnish deploy environment', 111);
+      }
     }
-
 }
 
 

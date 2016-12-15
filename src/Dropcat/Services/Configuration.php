@@ -520,6 +520,30 @@ class Configuration
     }
 
     /**
+    * Gets varnish IP from config-file.
+    */
+    public function deployVarnishIP()
+    {
+      if (isset($this->configuration['deploy']['varnish_ip'])) {
+        return $this->configuration['deploy']['varnish_ip'];
+      } else {
+        return null;
+      }
+    }
+
+    /**
+    * Gets varnish port from config-file.
+    */
+    public function deployVarnishPort()
+    {
+      if (isset($this->configuration['deploy']['varnish_port'])) {
+        return $this->configuration['deploy']['varnish_port'];
+      } else {
+        return null;
+      }
+    }
+
+    /**
      * Gets Mysql/MariaDB host
      */
     public function mysqlEnvironmentHost()
@@ -650,7 +674,7 @@ class Configuration
             return null;
         }
     }
-    
+
     public function nodeNvmRcFile()
     {
         if (isset($this->configuration['node']['nvmrc_file'])) {
