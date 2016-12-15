@@ -78,13 +78,15 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         if ($output->isVerbose()) {
             echo "Running scp -C -P $remote_backup_server_port $remote_backup_server_user@$remote_backup_server:$remote_backup_path/$remote_db_backup_name .\n";
         }
+
         $process = new Process("scp -C -P $remote_backup_server_port $remote_backup_server_user@$remote_backup_server:$remote_backup_path/$remote_db_backup_name .");
+        $output->writeln('<info>downloading ' . $remote_db_backup_name . '</info>');
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
 
-        $output->writeln('<info>Task: ' . $remote_db_backup_name . ' copied to current folder</info>');
+        $output->writeln('<info>Task: ' . $remote_db_backup_name . ' copied to current path.</info>');
     }
 }

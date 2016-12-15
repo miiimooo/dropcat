@@ -124,7 +124,6 @@ class Configuration
         } else {
             return null;
         }
-
     }
 
     /**
@@ -643,7 +642,8 @@ class Configuration
         $ignore_files = rtrim($ignore_files);
         return $ignore_files;
     }
-    public function nodeNvmDirectory() {
+    public function nodeNvmDirectory()
+    {
         if (isset($this->configuration['node']['nvm_directory'])) {
             return $this->configuration['node']['nvm_directory'];
         } else {
@@ -651,7 +651,8 @@ class Configuration
         }
     }
     
-    public function nodeNvmRcFile() {
+    public function nodeNvmRcFile()
+    {
         if (isset($this->configuration['node']['nvmrc_file'])) {
             return $this->configuration['node']['nvmrc_file'];
         } else {
@@ -659,44 +660,79 @@ class Configuration
         }
     }
 
-    public function gulpDirectory() {
+    public function gulpDirectory()
+    {
         if (isset($this->configuration['node']['gulp_directory'])) {
             return $this->configuration['node']['gulp_directory'];
         } else {
             return null;
         }
     }
-    public function gulpOptions() {
+    public function gulpOptions()
+    {
         if (isset($this->configuration['node']['gulp_options'])) {
             return $this->configuration['node']['gulp_options'];
         } else {
             return '';
         }
     }
-    public function nodeEnvironment() {
-          if (isset($this->configuration['node']['environment'])){
+    public function nodeEnvironment()
+    {
+        if (isset($this->configuration['node']['environment'])) {
             $nodeEnvironment = $this->configuration['node']['environment'];
             return $nodeEnvironment;
-        }
-        else {
+        } else {
             return null;
         }
     }
-    public function localEnvironmentRsyncFrom() {
-        if (isset($this->configuration['local']['environment']['rsync_from'])){
+    public function localEnvironmentRsyncFrom()
+    {
+        if (isset($this->configuration['local']['environment']['rsync_from'])) {
             $from = $this->configuration['local']['environment']['rsync_from'];
             return $from;
-        }
-        else {
+        } else {
             return null;
         }
     }
-    public function remoteEnvironmentRsyncTo() {
-        if (isset($this->configuration['remote']['environment']['rsync_to'])){
+    public function remoteEnvironmentRsyncTo()
+    {
+        if (isset($this->configuration['remote']['environment']['rsync_to'])) {
             $from = $this->configuration['remote']['environment']['rsync_to'];
             return $from;
+        } else {
+            return null;
         }
-        else {
+    }
+    /**
+     * Get ssh port for local use.
+     */
+    public function remoteEnvironmentLocalSshPort()
+    {
+        if (isset($this->configuration['remote']['environment']['local_ssh_port'])) {
+            return $this->configuration['remote']['environment']['local_ssh_port'];
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Get server for local use.
+     */
+    public function remoteEnvironmentLocalServerName()
+    {
+        if (isset($this->configuration['remote']['environment']['local_server'])) {
+            return $this->configuration['remote']['environment']['local_server'];
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Get ssh user for local use.
+     */
+    public function remoteEnvironmentLocalSshUser()
+    {
+        if (isset($this->configuration['remote']['environment']['local_ssh_user'])) {
+            return $this->configuration['remote']['environment']['local_ssh_user'];
+        } else {
             return null;
         }
     }
