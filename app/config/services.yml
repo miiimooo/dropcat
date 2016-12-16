@@ -151,8 +151,14 @@ services:
       arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.rsync:
-      class: Dropcat\Command\RsyncCommand
+    dropcat.command.rsync:to:
+      class: Dropcat\Command\RsyncToCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.rsync:from:
+      class: Dropcat\Command\RsyncFromCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
       lazy: true
       tags:
