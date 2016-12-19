@@ -43,6 +43,13 @@ To override config in dropcat.yml, using options:
                         'Path to .nvmrc file',
                         $this->configuration->nodeNvmRcFile()
                     ),
+                    new InputOption(
+                      'npm-packages-path',
+                      'npp',
+                      InputOption::VALUE_OPTIONAL,
+                      'Directory where the npm packages.json is.',
+                      $this->configuration->nodeNpmPackagesJsonDirectory()
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -52,13 +59,17 @@ To override config in dropcat.yml, using options:
     {
         $nvmDir = $input->getOption('nvm-dir');
         $nodeNvmRcFile = $input->getOption('nvmrc');
+        $npmPackagesJsonDirectory = $input->getOption('npm-packages-path');
         if ($nodeNvmRcFile === null) {
             $nodeNvmRcFile = getcwd() . '/.nvmrc';
         }
         if (!file_exists($nodeNvmRcFile)) {
             throw new Exception('No .nvmrc file found.');
         }
-        $npmInstall = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm install && npm install");
+        if($npmPackagesJsonDirectory === null) {
+          $npmPackagesJsonDirectory = getcwd();
+        }
+        $npmInstall = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && cd $npmPackagesJsonDirectory && nvm install && npm install");
         $npmInstall->setTimeout(3600);
         $npmInstall->run();
         echo $npmInstall->getOutput();

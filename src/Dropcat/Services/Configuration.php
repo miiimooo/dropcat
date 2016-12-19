@@ -659,6 +659,14 @@ class Configuration
         }
     }
 
+  public function nodeNpmPackagesJsonDirectory() {
+    if (isset($this->configuration['node']['npm_packages_json_directory'])) {
+      return $this->configuration['node']['npm_packages_json_directory'];
+    } else {
+      return null;
+    }
+  }
+
     public function gulpDirectory() {
         if (isset($this->configuration['node']['gulp_directory'])) {
             return $this->configuration['node']['gulp_directory'];
