@@ -843,7 +843,7 @@ class Configuration
         }
     }
     /**
-     * Gets all server-aliases.
+     * Gets all server extras.
      */
     public function getServerExtras()
     {
