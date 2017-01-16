@@ -28,12 +28,12 @@ To override config in dropcat.yml, using options:
             ->setDefinition(
                 array(
                    new InputOption(
-                      'target',
-                      't',
-                      InputOption::VALUE_OPTIONAL,
-                      'Vhost target folder',
-                      $this->configuration->vhostTarget()
-                    ),
+                       'target',
+                       't',
+                       InputOption::VALUE_OPTIONAL,
+                       'Vhost target folder',
+                       $this->configuration->vhostTarget()
+                   ),
                     new InputOption(
                         'file_name',
                         'f',
