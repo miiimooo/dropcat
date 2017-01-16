@@ -169,3 +169,15 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.vhost:create:
+      class: Dropcat\Command\VhostCreateCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.vhost:delete:
+      class: Dropcat\Command\VhostDeleteCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
