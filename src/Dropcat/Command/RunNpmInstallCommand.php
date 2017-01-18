@@ -51,6 +51,9 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $nvmDir = $input->getOption('nvm-dir');
+        if (!isset($nvmDir)) {
+            throw new Exception('No nvm dir found in options.');
+        }
         $nodeNvmRcFile = $input->getOption('nvmrc');
         if ($nodeNvmRcFile === null) {
             $nodeNvmRcFile = getcwd() . '/.nvmrc';
