@@ -169,3 +169,10 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+
+    dropcat.command.varnish-purge:
+      class: Dropcat\Command\VarnishPurgeCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
