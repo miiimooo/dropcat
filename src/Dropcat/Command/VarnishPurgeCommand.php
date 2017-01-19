@@ -66,9 +66,10 @@ class VarnishPurgeCommand extends DropcatCommand
             10
           );
 
+          $host = parse_url($this->configuration->siteEnvironmentUrl(), PHP_URL_HOST);
           // Prepare the command to send
           $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
-          $cmd .= "Host: ". $this->configuration->siteEnvironmentUrl() . "\r\n";
+          $cmd .= "Host: ". $host . "\r\n";
           $cmd .= "Connection: Close\r\n";
           $cmd .= "\r\n";
 
@@ -101,3 +102,10 @@ class VarnishPurgeCommand extends DropcatCommand
 //    ban("obj.http.x-host == " + req.http.host);
 //    return (synth(200, "Ban added."));
 //  }
+// sub vcl_backend_response {
+//   set beresp.http.x-host = bereq.http.Host;
+// }
+// sub vcl_deliver {
+//   # remove the header from response, only used for bans.
+//   unset resp.http.x-host;
+//}
