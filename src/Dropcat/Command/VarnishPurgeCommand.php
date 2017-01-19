@@ -13,18 +13,47 @@ class VarnishPurgeCommand extends DropcatCommand
     protected function configure()
     {
         $HelpText = 'The <info>varnish:purge</info> command will purge all entries on varnish.
-        <info>dropcat varnish purge</info>';
+        <info>dropcat varnish:purge</info>';
 
         $this->setName("varnish:purge")
+          ->setDescription("Purge your varnish instance")
+          ->setDefinition(
+              array(
+                  new InputOption(
+                      'varnish-ip',
+                      'vi',
+                      InputOption::VALUE_OPTIONAL,
+                      'From',
+                      $this->configuration->deployVarnishIP()
+                  ),
+                  new InputOption(
+                      'varnish-port',
+                      'vp',
+                      InputOption::VALUE_OPTIONAL,
+                      'To',
+                      $this->configuration->deployVarnishPort()
+                  ),
+                  new InputOption(
+                      'url',
+                      'u',
+                      InputOption::VALUE_OPTIONAL,
+                      'Site url',
+                      $this->configuration->siteEnvironmentUrl()
+                  ),
+                )
+              )
           ->setHelp($HelpText);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+      $varrnish_port = $input->getOption('varnish-port');
+      $varrnish_ip = $input->getOption('varrnish-ip');
+      $url = $input->getOption('url');
       // Open the socket
       $errno = ( integer) "";
       $errstr = ( string) "";
-      if ($this->configuration->deployVarnishIP() && $this->configuration->deployVarnishPort()){
+      if ($varrnish_port && $varrnish_ip){
 
           $varnish_sock = fsockopen(
             $this->configuration->deployVarnishIP(),
@@ -58,9 +87,8 @@ class VarnishPurgeCommand extends DropcatCommand
     }
 }
 
-
 //
-// Varnish configuration
+// Example Varnish configuration
 //sub vcl_recv {
 //  # Allow PURGE all domain
 //  if (req.method == "DOMAINPURGE") {
