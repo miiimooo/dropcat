@@ -13,8 +13,11 @@ class VarnishPurgeCommand extends DropcatCommand
     protected function configure()
     {
         $HelpText = 'The <info>varnish:purge</info> command will purge all entries on varnish.
-        <info>dropcat varnish:purge</info>';
-
+        <comment>Samples:</comment>
+        To run with default options (using config from dropcat.yml in the currrent dir):
+        <info>dropcat varnish:purge</info>
+        To override config in dropcat.yml, using options:
+        <info>dropcat varnish:purge --url=http://mysite.foo --varnish-port=80</info>';
         $this->setName("varnish:purge")
           ->setDescription("Purge your varnish instance")
           ->setDefinition(
@@ -23,12 +26,12 @@ class VarnishPurgeCommand extends DropcatCommand
                       'varnish-ip',
                       'vi',
                       InputOption::VALUE_OPTIONAL,
-                      'From',
+                      'Varnish IP (normal is external IP)',
                       $this->configuration->deployVarnishIP()
                   ),
                   new InputOption(
                       'varnish-port',
-                      'vp',
+                      'Varnish port',
                       InputOption::VALUE_OPTIONAL,
                       'To',
                       $this->configuration->deployVarnishPort()
