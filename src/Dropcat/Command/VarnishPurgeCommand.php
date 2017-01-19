@@ -12,10 +12,10 @@ class VarnishPurgeCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>varnish purge</info> command will purge all entries on varnish.
+        $HelpText = 'The <info>varnish:purge</info> command will purge all entries on varnish.
         <info>dropcat varnish purge</info>';
 
-        $this->setName("varnishpurge")
+        $this->setName("varnish:purge")
           ->setHelp($HelpText);
     }
 
