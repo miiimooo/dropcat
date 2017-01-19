@@ -51,7 +51,7 @@ class VarnishPurgeCommand extends DropcatCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
       $varrnish_port = $input->getOption('varnish-port');
-      $varrnish_ip = $input->getOption('varrnish-ip');
+      $varrnish_ip = $input->getOption('varnish-ip');
       $url = $input->getOption('url');
       // Open the socket
       $errno = ( integer) "";
