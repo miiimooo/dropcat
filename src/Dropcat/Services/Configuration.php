@@ -856,6 +856,20 @@ class Configuration
         }
     }
     /**
+     * Return extra config for vhost.
+     */
+    public function vhostBashCommand()
+    {
+        if (isset($this->configuration['vhost']['bash_command'])) {
+            $bash_command = $this->configuration['vhost']['bash_command'];
+            return $bash_command;
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
      * Gets all server-aliases.
      */
     public function getServerAliases()
