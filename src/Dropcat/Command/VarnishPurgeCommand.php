@@ -10,19 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 class VarnishPurgeCommand extends DropcatCommand
 {
-  public function errorHandler($errno,$errmsg,$errfile) {
-        //email yourself the error message and code
-        $email  =   "An error {$erro} occured on page ".$_SERVER['REQUEST_URI'].", in the file {$errfile}.\r\n\r\nThe error is shown below:\r\n{$errmsg}";
-        mail("email@domain.com","PHP Error Notification",$email);
-
-        //output a friendly message for the user
-        $wrapper    =   new SmartyTemplate();
-        $msg        =   "Thank  you for your message.  Unfortunately we have been unable to send your email, please go back and resubmit the form or call us on 0800 123 456 directly.  Sorry for any inconvenience caused";
-        $wrapper->assign("content", $msg);
-        $wrapper->display("display_wrapper.tpl");
-        exit();
-    }
-    
     protected function configure()
     {
         $HelpText = 'The <info>varnish:purge</info> command will purge all entries on varnish.
@@ -78,9 +65,7 @@ class VarnishPurgeCommand extends DropcatCommand
             $errstr,
             10
           );
-          if (!$varnish_sock) {
-    echo "$errstr ($errno)<br />\n";
-}
+
           $host = parse_url($this->configuration->siteEnvironmentUrl(), PHP_URL_HOST);
           // Prepare the command to send
           $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
@@ -92,8 +77,6 @@ class VarnishPurgeCommand extends DropcatCommand
           fwrite($varnish_sock, $cmd);
 
           $response = "";
-          var_dump($varnish_sock);
-          die();
           while (!feof($varnish_sock)) {
             $response .= fgets($varnish_sock, 128);
           }
@@ -118,7 +101,7 @@ class VarnishPurgeCommand extends DropcatCommand
 //     }
 //     ban("obj.http.x-host == " + req.http.host);
 //     return (synth(200, "Ban added."));
-//   }
+//  }
 // sub vcl_backend_response {
 //   set beresp.http.x-host = bereq.http.Host;
 // }
