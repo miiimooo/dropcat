@@ -77,6 +77,13 @@ To override config in dropcat.yml, using options:
                         $this->configuration->vhostExtra()
                     ),
                     new InputOption(
+                        'bash_command',
+                        'bc',
+                        InputOption::VALUE_OPTIONAL,
+                        'Bash command',
+                        $this->configuration->vhostBashCommand()
+                    ),
+                    new InputOption(
                         'server',
                         's',
                         InputOption::VALUE_OPTIONAL,
@@ -125,6 +132,7 @@ To override config in dropcat.yml, using options:
         $server_name = $input->getOption('server_name');
         $server_alias = $input->getOption('server_alias');
         $extra = $input->getOption('extra');
+        $bash_command = $input->getOption('bash_command');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
         $port = $input->getOption('ssh_port');
@@ -132,6 +140,12 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
 
+        $runbash = '';
+        if (isset($bash_command)) {
+          $runbash = " && $bash_command";
+        }
+echo $bash_command;
+die();
         $virtualHost ="<VirtualHost *:$vhost_port>\n" .
           "  DocumentRoot $document_root\n" .
           "  ServerName $server_name\n\n" .
@@ -139,7 +153,7 @@ To override config in dropcat.yml, using options:
           "$extra\n" .
           "</VirtualHost>\n";
         $aliasCreate= new Process(
-            "ssh -o LogLevel=Error $user@$server -p $port \"echo '$virtualHost' > $target/$file_name\""
+            "ssh -o LogLevel=Error $user@$server -p $port \"echo '$virtualHost' > $target/$file_name\" $runbash"
         );
         $aliasCreate->setTimeout(999);
         $aliasCreate->run();
