@@ -60,7 +60,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                 'rpsp',
                 InputOption::VALUE_OPTIONAL,
                 'SSH Remote backup up server ssh port',
-                $this->configuration->remoteEnvironmentSshPort()
+                $this->configuration->localEnvironmentBackupServerPort()
             ),
             )
         )

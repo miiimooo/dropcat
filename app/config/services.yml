@@ -158,8 +158,14 @@ services:
       arguments: ['@DropcatContainer','@dropcat.configuration']
       tags:
         - {name: console.command}
-    dropcat.command.rsync:
-      class: Dropcat\Command\RsyncCommand
+    dropcat.command.rsync:to:
+      class: Dropcat\Command\RsyncToCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.rsync:from:
+      class: Dropcat\Command\RsyncFromCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
       lazy: true
       tags:
@@ -182,3 +188,21 @@ services:
     filesystem:
       class: Symfony\Component\Filesystem\Filesystem
       shared: false
+    dropcat.command.vhost:create:
+      class: Dropcat\Command\VhostCreateCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.vhost:delete:
+      class: Dropcat\Command\VhostDeleteCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.varnish-purge:
+      class: Dropcat\Command\VarnishPurgeCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}

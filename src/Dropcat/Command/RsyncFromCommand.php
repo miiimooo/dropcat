@@ -12,18 +12,18 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class RsyncCommand extends DropcatCommand
+class RsyncFromCommand extends DropcatCommand
 {
     protected function configure()
     {
         $HelpText = 'The <info>rsync command</info> sync local target with remote target.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat rsync</info>
+<info>dropcat rsync:from</info>
 To override config in dropcat.yml, using options:
-<info>dropcat rsync --server 127.0.0.0 -i my_pub.key</info>';
+<info>dropcat rsync:from --server 127.0.0.0 -i my_pub.key</info>';
 
-        $this->setName("rsync")
+        $this->setName("rsync:from")
             ->setDescription("Rsync folders")
             ->setDefinition(
                 array(
@@ -32,14 +32,14 @@ To override config in dropcat.yml, using options:
                         'f',
                         InputOption::VALUE_OPTIONAL,
                         'From',
-                        $this->configuration->localEnvironmentRsyncFrom()
+                        $this->configuration->remoteEnvironmentRsyncFrom()
                     ),
                     new InputOption(
                         'to',
                         't',
                         InputOption::VALUE_OPTIONAL,
                         'To',
-                        $this->configuration->remoteEnvironmentRsyncTo()
+                        $this->configuration->localEnvironmentRsyncTo()
                     ),
                     new InputOption(
                         'server',
@@ -106,20 +106,15 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
         $timeout = $input->getOption('timeout');
-
-        $rsync = 'rsync -a ' . $from . ' -e "ssh -i ' . $identity_file . ' -p ' . $port . '" --progress ' . $user . '@' . $server . ':' . $to;
-
+        $rsync = "rsync -chavzP --stats -e 'ssh -i " . $identity_file . ' -p ' . $port . "' $user@$server:$from $to";
         $newRsync = new Process("$rsync");
         $newRsync->setTimeout(3600);
         $newRsync->run();
         echo $newRsync->getOutput();
         if (!$newRsync->isSuccessful()) {
             throw new ProcessFailedException($newRsync);
-            exit(1);
         }
 
-
-        $output->writeln('<info>Task: rsync finished</info>');
-
+        $output->writeln('<info>Task: rsync:to finished</info>');
     }
 }

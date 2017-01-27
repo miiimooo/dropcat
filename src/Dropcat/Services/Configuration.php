@@ -520,6 +520,30 @@ class Configuration
     }
 
     /**
+    * Gets varnish IP from config-file.
+    */
+    public function deployVarnishIP()
+    {
+      if (isset($this->configuration['deploy']['varnish_ip'])) {
+        return $this->configuration['deploy']['varnish_ip'];
+      } else {
+        return null;
+      }
+    }
+
+    /**
+    * Gets varnish port from config-file.
+    */
+    public function deployVarnishPort()
+    {
+      if (isset($this->configuration['deploy']['varnish_port'])) {
+        return $this->configuration['deploy']['varnish_port'];
+      } else {
+        return null;
+      }
+    }
+
+    /**
      * Gets Mysql/MariaDB host
      */
     public function mysqlEnvironmentHost()
@@ -650,7 +674,7 @@ class Configuration
             return null;
         }
     }
-    
+
     public function nodeNvmRcFile()
     {
         if (isset($this->configuration['node']['nvmrc_file'])) {
@@ -732,6 +756,137 @@ class Configuration
     {
         if (isset($this->configuration['remote']['environment']['local_ssh_user'])) {
             return $this->configuration['remote']['environment']['local_ssh_user'];
+        } else {
+            return null;
+        }
+    }
+    public function remoteEnvironmentRsyncFrom()
+    {
+        if (isset($this->configuration['remote']['environment']['rsync_from'])) {
+            $from = $this->configuration['remote']['environment']['rsync_from'];
+            return $from;
+        } else {
+            return null;
+        }
+    }
+    public function localEnvironmentRsyncTo()
+    {
+        if (isset($this->configuration['local']['environment']['rsync_to'])) {
+            $from = $this->configuration['local']['environment']['rsync_to'];
+            return $from;
+        } else {
+            return null;
+        }
+    }
+    public function vhostFileName()
+    {
+        if (isset($this->configuration['vhost']['file_name'])) {
+            $file_name = $this->configuration['vhost']['file_name'];
+            return $file_name;
+        } else {
+            return null;
+        }
+    }
+    public function vhostTarget()
+    {
+        if (isset($this->configuration['vhost']['target'])) {
+            $target = $this->configuration['vhost']['target'];
+            return $target;
+        } else {
+            return null;
+        }
+    }
+    public function vhostPort()
+    {
+        if (isset($this->configuration['vhost']['port'])) {
+            $port = $this->configuration['vhost']['port'];
+            return $port;
+        } else {
+            return '80';
+        }
+    }
+    public function vhostDocumentRoot()
+    {
+        if (isset($this->configuration['vhost']['document_root'])) {
+            $port = $this->configuration['vhost']['document_root'];
+            return $port;
+        } else {
+            return null;
+        }
+    }
+    public function vhostServerName()
+    {
+        if (isset($this->configuration['vhost']['server_name'])) {
+            $server_name = $this->configuration['vhost']['server_name'];
+            return $server_name;
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Return server-aliases.
+     */
+    public function vhostServerAlias()
+    {
+        $server_aliases_array = $this->getServerAliases();
+        $server_aliases = null;
+        if (isset($server_aliases_array)) {
+            foreach ($server_aliases_array as $server_alias) {
+                $server_aliases .= "  ServerAlias $server_alias\n";
+            }
+            return $server_aliases;
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Return extra config for vhost.
+     */
+    public function vhostExtra()
+    {
+        $server_extra_array = $this->getServerExtras();
+        $server_extras = null;
+        if (isset($server_extra_array)) {
+            foreach ($server_extra_array as $server_extra) {
+                $server_extras .= "  $server_extra\n";
+            }
+            return $server_extras;
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Return extra config for vhost.
+     */
+    public function vhostBashCommand()
+    {
+        if (isset($this->configuration['vhost']['bash_command'])) {
+            $bash_command = $this->configuration['vhost']['bash_command'];
+            return $bash_command;
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * Gets all server-aliases.
+     */
+    public function getServerAliases()
+    {
+        if (isset($this->configuration['vhost']['server_alias'])) {
+            return $this->configuration['vhost']['server_alias'];
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Gets all server extras.
+     */
+    public function getServerExtras()
+    {
+        if (isset($this->configuration['vhost']['extra'])) {
+            return $this->configuration['vhost']['extra'];
         } else {
             return null;
         }
