@@ -35,6 +35,11 @@ class DbImportCommandTest extends \PHPUnit_Framework_TestCase
         // We mock the command so that we later on can test Process.
         $this->mock        = $this->getMockBuilder('\Dropcat\Command\DbImportCommand')
             ->setConstructorArgs(array($this->container, $this->conf));
+
+        // Mock filesystem
+        $this->filesystem_mock = $this->getMockBuilder('Symfony\Component\Filesystem\Filesystem')
+            ->getMock();
+
     }
 
     public function testDbImport()
@@ -60,9 +65,13 @@ class DbImportCommandTest extends \PHPUnit_Framework_TestCase
         // + and that we return the mocked process, above.
         $expected_process_command = <<<EOF
 drush @mysite sql-drop -y &&
-            drush @mysite sql-cli < /dev/null
+            drush @mysite sql-cli < /tmp/dropcat-default-db.sql
 EOF;
 
+        $command_mock->expects($this->once())
+            ->method('runProcess')
+            ->with($this->equalTo($expected_process_command))
+            ->willReturn($process_mock);
         $command_mock->expects($this->once())
             ->method('runProcess')
             ->with($this->equalTo($expected_process_command))
@@ -74,12 +83,20 @@ EOF;
         // Initiate the tester.
         $this->tester = new CommandTester($command_mock);
 
+        $this->filesystem_mock->expects($this->once())
+            ->method('exists')
+            ->with($this->equalTo('/tmp/dropcat-default-db.sql.gz'))
+            ->willReturn(true);
+
+        $this->container->set('filesystem', $this->filesystem_mock);
+
+
         // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
                 'command' => 'db-import',
                 '-d'      => 'mysite',
-                '-i'      => '/dev/null'
+                '-i'      => '/tmp/dropcat-default-db.sql.gz'
             )
         );
     }

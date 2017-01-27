@@ -67,20 +67,20 @@ To override config in dropcat.yml, using options:
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
-
-        if (file_exists($path_to_db)) {
+        /** @var \Symfony\Component\Filesystem\Filesystem $filesystem */
+        $filesystem = $this->container->get('filesystem');
+        if ($filesystem->exists($path_to_db)) {
             if ($output->isVerbose()) {
                 echo "Db exists at $path_to_db \n";
             }
             $file_type = pathinfo($path_to_db);
-            switch($file_type['extension'])
-            {
+            switch ($file_type['extension']) {
                 case "gz":
                     if ($output->isVerbose()) {
                         echo "Filetype is gz \n";
                     }
                     $process = new Process(
-                      "gunzip $path_to_db --force -c > $db_dump"
+                        "gunzip $path_to_db --force -c > $db_dump"
                     );
                     $process->setTimeout($timeout);
                     $process->run();
@@ -91,7 +91,8 @@ To override config in dropcat.yml, using options:
                     echo $process->getOutput();
                     $output->writeln("gzipped db dump written to $db_dump");
                     break;
-                default: // Handle no file extension
+                // Handle no file extension
+                default:
                     echo "only gzip (.gz) is supported for now";
                     $this->exitCommand(1);
                     break;
