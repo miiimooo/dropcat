@@ -31,6 +31,20 @@ To override config in dropcat.yml, using options:
             ->setDefinition(
                 array(
                     new InputOption(
+                        'app-name',
+                        'an',
+                        InputOption::VALUE_OPTIONAL,
+                        'App name',
+                        $this->configuration->localEnvironmentAppName()
+                    ),
+                    new InputOption(
+                        'build-id',
+                        'bi',
+                        InputOption::VALUE_OPTIONAL,
+                        'Id',
+                        $this->configuration->localEnvironmentBuildId()
+                    ),
+                    new InputOption(
                         'drush_folder',
                         'df',
                         InputOption::VALUE_OPTIONAL,
@@ -142,6 +156,8 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app_name = $input->getOption('app-name');
+        $build_id = $input->getOption('build-id');
         $drush_folder = $input->getOption('drush_folder');
         $drush_alias = $input->getOption('drush_alias');
         $server = $input->getOption('server');
@@ -157,6 +173,16 @@ To override config in dropcat.yml, using options:
         $mysql_user = $input->getOption('mysql_user');
         $mysql_password = $input->getOption('mysql_password');
         $timeout = $input->getOption('timeout');
+
+
+    // logga in på remote
+
+      // ta reda path till existernade site om den finns
+
+      // spara path i en fil (OLD)
+
+
+
 
         $drushAlias = new CreateDrushAlias();
         $drushAlias->setName($site_name);
@@ -198,6 +224,25 @@ To override config in dropcat.yml, using options:
             $output->writeln('<info>Database created</info>');
         } else {
             $output->writeln('<info>Database exists</info>');
+        }
+        $dbCheckHasTables = new Process(
+            "mysql -u $mysql_user -p$mysql_password -s --skip-column-names -e \"SELECT COUNT(DISTINCT table_name) FROM information_schema.columns WHERE table_schema = '$mysql_db';\""
+        );
+        $dbCheckHasTables->setPty(true);
+        $dbCheckHasTables->run();
+        $dbHastables = $dbCheckHasTables->getOutput();
+
+        if ($dbHastables != 0) {
+            $dbNewName = $app_name . '_' . $build_id;
+            $createNewDb = new Process(
+                "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $dbNewName"
+            );
+            $createNewDb->setPty(true);
+            $createNewDb->run();
+            $exit = $createNewDb->getExitCode();
+            echo $exit;
+            $dbCreated = $createNewDb->getOutput();
+            echo $dbCreated;
         }
         $output->writeln('<info>Task: prepare finished</info>');
     }
