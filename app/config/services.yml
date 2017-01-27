@@ -187,3 +187,9 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.settings-override:
+      class: Dropcat\Command\SettingsOverrideCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
