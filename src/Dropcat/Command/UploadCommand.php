@@ -25,127 +25,129 @@ To override config in dropcat.yml, using options:
 <info>dropcat upload -server 127.0.0.0 -i my_pub.key</info>';
 
         $this->setName("upload")
-            ->setDescription("Upload to server")
-            ->setDefinition(
-                array(
-                    new InputOption(
-                        'app-name',
-                        'a',
-                        InputOption::VALUE_OPTIONAL,
-                        'App name',
-                        $this->configuration->localEnvironmentAppName()
-                    ),
-                    new InputOption(
-                        'build-id',
-                        'bi',
-                        InputOption::VALUE_OPTIONAL,
-                        'Id',
-                        $this->configuration->localEnvironmentBuildId()
-                    ),
-                    new InputOption(
-                        'separator',
-                        'se',
-                        InputOption::VALUE_OPTIONAL,
-                        'Name separator',
-                        $this->configuration->localEnvironmentSeparator()
-                    ),
-                    new InputOption(
-                        'tar',
-                        't',
-                        InputOption::VALUE_OPTIONAL,
-                        'Tar',
-                        $this->configuration->localEnvironmentTarName()
-                    ),
-                    new InputOption(
-                        'tar_dir',
-                        'td',
-                        InputOption::VALUE_OPTIONAL,
-                        'Tar dir',
-                        $this->configuration->localEnvironmentTarDir()
-                    ),
-                    new InputOption(
-                        'server',
-                        's',
-                        InputOption::VALUE_OPTIONAL,
-                        'Server',
-                        $this->configuration->remoteEnvironmentServerName()
-                    ),
-                    new InputOption(
-                        'user',
-                        'u',
-                        InputOption::VALUE_OPTIONAL,
-                        'User (ssh)',
-                        $this->configuration->remoteEnvironmentSshUser()
-                    ),
-                    new InputOption(
-                        'ssh_port',
-                        'p',
-                        InputOption::VALUE_OPTIONAL,
-                        'SSH port',
-                        $this->configuration->remoteEnvironmentSshPort()
-                    ),
-                    new InputOption(
-                        'ssh_key_password',
-                        'skp',
-                        InputOption::VALUE_OPTIONAL,
-                        'SSH key password',
-                        $this->configuration->localEnvironmentSshKeyPassword()
-                    ),
-                    new InputOption(
-                        'target_dir',
-                        'tp',
-                        InputOption::VALUE_OPTIONAL,
-                        'Target dir',
-                        $this->configuration->remoteEnvironmentTargetDir()
-                    ),
-                    new InputOption(
-                        'identity_file',
-                        'i',
-                        InputOption::VALUE_OPTIONAL,
-                        'Identify file',
-                        $this->configuration->remoteEnvironmentIdentifyFile()
-                    ),
-                    new InputOption(
-                        'timeout',
-                        'to',
-                        InputOption::VALUE_OPTIONAL,
-                        'Timeout',
-                        $this->configuration->timeOut()
-                    ),
-                    new InputOption(
-                        'keeptar',
-                        'kt',
-                        InputOption::VALUE_NONE,
-                        'Keep tar after upload  (defaults to no)'
-                    ),
-                    new InputOption(
-                        'dontchecksha1',
-                        'dsha1',
-                        InputOption::VALUE_NONE,
-                        "Don't check SHA1 hash for file (defaults to no)"
-                    ),
-                )
+          ->setDescription("Upload to server")
+          ->setDefinition(
+            array(
+              new InputOption(
+                'app-name',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'App name',
+                $this->configuration->localEnvironmentAppName()
+              ),
+              new InputOption(
+                'build-id',
+                'bi',
+                InputOption::VALUE_OPTIONAL,
+                'Id',
+                $this->configuration->localEnvironmentBuildId()
+              ),
+              new InputOption(
+                'separator',
+                'se',
+                InputOption::VALUE_OPTIONAL,
+                'Name separator',
+                $this->configuration->localEnvironmentSeparator()
+              ),
+              new InputOption(
+                'tar',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Tar',
+                $this->configuration->localEnvironmentTarName()
+              ),
+              new InputOption(
+                'tar_dir',
+                'td',
+                InputOption::VALUE_OPTIONAL,
+                'Tar dir',
+                $this->configuration->localEnvironmentTarDir()
+              ),
+              new InputOption(
+                'server',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Server',
+                $this->configuration->remoteEnvironmentServerName()
+              ),
+              new InputOption(
+                'user',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'User (ssh)',
+                $this->configuration->remoteEnvironmentSshUser()
+              ),
+              new InputOption(
+                'ssh_port',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'SSH port',
+                $this->configuration->remoteEnvironmentSshPort()
+              ),
+              new InputOption(
+                'ssh_key_password',
+                'skp',
+                InputOption::VALUE_OPTIONAL,
+                'SSH key password',
+                $this->configuration->localEnvironmentSshKeyPassword()
+              ),
+              new InputOption(
+                'target_dir',
+                'tp',
+                InputOption::VALUE_OPTIONAL,
+                'Target dir',
+                $this->configuration->remoteEnvironmentTargetDir()
+              ),
+              new InputOption(
+                'identity_file',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'Identify file',
+                $this->configuration->remoteEnvironmentIdentifyFile()
+              ),
+              new InputOption(
+                'timeout',
+                'to',
+                InputOption::VALUE_OPTIONAL,
+                'Timeout',
+                $this->configuration->timeOut()
+              ),
+              new InputOption(
+                'keeptar',
+                'kt',
+                InputOption::VALUE_NONE,
+                'Keep tar after upload  (defaults to no)'
+              ),
+              new InputOption(
+                'dontchecksha1',
+                'dsha1',
+                InputOption::VALUE_NONE,
+                "Don't check SHA1 hash for file (defaults to no)"
+              ),
             )
-            ->setHelp($HelpText);
+          )
+          ->setHelp($HelpText);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app_name              = $input->getOption('app-name');
-        $build_id              = $input->getOption('build-id');
-        $separator             = $input->getOption('separator');
-        $tar                   = $input->getOption('tar');
-        $tar_dir               = $input->getOption('tar_dir');
-        $server                = $input->getOption('server');
-        $user                  = $input->getOption('user');
-        $targetdir             = $input->getOption('target_dir');
-        $port                  = $input->getOption('ssh_port');
-        $ssh_key_password      = $input->getOption('ssh_key_password');
-        $identity_file         = $input->getOption('identity_file');
-        $identity_file_content = $this->getKeyContents($identity_file);
-        $timeout               = $input->getOption('timeout');
-        $keeptar               = $input->getOption('keeptar') ? true : false;
-        $checksha1             = $input->getOption('dontchecksha1') ? false : true;
+
+        $app_name = $input->getOption('app-name');
+        $build_id = $input->getOption('build-id');
+        $separator = $input->getOption('separator');
+        $tar = $input->getOption('tar');
+        $tar_dir = $input->getOption('tar_dir');
+        $server = $input->getOption('server');
+        $user = $input->getOption('user');
+        $targetdir = $input->getOption('target_dir');
+        $port = $input->getOption('ssh_port');
+        $ssh_key_password = $input->getOption('ssh_key_password');
+        $identity_file = $input->getOption('identity_file');
+        $identity_file_content = file_get_contents($identity_file);
+        $timeout = $input->getOption('timeout');
+        $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
+        $checksha1 = $input->getOption('dontchecksha1') ? 'false' : 'true';
+
 
         if (isset($tar)) {
             $tarfile = $tar;
@@ -177,9 +179,13 @@ To override config in dropcat.yml, using options:
 
         $tarExists = $sftp->file_exists("$tar_dir$tarfile");
         // Setting default value
+
+        if ($output->isVerbose()) {
+            echo "checksha1 is set to $checksha1 \n";
+        }
         $remoteFileSha1 = null;
         if ($tarExists) {
-            if ($checksha1 === true) {
+            if ($checksha1 == 'true') {
                 $remoteFileSha1 = $sftp->exec("sha1sum $tar_dir$tarfile | awk '{print $1}'");
                 if ($output->isVerbose()) {
                     echo "tar is at $tar_dir$tarfile\n";

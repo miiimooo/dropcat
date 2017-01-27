@@ -82,19 +82,19 @@ To override config in dropcat.yml, using options:
         $fs = $this->container->get('filesystem');
 
         // Rename profile to project name
-        $fs->rename('web_init/web/profiles/wk-standard', 'web_init/web/profiles/' . $my_profile);
+        $fs->rename('web_init/web/profiles/wkstandard', 'web_init/web/profiles/' . $my_profile);
 
         // Rename files to project-name
         $fs->rename(
-            'web_init/web/profiles/' . $my_profile . '/wk-standard.profile',
+            'web_init/web/profiles/' . $my_profile . '/wkstandard.profile',
             'web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.profile'
         );
         $fs->rename(
-            'web_init/web/profiles/' . $my_profile . '/wk-standard.install',
+            'web_init/web/profiles/' . $my_profile . '/wkstandard.install',
             'web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.install'
         );
         $fs->rename(
-            'web_init/web/profiles/' . $my_profile . '/wk-standard.info.yml',
+            'web_init/web/profiles/' . $my_profile . '/wkstandard.info.yml',
             'web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.info.yml'
         );
 
@@ -104,14 +104,14 @@ To override config in dropcat.yml, using options:
         // Replace what is needed
         $read = $this->container->get('dropcat.factory')->splfileobject('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.install', 'r');
         $content = $read->fread($read->getSize());
-        $content = str_replace("wk-standard_install", "$my_profile" . "_install", $content);
+        $content = str_replace("wkstandard_install", "$my_profile" . "_install", $content);
         $content = str_replace(
-            "Install, update and uninstall functions for the wk-standard installation profile.",
+            "Install, update and uninstall functions for the wkstandard installation profile.",
             "Install, update and uninstall functions for $my_profile installation profile.",
             $content
         );
         $content = str_replace(
-            "web/profiles/wk-standard/",
+            "web/profiles/wkstandard/",
             "web/profiles/$my_profile/",
             $content
         );
@@ -126,15 +126,17 @@ To override config in dropcat.yml, using options:
         // Replace in profile info file
         $read =  $this->container->get('dropcat.factory')->splfileobject('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.info.yml', 'r');
         $content = $read->fread($read->getSize());
-        $content = str_replace("WK-standard", "$my_profile", $content);
-        $write =  $this->container->get('dropcat.factory')->splfileobject($read->getPathname(), 'w+');
+
+        $content = str_replace("wkstandard", "$my_profile", $content);
+        $write = new SplFileObject($read->getPathname(), 'w+');
         $write->fwrite($content);
 
         // Replace in root composer.json
         $read =  $this->container->get('dropcat.factory')->splfileobject('web_init/composer.json', 'r');
         $content = $read->fread($read->getSize());
-        $content = str_replace("web/profiles/wk-standard/", "web/profiles/$my_profile/", $content);
-        $write =  $this->container->get('dropcat.factory')->splfileobject($read->getPathname(), 'w+');
+
+        $content = str_replace("web/profiles/wkstandard/", "web/profiles/$my_profile/", $content);
+        $write = new SplFileObject($read->getPathname(), 'w+');
         $write->fwrite($content);
 
 

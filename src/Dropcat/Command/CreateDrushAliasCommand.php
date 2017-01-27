@@ -30,7 +30,17 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
         $this->setName("create-drush-alias")
         ->setDescription("run command or script on local environment")
-        ->setHelp($HelpText);
+        ->setHelp($HelpText)
+        ->setDefinition(
+            array(
+            new InputOption(
+                'local',
+                'l',
+                InputOption::VALUE_NONE,
+                "Create drush alias for local use"
+            ),
+            )
+        );
     }
 
 
@@ -38,14 +48,31 @@ To override config in dropcat.yml, using options, creates alias to stage env.
     {
         if (!empty($this->configuration->siteEnvironmentName())) {
             $siteName = $this->configuration->siteEnvironmentName();
-            $server = $this->configuration->remoteEnvironmentServerName();
-            $user = $this->configuration->remoteEnvironmentSshUser();
             $webroot = $this->configuration->remoteEnvironmentWebRoot();
             $alias = $this->configuration->remoteEnvironmentAlias();
-            $url =  $this->configuration->siteEnvironmentUrl();
+            $url = $this->configuration->siteEnvironmentUrl();
             $sshport = $this->configuration->remoteEnvironmentSshPort();
 
-            $drushAlias = $this->container->get('createDrushAlias');
+            $server = $this->configuration->remoteEnvironmentServerName();
+            $user = $this->configuration->remoteEnvironmentSshUser();
+            $local = $input->getOption('local') ? 'true' : 'false';
+            if ($local == 'true') {
+                $sshport = $this->configuration->remoteEnvironmentLocalSshPort() ?
+                $this->configuration->remoteEnvironmentLocalSshPort() :
+                $this->configuration->remoteEnvironmentSshPort();
+                $server = $this->configuration->remoteEnvironmentLocalServerName() ?
+                $this->configuration->remoteEnvironmentLocalServerName() :
+                $this->configuration->remoteEnvironmentServerName();
+                $user = $this->configuration->remoteEnvironmentLocalSshUser() ?
+                $this->configuration->remoteEnvironmentLocalSshUser() :
+                $this->configuration->remoteEnvironmentSshUser();
+            }
+            if ($output->isVerbose()) {
+                echo "ssh user is $user\n";
+                echo "server is $server\n";
+                echo "port is $sshport\n";
+            }
+            $drushAlias = new CreateDrushAlias();
             $drushAlias->setName($siteName);
             $drushAlias->setServer($server);
             $drushAlias->setUser($user);
@@ -62,14 +89,14 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             $drush_file = $this->container->get('filesystem');
 
             try {
-                $drush_file->dumpFile($home_dir.'/.drush/'.$drush_alias_name.
+                $drush_file->dumpFile($home_dir . '/.drush/' . $drush_alias_name .
                 '.aliases.drushrc.php', $drushAlias->getValue());
             } catch (IOExceptionInterface $e) {
-                echo 'An error occurred while creating your file at '.$e->getPath();
+                echo 'An error occurred while creating your file at ' . $e->getPath();
             }
 
             $output->writeln('<info>Task: create-drush-alias finished. You could now use:</info>');
-            $output->writeln('<info>drush @' . $siteName .  '</info>');
+            $output->writeln('<info>drush @' . $siteName . '</info>');
         } else {
             echo 'I cannot create any alias, please check your --env parameter';
         }
