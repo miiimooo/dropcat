@@ -59,7 +59,7 @@ class CreateDrushAlias
   $aliases["' . $this->sitename . '"] = array (
     "remote-host" => "' . $this->server . '",
     "remote-user" => "' . $this->user . '",
-    "root" => "' . $this->webroot . '/' . $this->setSitePath . '/web",
+    "root" => "' . $this->webroot . '/' . $this->alias . '/web",
     "uri"  => "' . $this->url . '",
     "ssh-options" => "-q -p ' . $this->sshport . '",';
     if ($this->drushScript)
