@@ -11,13 +11,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class SettingsOverrideCommand extends DropcatCommand
+class SettingsFileGeneratorCommand extends DropcatCommand
 {
     protected function configure()
     {
         $HelpText = '<info>Overrides settings.php settings.</info>';
 
-        $this->setName("settings-override")
+        $this->setName("settingsfile-generator")
             ->setDescription("Overrides settings.php settings.")
             ->setHelp($HelpText);
     }
@@ -31,31 +31,34 @@ class SettingsOverrideCommand extends DropcatCommand
 
   protected function addNewSettingsFile()
   {
-    $app_path = $this->configuration->localEnvironmentAppPath();
-    $predeploy_settings_file = $app_path .'/sites/default/settings.predeploy.php';
-
-    $v = array();
+    $settings_variables = array();
 // values to 'override'.
-    $v['settings']['database']['default']['name'] = 'BEPPESNYADB';
+    $settings_variables['settings']['database']['default']['name'] = 'BEPPESNYADBfoo';
 
 // read file.
-    $fh = fopen($predeploy_settings_file, 'w+');
+    $fh = fopen($this->settingsFileName(), 'w+');
 
 // Using extra to put "first" level of array to a variable.
-    $contents = '<?php' . "\nextract(";
+    $contents = '<?php' . "\n";
 
 // ... to get the OUT
     ob_start();
 
 // dump variable to parseable PHP
-    var_export($v);
+    var_export($settings_variables);
 
     $contents .= ob_get_clean().'';
-    $contents .= ');';
 
 // finally write it!
     fwrite($fh, $contents);
     fclose($fh);
 
+  }
+
+  protected function settingsFileName()
+  {
+    $app_path = $this->configuration->localEnvironmentAppPath();
+    $settings_filename = $app_path .'/sites/default/settings.db.local.php';
+    return $settings_filename;
   }
 }
