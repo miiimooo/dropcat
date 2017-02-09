@@ -52,26 +52,42 @@ class SettingsFileGeneratorCommand extends DropcatCommand
         $custom_settings = $this->configuration->getCustomSettings();
         if ($custom_settings) {
             $this->filesystem = new Filesystem();
-            // Make local settings file writable.
-            $this->setLocalSettingsfilePermissions(0777);
             $local_settingsfile = $this->localSettingsFile();
+
+            // Make local settings file writable.
+            // $this->setLocalSettingsfilePermissions(0777);
+            $this->filesystem->chmod($local_settingsfile, 0777);
+
+            $local_settingsfile_contents = $this->getLocalSettingsfileContent($local_settingsfile);
+
+
             $this->filesystem->dumpFile($local_settingsfile, 'fooofaaaa');
             // Reset local settings file permissions to normal, not writable.
-            $this->setLocalSettingsfilePermissions(0644);
+            // $this->setLocalSettingsfilePermissions(0644);
+            $this->filesystem->chmod($local_settingsfile, 0644);
         }
         return 'wrote something?';
     }
 
-    protected function getLocalSettingsfileContent()
+    /**
+     * Returns the contents of the settings file we want to rewrite
+     *
+     * @param string $settingsFile path to the settings file
+     *
+     * @return string
+     */
+    protected function getLocalSettingsfileContent($settingsFile)
     {
-        // $this->filesystem->
+        return file_get_contents($settingsFile, false);
     }
 
+    // Not needed, we have filesystem object to mock instead
     protected function writeToLocalSettingsfile()
     {
 
     }
 
+    // Not needed, we have filesystem object to mock instead
     protected function setLocalSettingsfilePermissions($permissions = 0644)
     {
         $localSettingsFile = $this->localSettingsFile();
