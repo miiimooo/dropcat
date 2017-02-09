@@ -891,4 +891,17 @@ class Configuration
             return null;
         }
     }
+
+   /**
+   * Gets all custom settings.
+   */
+    public function getCustomSettings()
+    {
+      if(!empty($this->configuration['custom_settings'])) {
+        return $this->configuration['custom_settings'];
+      }
+      else {
+        return null;
+      }
+    }
 }

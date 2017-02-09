@@ -10,10 +10,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 
 class SettingsFileGeneratorCommand extends DropcatCommand
 {
-    protected function configure()
+
+    public function __construct(ContainerBuilder $container, Configuration $conf) {
+      parent::__construct($container, $conf);
+      $this->filesystem = new Filesystem();
+    }
+
+  protected function configure()
     {
         $HelpText = '<info>Overrides settings.php settings.</info>';
 
@@ -24,41 +32,51 @@ class SettingsFileGeneratorCommand extends DropcatCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output = new ConsoleOutput();
-        $new_settings_file = $this->addNewSettingsFile();
+        $new_settings_file = $this->addCustomSettings();
         $output->writeln($new_settings_file);
     }
 
-
-  protected function addNewSettingsFile()
+  /**
+   * 1. Check if we have settings in yml
+   * 2. check if we have settings in command line value
+   * 3. parse the yml
+   * 4. append to settings file ( should be in configs )
+   */
+  protected function addCustomSettings()
   {
-    $settings_variables = array();
-// values to 'override'.
-    $settings_variables['settings']['database']['default']['name'] = 'BEPPESNYADBfoo';
+    $custom_settings = $this->configuration->getCustomSettings();
+    if($custom_settings) {
+      // Make local settings file writable.
+      $this->setLocalSettingsfilePermissions(0777);
+      $local_settingsfile = $this->localSettingsFile();
+      $this->filesystem->dumpFile($local_settingsfile, 'fooofaaaa');
+      // Reset local settings file permissions to normal, not writable.
+      $this->setLocalSettingsfilePermissions(0644);
+    }
+    return 'wrote something?';
+  }
 
-// read file.
-    $fh = fopen($this->settingsFileName(), 'w+');
+  protected function getLocalSettingsfileContent()
+  {
+    $this->filesystem->
+  }
 
-// Using extra to put "first" level of array to a variable.
-    $contents = '<?php' . "\n";
-
-// ... to get the OUT
-    ob_start();
-
-// dump variable to parseable PHP
-    var_export($settings_variables);
-
-    $contents .= ob_get_clean().'';
-
-// finally write it!
-    fwrite($fh, $contents);
-    fclose($fh);
+  protected function writeToLocalSettingsfile()
+  {
 
   }
 
-  protected function settingsFileName()
+  protected function setLocalSettingsfilePermissions($permissions = 0644)
   {
+    $localSettingsFile = $this->localSettingsFile();
+    $this->filesystem->chmod($localSettingsFile, $permissions);
+  }
+
+  protected function localSettingsFile()
+  {
+    $run_path = getcwd();
     $app_path = $this->configuration->localEnvironmentAppPath();
-    $settings_filename = $app_path .'/sites/default/settings.db.local.php';
+    $settings_filename = $run_path .'/web'. $app_path .'/sites/default/settings.local.php';
     return $settings_filename;
   }
 }
