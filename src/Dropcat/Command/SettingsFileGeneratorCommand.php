@@ -53,7 +53,7 @@ class SettingsFileGeneratorCommand extends DropcatCommand
         if ($custom_settings) {
             // injecta via containern senare
             $this->filesystem = new Filesystem();
-            $local_settingsfile = $this->configuration->getCustomSettings();
+            $local_settingsfile = $this->configuration->getCustomSettingsFilePath();
 
             // Make local settings file writable.
             // $this->setLocalSettingsfilePermissions(0777);
@@ -95,17 +95,32 @@ class SettingsFileGeneratorCommand extends DropcatCommand
     {
         $parseableSettings = <<<EOF
 # START GENERATED CONFIGS, Oh Happy Days!
-
-extract(
 EOF;
 
-        $parseableSettings .= var_export($custom_settings, true);
+        foreach ($custom_settings as $var_name => $var_contents) {
+            $parseableVariableContents = var_export($var_contents, true);
+            // merge and other lovely shite
+            if (is_array($var_contents)) {
+                $parseableSettings .= <<<EOF
+
+if ( !isset(\${$var_name}) ) {
+    \${$var_name} = array();
+}
+\${$var_name} = array_replace_recursive(\${$var_name}, {$parseableVariableContents});
+EOF;
+            } else {
+                $parseableSettings .= <<<EOF
+
+\${$var_name} = {$parseableVariableContents};
+EOF;
+            }
+        }
 
         $parseableSettings .= <<<EOF
-);
-# END GENERATED CONFIGS!
-EOF;
 
+# END GENERATED CONFIGS!
+
+EOF;
         return $parseableSettings;
     }
 
