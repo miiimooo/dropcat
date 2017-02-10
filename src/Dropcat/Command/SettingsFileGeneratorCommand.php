@@ -51,8 +51,9 @@ class SettingsFileGeneratorCommand extends DropcatCommand
     {
         $custom_settings = $this->configuration->getCustomSettings();
         if ($custom_settings) {
+            // injecta via containern senare
             $this->filesystem = new Filesystem();
-            $local_settingsfile = $this->localSettingsFile();
+            $local_settingsfile = $this->configuration->getCustomSettings();
 
             // Make local settings file writable.
             // $this->setLocalSettingsfilePermissions(0777);
@@ -60,8 +61,10 @@ class SettingsFileGeneratorCommand extends DropcatCommand
 
             $local_settingsfile_contents = $this->getLocalSettingsfileContent($local_settingsfile);
 
+            $generated_configs = $local_settingsfile_contents . "\n" .
+                $this->generateNewLocalSettingsFileContent($custom_settings);
 
-            $this->filesystem->dumpFile($local_settingsfile, 'fooofaaaa');
+            $this->filesystem->dumpFile($local_settingsfile, $generated_configs);
             // Reset local settings file permissions to normal, not writable.
             // $this->setLocalSettingsfilePermissions(0644);
             $this->filesystem->chmod($local_settingsfile, 0644);
@@ -79,6 +82,31 @@ class SettingsFileGeneratorCommand extends DropcatCommand
     protected function getLocalSettingsfileContent($settingsFile)
     {
         return file_get_contents($settingsFile, false);
+    }
+
+    /**
+     * Generate a PHP-parsable string of the provided variable.
+     *
+     * @param array $custom_settings Settings to add to settings file
+     *
+     * @return string
+     */
+    protected function generateNewLocalSettingsFileContent($custom_settings)
+    {
+        $parseableSettings = <<<EOF
+# START GENERATED CONFIGS, Oh Happy Days!
+
+extract(
+EOF;
+
+        $parseableSettings .= var_export($custom_settings, true);
+
+        $parseableSettings .= <<<EOF
+);
+# END GENERATED CONFIGS!
+EOF;
+
+        return $parseableSettings;
     }
 
     // Not needed, we have filesystem object to mock instead

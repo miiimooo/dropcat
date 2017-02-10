@@ -894,14 +894,24 @@ class Configuration
 
    /**
    * Gets all custom settings.
+    * @todo: handle cli-parameter that will send in new/overriding conf.
    */
     public function getCustomSettings()
     {
-      if(!empty($this->configuration['custom_settings'])) {
-        return $this->configuration['custom_settings'];
-      }
-      else {
-        return null;
-      }
+        if (!empty($this->configuration['custom_settings'])) {
+            return $this->configuration['custom_settings'];
+        } else {
+            return null;
+        }
+    }
+
+    public function getCustomSettingsFilePath()
+    {
+        if (!empty($this->configuration['custom_settings_file'])) {
+            $run_path = getcwd();
+            return $run_path . \DIRECTORY_SEPARATOR . $this->configuration['custom_settings_file'];
+        } else {
+            return null;
+        }
     }
 }
