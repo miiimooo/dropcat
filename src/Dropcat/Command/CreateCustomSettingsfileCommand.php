@@ -92,6 +92,9 @@ class CreateCustomSettingsfileCommand extends DropcatCommand
     protected function generateNewCustomSettingsFileContent($custom_settings)
     {
         $parseableSettings = <<<EOF
+
+# CUSTOM GENERATED SETTINGS by DROPCAT
+
 EOF;
 
         foreach ($custom_settings as $var_name => $var_contents) {
@@ -114,6 +117,8 @@ EOF;
         }
 
         $parseableSettings .= <<<EOF
+
+# END CUSTOM GENERATED SETTINGS by DROPCAT
 
 EOF;
         return $parseableSettings;

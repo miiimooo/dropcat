@@ -898,11 +898,20 @@ class Configuration
      */
     public function getCustomSettings()
     {
+        $return = null;
         if (!empty($this->configuration['custom_settings'])) {
-            return $this->configuration['custom_settings'];
-        } else {
-            return null;
+            $return = $this->configuration['custom_settings'];
         }
+        $input = new ArgvInput();
+        $provided_conf = Yaml::parse($input->getParameterOption(array('--custom-settings'), null));
+        if (isset($provided_conf)) {
+            if (isset($return)) {
+                $return = array_replace_recursive($return, $provided_conf);
+            } else {
+                $return = $provided_conf;
+            }
+        }
+        return $return;
     }
 
     /**

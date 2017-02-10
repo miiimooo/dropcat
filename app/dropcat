@@ -64,7 +64,15 @@ $application->getDefinition()->addOptions([
         InputOption::VALUE_OPTIONAL,
         'The environment to operate in.',
         'dev'
+    ),
+    new InputOption(
+        'custom-settings',
+        'cs',
+        InputOption::VALUE_OPTIONAL,
+        'Supply custom settings.',
+        null
     )
+
 ]);
 
 
