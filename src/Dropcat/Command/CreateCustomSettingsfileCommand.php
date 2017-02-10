@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class SettingsFileGeneratorCommand extends DropcatCommand
+class CreateCustomSettingsfileCommand extends DropcatCommand
 {
     /** @var  Filesystem */
     private $filesystem;
@@ -29,23 +29,21 @@ class SettingsFileGeneratorCommand extends DropcatCommand
     {
         $HelpText = '<info>Overrides settings.php settings.</info>';
 
-        $this->setName("settingsfile-generator")
-            ->setDescription("Overrides settings.php settings.")
+        $this->setName("create-custom-settingsfile")
+            ->setDescription("Creates a custom settingsfile based on existing settings-file.")
             ->setHelp($HelpText);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output            = new ConsoleOutput();
-        $new_settings_file = $this->addCustomSettings();
-        $output->writeln($new_settings_file);
+        $settings_file = $this->addCustomSettings();
+        $output->writeln($settings_file);
     }
 
     /**
-     * 1. Check if we have settings in yml
-     * 2. check if we have settings in command line value
-     * 3. parse the yml
-     * 4. append to settings file ( should be in configs )
+     * Adds custom settings to the custom settings file based on dropcat
+     * configuration in the custom_settings section.
      */
     protected function addCustomSettings()
     {
@@ -53,23 +51,23 @@ class SettingsFileGeneratorCommand extends DropcatCommand
         if ($custom_settings) {
             // injecta via containern senare
             $this->filesystem = new Filesystem();
-            $local_settingsfile = $this->configuration->getCustomSettingsFilePath();
+            $custom_settingsfile = $this->configuration->getCustomSettingsFilePath();
 
-            // Make local settings file writable.
-            // $this->setLocalSettingsfilePermissions(0777);
-            $this->filesystem->chmod($local_settingsfile, 0777);
+            $custom_settingsfile_contents = $this->getCustomSettingsfileContent($custom_settingsfile);
 
-            $local_settingsfile_contents = $this->getLocalSettingsfileContent($local_settingsfile);
+            $generated_configs = $custom_settingsfile_contents . "\n" .
+                $this->generateNewCustomSettingsFileContent($custom_settings);
 
-            $generated_configs = $local_settingsfile_contents . "\n" .
-                $this->generateNewLocalSettingsFileContent($custom_settings);
+            // Make custom settings file writable.
+            $this->filesystem->chmod($custom_settingsfile, 0777);
 
-            $this->filesystem->dumpFile($local_settingsfile, $generated_configs);
-            // Reset local settings file permissions to normal, not writable.
-            // $this->setLocalSettingsfilePermissions(0644);
-            $this->filesystem->chmod($local_settingsfile, 0644);
+            // Create a new settings-file with the combined settings.
+            $this->filesystem->dumpFile($custom_settingsfile, $generated_configs);
+
+            // Reset custom settings file permissions to normal, not writable.
+            $this->filesystem->chmod($custom_settingsfile, 0644);
         }
-        return 'wrote something?';
+        return 'Added custom settings to '. $custom_settingsfile;
     }
 
     /**
@@ -79,7 +77,7 @@ class SettingsFileGeneratorCommand extends DropcatCommand
      *
      * @return string
      */
-    protected function getLocalSettingsfileContent($settingsFile)
+    protected function getCustomSettingsfileContent($settingsFile)
     {
         return file_get_contents($settingsFile, false);
     }
@@ -91,10 +89,9 @@ class SettingsFileGeneratorCommand extends DropcatCommand
      *
      * @return string
      */
-    protected function generateNewLocalSettingsFileContent($custom_settings)
+    protected function generateNewCustomSettingsFileContent($custom_settings)
     {
         $parseableSettings = <<<EOF
-# START GENERATED CONFIGS, Oh Happy Days!
 EOF;
 
         foreach ($custom_settings as $var_name => $var_contents) {
@@ -118,30 +115,8 @@ EOF;
 
         $parseableSettings .= <<<EOF
 
-# END GENERATED CONFIGS!
-
 EOF;
         return $parseableSettings;
     }
 
-    // Not needed, we have filesystem object to mock instead
-    protected function writeToLocalSettingsfile()
-    {
-
-    }
-
-    // Not needed, we have filesystem object to mock instead
-    protected function setLocalSettingsfilePermissions($permissions = 0644)
-    {
-        $localSettingsFile = $this->localSettingsFile();
-        $this->filesystem->chmod($localSettingsFile, $permissions);
-    }
-
-    protected function localSettingsFile()
-    {
-        $run_path          = getcwd();
-        $app_path          = $this->configuration->localEnvironmentAppPath();
-        $settings_filename = $run_path . '/web' . $app_path . '/sites/default/settings.local.php';
-        return $settings_filename;
-    }
 }

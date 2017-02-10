@@ -37,10 +37,10 @@ site:
 
 mysql:
   environment:
-    host: localhost
-    database: drupal_db1
-    user: myuser
-    password: NULL
+    host: &db_host localhost
+    database: &db_database drupal_db1
+    user: &db_username myuser
+    password: &db_password NULL
     port: 3306
 
 deploy:
@@ -55,3 +55,17 @@ deploy:
     - nbproject
   jenkins_server: http://foobar:token@jenkins.server.net:8080
   jenkins_job: MyJob
+
+custom_settings_file: web/sites/default/settings.local.php
+custom_settings:
+  databases:
+    default:
+      default:
+        database: *db_database
+        username: *db_username
+        password: *db_password
+        prefix: ""
+        host: *db_host
+        port: *db_port
+        namespace: "Drupal\\Core\\Database\\Driver\\mysql"
+        driver: "mysql"

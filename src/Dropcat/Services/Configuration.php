@@ -892,10 +892,10 @@ class Configuration
         }
     }
 
-   /**
-   * Gets all custom settings.
-    * @todo: handle cli-parameter that will send in new/overriding conf.
-   */
+    /**
+     * Gets all custom settings.
+     * @todo: handle cli-parameter that will send in new/overriding conf.
+     */
     public function getCustomSettings()
     {
         if (!empty($this->configuration['custom_settings'])) {
@@ -905,6 +905,9 @@ class Configuration
         }
     }
 
+    /**
+     * Gets the custom settings file (absolute) path.
+     */
     public function getCustomSettingsFilePath()
     {
         if (!empty($this->configuration['custom_settings_file'])) {
