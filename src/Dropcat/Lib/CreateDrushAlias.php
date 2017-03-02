@@ -55,7 +55,7 @@ class CreateDrushAlias
     "remote-user" => "' . $this->setUser . '",
     "root" => "' . $this->setWebRoot . '/' . $this->setSitePath . '/web",
     "uri"  => "' . $this->setUrl . '",
-    "ssh-options" => "-q -p ' . $this->setSSHPort . '",
+    "ssh-options" => "-o LogLevel=Error -q -p ' . $this->setSSHPort . '",
 );';
         return ($aliasOut);
     }
