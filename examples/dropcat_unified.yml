@@ -1,0 +1,119 @@
+# Dropcat unified YAML config file
+# Default values *must* be placed under the default: key,
+# which in turn must be listed first in the document.
+# See towards the end of the file for per-environment overrides.
+
+# If this file exists in the project root, it will be used,
+# otherwise the old dropcat.*.yml files will be used.
+
+default: &DEFAULT
+  app_name: legitimation
+  local: &LOCAL
+    app_path: NULL
+    tmp_path: /tmp
+    build_id: NULL
+    seperator: _
+    db_import: /sharedbackups/prod/socprod/db.sql.gz
+    tar_name: NULL
+    ssh_key_password: NULL
+    rsync_from: NULL
+    rsync_to: NULL
+  remote: &REMOTE
+    server: 88.80.172.30
+    ssh_user: 53597-5448
+    ssh_port: 3022
+    local_ssh_user: NULL
+    local_ssh_port: NULL
+    local_server: NULL
+    target_path: /var/www/webroot
+    identity_file: /var/lib/jenkins/.ssh/id_rsa
+    web_root: /var/www/webroot
+    temp_folder: /tmp
+    alias: legitimation_latest_stage
+    target_dir: /tmp
+    rsync_from: NULL
+    rsync_to: NULL
+  web: &WEB
+    drush_alias: legitimation
+    backup_path: /backup
+    config_name: staging
+    original_path: /var/www/webroot/shared/socstage/files
+    symlink: /var/www/webroot/legitimation_latest_stage/web/sites/default/files
+    url: http://socialstyrelsen.wkstage.se/
+    name: socstage
+    profile: default
+    profile_options: NULL
+    drush_install_options: NULL
+    admin_pass: NULL
+    vhost: &VHOST
+      file_name: NULL
+      target: NULL
+      port: NULL
+      document_root: NULL
+      server_name: NULL
+      bash_command: NULL
+      server_alias: NULL
+      extra: NULL
+  build: &BUILD
+    node: &NODE
+      nvm_directory: NULL
+      nvmrc_file: NULL
+      gulp_directory: NULL
+      gulp_options: NULL
+  db: &DB
+    type: mysql
+    host: mariadb53596-stages-d8.jelastic.elastx.net
+    database: soc_stage_db1
+    user: root
+    port: 3306
+    password: ''
+  deploy: &DEPLOY
+    varnish_ip: NULL
+    varnish_port: NULL
+    jenkins_server: NULL
+    jenkins_job: NULL
+    ignore: &IGNORE
+      - .git
+      - .gitignore
+      - ansible
+      - .idea
+      - Vagrantfile
+      - .vagrant
+      - provision
+      - nbproject
+
+
+###
+### IF YOU ADD ANY KEYS TO A MAP, YOU MUST "IMPORT" THE DEFAULTS WITH AN ALIAS
+# Environment prod
+prod:
+  <<: *DEFAULT
+  remote:
+    <<: *REMOTE
+    ssh_user: 51617-2075
+    alias: soc_latest_prod
+  web:
+    <<: *WEB
+    drush_alias: socprod
+    name: socprod
+    url: http://www.socialstyrelsen.se
+    original_path: /var/www/webroot/shared/socprod/files
+    symlink: /var/www/webroot/soc_latest_prod/web/sites/default/files
+  db:
+    <<: *DB
+    host: mysql-prod.socialstyrelsen.se
+    database: soc_prod_db1
+    password: 'very secret'
+
+
+# Environment stage
+
+stage:
+  <<: *DEFAULT
+
+# Environment kt
+
+dev:
+  <<: *DEFAULT
+
+
