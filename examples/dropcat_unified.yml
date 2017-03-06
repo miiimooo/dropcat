@@ -7,7 +7,7 @@
 # otherwise the old dropcat.*.yml files will be used.
 default: &DEFAULT
   app_name: my_app
-  local:
+  local: &LOCAL
     app_path: NULL
     tmp_path: /tmp
     build_id: NULL
@@ -25,7 +25,7 @@ default: &DEFAULT
     remote_backup_path: /nightly/backup/prod/my_app
         # name of db dump
     remote_db_backup_name: db.sql.gz
-  remote:
+  remote: &REMOTE
     server: 88.80.172.30
     ssh_user: 53597-5448
     ssh_port: 3022
@@ -40,7 +40,7 @@ default: &DEFAULT
     target_dir: /tmp
     rsync_from: NULL
     rsync_to: NULL
-  web:
+  web: &WEB
     drush_alias: my_app
     backup_path: /backup
     config_name: sync
@@ -52,7 +52,7 @@ default: &DEFAULT
     profile_options: NULL
     drush_install_options: NULL
     admin_pass: NULL
-    vhost:
+    vhost: &VHOST
       file_name: NULL
       target: NULL
       port: NULL
@@ -61,25 +61,25 @@ default: &DEFAULT
       bash_command: NULL
       server_alias: NULL
       extra: NULL
-  build:
-    node:
+  build: &BUILD
+    node: &NODE
       nvm_directory: NULL
       nvmrc_file: NULL
       gulp_directory: NULL
       gulp_options: NULL
-  db:
+  db: &DB
     type: mysql
     host: my.db.server
     database: myapp_db1
     user: root
     port: 3306
     password: password
-  deploy:
+  deploy: &DEPLOY
     varnish_ip: NULL
     varnish_port: NULL
     jenkins_server: NULL
     jenkins_job: NULL
-    ignore:
+    ignore: &IGNORE
       - .git
       - .gitignore
       - ansible
@@ -95,15 +95,18 @@ default: &DEFAULT
 prod:
   <<: *DEFAULT
   remote:
+    <<: *REMOTE
     ssh_user: 51617-2075
     alias: myapp_latest_prod
   web:
+    <<: *WEB
     drush_alias: myapp_prod
     name: socprod
     url: http://www.myapp.com
     original_path: /var/www/webroot/shared/my_app/files
     symlink: /var/www/webroot/myapp_latest_prod/web/sites/default/files
   db:
+    <<: *DB
     host: mysql-prod.server.com
     database: myapp_prod_db1
     password: 'password'
