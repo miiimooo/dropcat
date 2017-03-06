@@ -5,20 +5,27 @@
 
 # If this file exists in the project root, it will be used,
 # otherwise the old dropcat.*.yml files will be used.
-
 default: &DEFAULT
-  app_name: legitimation
-  local: &LOCAL
+  app_name: my_app
+  local:
     app_path: NULL
     tmp_path: /tmp
     build_id: NULL
     seperator: _
-    db_import: /sharedbackups/prod/socprod/db.sql.gz
+    db_import: /sharedbackups/prod/my_app/db.sql.gz
     tar_name: NULL
     ssh_key_password: NULL
     rsync_from: NULL
     rsync_to: NULL
-  remote: &REMOTE
+    drush_folder: /var/lib/jenkins/.drush
+    remote_backup_server: my.backup.server
+    remote_backup_server_port: 2222
+    remote_backup_server_user: 57948-5448
+    # no trailing slash
+    remote_backup_path: /nightly/backup/prod/my_app
+        # name of db dump
+    remote_db_backup_name: db.sql.gz
+  remote:
     server: 88.80.172.30
     ssh_user: 53597-5448
     ssh_port: 3022
@@ -29,23 +36,23 @@ default: &DEFAULT
     identity_file: /var/lib/jenkins/.ssh/id_rsa
     web_root: /var/www/webroot
     temp_folder: /tmp
-    alias: legitimation_latest_stage
+    alias: myapp_latest_dev
     target_dir: /tmp
     rsync_from: NULL
     rsync_to: NULL
-  web: &WEB
-    drush_alias: legitimation
+  web:
+    drush_alias: my_app
     backup_path: /backup
-    config_name: staging
-    original_path: /var/www/webroot/shared/socstage/files
-    symlink: /var/www/webroot/legitimation_latest_stage/web/sites/default/files
-    url: http://socialstyrelsen.wkstage.se/
-    name: socstage
+    config_name: sync
+    original_path: /var/www/webroot/shared/my_app/files
+    symlink: /var/www/webroot/myapp_latest_dev/web/sites/default/files
+    url: http://myapp.mydomain.com/
+    name: my_app
     profile: default
     profile_options: NULL
     drush_install_options: NULL
     admin_pass: NULL
-    vhost: &VHOST
+    vhost:
       file_name: NULL
       target: NULL
       port: NULL
@@ -54,25 +61,25 @@ default: &DEFAULT
       bash_command: NULL
       server_alias: NULL
       extra: NULL
-  build: &BUILD
-    node: &NODE
+  build:
+    node:
       nvm_directory: NULL
       nvmrc_file: NULL
       gulp_directory: NULL
       gulp_options: NULL
-  db: &DB
+  db:
     type: mysql
-    host: mariadb53596-stages-d8.jelastic.elastx.net
-    database: soc_stage_db1
+    host: my.db.server
+    database: myapp_db1
     user: root
     port: 3306
-    password: ''
-  deploy: &DEPLOY
+    password: password
+  deploy:
     varnish_ip: NULL
     varnish_port: NULL
     jenkins_server: NULL
     jenkins_job: NULL
-    ignore: &IGNORE
+    ignore:
       - .git
       - .gitignore
       - ansible
@@ -83,27 +90,23 @@ default: &DEFAULT
       - nbproject
 
 
-###
-### IF YOU ADD ANY KEYS TO A MAP, YOU MUST "IMPORT" THE DEFAULTS WITH AN ALIAS
+
 # Environment prod
 prod:
   <<: *DEFAULT
   remote:
-    <<: *REMOTE
     ssh_user: 51617-2075
-    alias: soc_latest_prod
+    alias: myapp_latest_prod
   web:
-    <<: *WEB
-    drush_alias: socprod
+    drush_alias: myapp_prod
     name: socprod
-    url: http://www.socialstyrelsen.se
-    original_path: /var/www/webroot/shared/socprod/files
-    symlink: /var/www/webroot/soc_latest_prod/web/sites/default/files
+    url: http://www.myapp.com
+    original_path: /var/www/webroot/shared/my_app/files
+    symlink: /var/www/webroot/myapp_latest_prod/web/sites/default/files
   db:
-    <<: *DB
-    host: mysql-prod.socialstyrelsen.se
-    database: soc_prod_db1
-    password: 'very secret'
+    host: mysql-prod.server.com
+    database: myapp_prod_db1
+    password: 'password'
 
 
 # Environment stage
