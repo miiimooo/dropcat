@@ -46,7 +46,7 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->configuration->configuration) {
+        if ($this->configuration) {
             $siteName = $this->configuration->siteEnvironmentName();
             $webroot = $this->configuration->remoteEnvironmentWebRoot();
             $alias = $this->configuration->remoteEnvironmentAlias();
