@@ -66,8 +66,7 @@ class CreateDrushAliasCommandTest extends \PHPUnit_Framework_TestCase
     "remote-user" => "sshuser",
     "root" => "webroot/envAlias/web",
     "uri"  => "envUrl",
-    "ssh-options" => "-q -p sshPort",
-);
+    "ssh-options" => "-o LogLevel=Error -q -p sshPort",);
 EOF;
 
         $this->filesystem_mock->expects($this->once())

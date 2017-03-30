@@ -10,53 +10,66 @@ class CreateDrushAlias
     private $alias;
     private $url;
     private $sshport;
+    private $drushScript = NULL;
 
     public function setName($sitename)
     {
-        $this->setName = $sitename;
+        $this->sitename = $sitename;
     }
 
     public function setServer($server)
     {
-        $this->setServer = $server;
+        $this->server = $server;
     }
 
     public function setUser($user)
     {
-        $this->setUser = $user;
+        $this->user = $user;
     }
 
     public function setWebRoot($webroot)
     {
-        $this->setWebRoot = $webroot;
+        $this->webroot = $webroot;
     }
 
     public function setSitePath($alias)
     {
-        $this->setSitePath = $alias;
+        $this->alias = $alias;
     }
 
     public function setUrl($url)
     {
-        $this->setUrl = $url;
+        $this->url = $url;
     }
 
     public function setSSHPort($sshport)
     {
-        $this->setSSHPort = $sshport;
+        $this->sshport = $sshport;
+    }
+
+    public function setDrushScriptPath($script_path)
+    {
+      $this->drushScript = $script_path;
     }
 
 
     public function getValue()
     {
         $aliasOut = '<?php
-  $aliases["' . $this->setName . '"] = array (
-    "remote-host" => "' . $this->setServer . '",
-    "remote-user" => "' . $this->setUser . '",
-    "root" => "' . $this->setWebRoot . '/' . $this->setSitePath . '/web",
-    "uri"  => "' . $this->setUrl . '",
-    "ssh-options" => "-q -p ' . $this->setSSHPort . '",
-);';
+  $aliases["' . $this->sitename . '"] = array (
+    "remote-host" => "' . $this->server . '",
+    "remote-user" => "' . $this->user . '",
+    "root" => "' . $this->webroot . '/' . $this->alias . '/web",
+    "uri"  => "' . $this->url . '",
+    "ssh-options" => "-o LogLevel=Error -q -p ' . $this->sshport . '",';
+    if ($this->drushScript)
+    {
+      $aliasOut .= '
+      "path-aliases" =>  array(
+         "%drush-script"  => "'. $this->drushScript .'",
+      ),';
+    }
+        $aliasOut .= ');';
         return ($aliasOut);
     }
 

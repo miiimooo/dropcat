@@ -79,7 +79,7 @@ To override config in dropcat.yml, using options:
                     if ($output->isVerbose()) {
                         echo "Filetype is gz \n";
                     }
-                    $process = new Process(
+                    $process = $this->runProcess(
                         "gunzip $path_to_db --force -c > $db_dump"
                     );
                     $process->setTimeout($timeout);

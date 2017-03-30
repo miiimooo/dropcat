@@ -37,6 +37,12 @@ To override config in dropcat.yml, using options:
                         'Drush folder',
                         $this->configuration->localEnvironmentDrushFolder()
                     ),
+                  new InputOption(
+                    'drush_script',
+                    'ds',
+                    InputOption::VALUE_OPTIONAL,
+                    'Drush script path (can be remote)'
+                  ),
                     new InputOption(
                         'drush_alias',
                         'd',
@@ -142,6 +148,8 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        $drush_script   = $input->getOption('drush_script');
         $drush_folder   = $input->getOption('drush_folder');
         $drush_alias    = $input->getOption('drush_alias');
         $server         = $input->getOption('server');
@@ -166,6 +174,9 @@ To override config in dropcat.yml, using options:
         $drushAlias->setSitePath($alias);
         $drushAlias->setUrl($url);
         $drushAlias->setSSHPort($ssh_port);
+        if ($drush_script) {
+            $drushAlias->setDrushScriptPath($drush_script);
+        }
 
         $drush_file = $this->container->get('filesystem');
 

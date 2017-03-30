@@ -1,8 +1,8 @@
 <?php
 namespace Dropcat\Lib;
 
+use Dropcat\Services\DropcatConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 
@@ -32,8 +32,9 @@ class DropcatCommand extends Command
      */
     protected $configuration;
 
-    public function __construct(ContainerBuilder $container, Configuration $conf)
+    public function __construct(ContainerBuilder $container,  DropcatConfigurationInterface $conf)
     {
+
         $this->configuration = $conf;
         parent::__construct();
         $this->container = $container;

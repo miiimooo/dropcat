@@ -28,7 +28,11 @@ class DbImportCommandTest extends \PHPUnit_Framework_TestCase
         // This way, it will be available to the command.
         $this->container->set('DropcatContainer', $this->container);
 
-        $this->conf = $configuration = new Configuration();
+        $conf_mock =  $this->getMockBuilder('Dropcat\Services\Configuration')
+            ->getMock();
+        $conf_mock->method('localEnvironmentAppName')
+            ->willReturn('dropcat-default');
+        $this->conf = $configuration = $conf_mock;
 
         $this->application = new Application();
 
@@ -64,17 +68,18 @@ class DbImportCommandTest extends \PHPUnit_Framework_TestCase
         // + That when run, the parameter is 'drush @mysite cim myconfig -q -y
         // + and that we return the mocked process, above.
         $expected_process_command = <<<EOF
-drush @mysite sql-drop -y &&
-            drush @mysite sql-cli < /tmp/dropcat-default-db.sql
+gunzip /tmp/dropcat-default-db.sql.gz --force -c > /tmp/dropcat-default-db.sql
 EOF;
 
-        $command_mock->expects($this->once())
+        $command_mock->expects($this->at(0))
             ->method('runProcess')
             ->with($this->equalTo($expected_process_command))
             ->willReturn($process_mock);
-        $command_mock->expects($this->once())
+
+        $command_mock->expects($this->at(1))
             ->method('runProcess')
-            ->with($this->equalTo($expected_process_command))
+            ->with($this->equalTo('drush @mysite sql-drop -y &&
+            drush @mysite sql-cli < /tmp/dropcat-default-db.sql'))
             ->willReturn($process_mock);
 
         // Add our mocked command from above.
