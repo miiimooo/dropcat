@@ -104,8 +104,12 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
 
         $contents = $tar_library->listContent();
 
-        $this->assertEquals(\count($contents), 1);
-        $this->assertEquals($contents[0]['filename'], basename(__FILE__));
+        $this->assertEquals(\count($contents), 2);
+        $files = [];
+        foreach($contents as $file) {
+            $files[] = $file['filename'];
+        }
+        $this->assertTrue(in_array(basename(__FILE__), $files));
     }
 
     /**
