@@ -106,7 +106,7 @@ class TarCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(\count($contents), 2);
         $files = [];
-        foreach($contents as $file) {
+        foreach ($contents as $file) {
             $files[] = $file['filename'];
         }
         $this->assertTrue(in_array(basename(__FILE__), $files));
