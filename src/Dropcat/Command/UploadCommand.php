@@ -143,7 +143,7 @@ To override config in dropcat.yml, using options:
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
+        $identity_file_content = $this->readIdentityFile($identity_file);
         $timeout = $input->getOption('timeout');
         $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
         $checksha1 = $input->getOption('dontchecksha1') ? 'false' : 'true';
@@ -262,5 +262,16 @@ To override config in dropcat.yml, using options:
     protected function removeTar($tar_dir, $tarfile)
     {
         unlink("$tar_dir$tarfile");
+    }
+
+    /**
+     * @param $identity_file
+     *
+     * @return bool|string
+     */
+    protected function readIdentityFile($identity_file)
+    {
+        $identity_file_content = file_get_contents($identity_file);
+        return $identity_file_content;
     }
 }

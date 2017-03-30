@@ -96,7 +96,8 @@ class UploadCommandTest extends \PHPUnit_Framework_TestCase
             ->setMethods([
                 'getKeyContents',
                 'getSha1OfFile',
-                'exitCommand'
+                'exitCommand',
+                'readIdentityFile'
             ])
             ->getMock();
 
@@ -109,6 +110,7 @@ class UploadCommandTest extends \PHPUnit_Framework_TestCase
                 throw new \Exception($code);
             }));
 
+        $command_mock->method('readIdentityFile')->willReturn('something');
 
         $this->application->add($command_mock);
 
@@ -163,7 +165,8 @@ class UploadCommandTest extends \PHPUnit_Framework_TestCase
             ->setMethods([
                 'getKeyContents',
                 'getSha1OfFile',
-                'exitCommand'
+                'exitCommand',
+                'readIdentityFile'
             ])
             ->getMock();
 
@@ -176,6 +179,7 @@ class UploadCommandTest extends \PHPUnit_Framework_TestCase
                 throw new \Exception($code);
             }));
 
+        $command_mock->method('readIdentityFile')->willReturn('something');
 
         $this->application->add($command_mock);
 
@@ -234,7 +238,8 @@ class UploadCommandTest extends \PHPUnit_Framework_TestCase
             ->setMethods([
                 'getKeyContents',
                 'getSha1OfFile',
-                'exitCommand'
+                'exitCommand',
+                'readIdentityFile'
             ])
             ->getMock();
 
@@ -247,10 +252,13 @@ class UploadCommandTest extends \PHPUnit_Framework_TestCase
                 throw new \Exception($code);
             }));
 
+        $command_mock->method('readIdentityFile')->willReturn('something');
+
 
         $this->application->add($command_mock);
 
-        $this->expectOutputString('tar is at dirOfTaruploadTest@2.tar
+        $this->expectOutputString('checksha1 is set to false 
+tar is at dirOfTaruploadTest@2.tar
 local file hash is 7fd9d832fd2a1a45b8820876e1b52e6b1d58f2b1
 remote file hash is 
 check for upload did not succeed.'."\n");
@@ -319,7 +327,8 @@ check for upload did not succeed.'."\n");
                 'getKeyContents',
                 'getSha1OfFile',
                 'exitCommand',
-                'removeTar'
+                'removeTar',
+                'readIdentityFile'
             ])
             ->getMock();
 
@@ -333,10 +342,12 @@ check for upload did not succeed.'."\n");
                 throw new \Exception($code);
             }));
 
+        $command_mock->method('readIdentityFile')->willReturn('something');
 
         $this->application->add($command_mock);
 
-        $this->expectOutputString('tar is at dirOfTaruploadTest@2.tar
+        $this->expectOutputString('checksha1 is set to true 
+tar is at dirOfTaruploadTest@2.tar
 local file hash is 7fd9d832fd2a1a45b8820876e1b52e6b1d58f2b1
 remote file hash is fel' ."\n". 'SHA1 for file do not match.');
         $this->expectException('\\Exception');
@@ -395,7 +406,8 @@ remote file hash is fel' ."\n". 'SHA1 for file do not match.');
                 'getKeyContents',
                 'getSha1OfFile',
                 'exitCommand',
-                'removeTar'
+                'removeTar',
+                'readIdentityFile'
             ])
             ->getMock();
 
@@ -404,11 +416,14 @@ remote file hash is fel' ."\n". 'SHA1 for file do not match.');
         $command_mock->method('getSha1OfFile')->willReturn($sha1);
 
 
+        $command_mock->method('readIdentityFile')->willReturn('something');
+
         $this->application->add($command_mock);
 
-        $this->expectOutputString('upload seems to be successful, but SHA1 for file is not checked '."\n".'tar is going to be saved TRUE
+        $this->expectOutputString('checksha1 is set to false 
+upload seems to be successful, but SHA1 for file is not checked false'."\n".'tar is going to be saved TRUE
 path to tar dirOfTaruploadTest@2.tar
-tar file is not deleted '."\n");
+tar file is deleted '."\n");
         #$this->expectException('\\Exception');
         $options  = array(
             'verbosity' => OutputInterface::VERBOSITY_VERBOSE
@@ -473,22 +488,25 @@ tar file is not deleted '."\n");
                 'getKeyContents',
                 'getSha1OfFile',
                 'exitCommand',
-                'removeTar'
+                'removeTar',
+                'readIdentityFile'
             ])
             ->getMock();
 
         $command_mock->method('getKeyContents')->willReturn('itsok!');
         $command_mock->method('removeTar')->willReturn(true);
         $command_mock->method('getSha1OfFile')->willReturn($sha1);
-
+        $command_mock->method('readIdentityFile')->willReturn('something');
 
         $this->application->add($command_mock);
 
-        $this->expectOutputString('tar is at dirOfTaruploadTest@2.tar
+        $this->expectOutputString('checksha1 is set to true 
+tar is at dirOfTaruploadTest@2.tar
 local file hash is 7fd9d832fd2a1a45b8820876e1b52e6b1d58f2b1
-remote file hash is 7fd9d832fd2a1a45b8820876e1b52e6b1d58f2b1' ."\n". 'SHA1 for file match
+remote file hash is 7fd9d832fd2a1a45b8820876e1b52e6b1d58f2b1
+SHA1 for file match
 upload successful
-tar is going to be saved FALSE
+tar is going to be saved TRUE
 path to tar dirOfTaruploadTest@2.tar
 tar file is deleted 
 ');
