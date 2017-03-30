@@ -6,6 +6,7 @@ use Dropcat\Lib\CreateDrushAlias;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Console\Output\OutputInterface;
 
 
 /**
@@ -50,6 +51,9 @@ class CreateDrushAliasCommandTest extends \PHPUnit_Framework_TestCase
         $this->conf->method('remoteEnvironmentAlias')->willReturn('envAlias');
         $this->conf->method('siteEnvironmentUrl')->willReturn('envUrl');
         $this->conf->method('remoteEnvironmentSshPort')->willReturn('sshPort');
+        $this->conf->method('remoteEnvironmentLocalSshPort')->willReturn('sshPort');
+        $this->conf->method('remoteEnvironmentLocalServerName')->willReturn('servername');
+        $this->conf->method('remoteEnvironmentLocalSshUser')->willReturn('sshuser');
 
         $this->application = new Application();
 
@@ -85,7 +89,11 @@ EOF;
         // Execute the test, with our mocked stuff.
         $this->tester->execute(
             array(
-                'command' => 'create-drush-alias'
+                'command' => 'create-drush-alias',
+                '-l' => 'true'
+            ),
+            array(
+                'verbosity' => OutputInterface::VERBOSITY_VERBOSE
             )
         );
     }
