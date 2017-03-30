@@ -105,8 +105,7 @@ class PrepareCommandTest extends \PHPUnit_Framework_TestCase
     "remote-user" => "Collinius",
     "root" => "/srv/www/webroot//someAlias/web",
     "uri"  => "some.url.com",
-    "ssh-options" => "-q -p 7777",
-);'))
+    "ssh-options" => "-o LogLevel=Error -q -p 7777",);'))
             ->will($this->returnCallback(function ($code) {
                 throw new IOException($code);
             }));
@@ -184,8 +183,7 @@ class PrepareCommandTest extends \PHPUnit_Framework_TestCase
     "remote-user" => "Collinius",
     "root" => "/srv/www/webroot//someAlias/web",
     "uri"  => "some.url.com",
-    "ssh-options" => "-q -p 7777",
-);'))
+    "ssh-options" => "-o LogLevel=Error -q -p 7777",);'))
             ->willReturn(true);
 
         $this->container->set('filesystem', $this->fsMock);
@@ -262,8 +260,7 @@ class PrepareCommandTest extends \PHPUnit_Framework_TestCase
     "remote-user" => "Collinius",
     "root" => "/srv/www/webroot//someAlias/web",
     "uri"  => "some.url.com",
-    "ssh-options" => "-q -p 7777",
-);'))
+    "ssh-options" => "-o LogLevel=Error -q -p 7777",);'))
             ->willReturn(true);
 
         $this->container->set('filesystem', $this->fsMock);
@@ -339,8 +336,7 @@ class PrepareCommandTest extends \PHPUnit_Framework_TestCase
     "remote-user" => "Collinius",
     "root" => "/srv/www/webroot//someAlias/web",
     "uri"  => "some.url.com",
-    "ssh-options" => "-q -p 7777",
-);'))
+    "ssh-options" => "-o LogLevel=Error -q -p 7777",);'))
             ->willReturn(true);
 
         $this->container->set('filesystem', $this->fsMock);
@@ -419,8 +415,7 @@ Task: prepare finished'."\n");
     "remote-user" => "Collinius",
     "root" => "/srv/www/webroot//someAlias/web",
     "uri"  => "some.url.com",
-    "ssh-options" => "-q -p 7777",
-);'))
+    "ssh-options" => "-o LogLevel=Error -q -p 7777",);'))
             ->willReturn(true);
 
         $this->container->set('filesystem', $this->fsMock);
