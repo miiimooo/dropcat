@@ -124,13 +124,23 @@ EOF;
         $command_mock = $this->mock->setMethods(['runProcess'])
             ->getMock();
 
+
+        # Don't forget the filesystem-mock
+        $this->filesystem_mock->expects($this->once())
+            ->method('exists')
+            ->with($this->equalTo('/tmp/dropcat-default-db.sql.gz'))
+            ->willReturn(true);
+
+        $this->container->set('filesystem', $this->filesystem_mock);
+
+
+
         // Here we set up an assertion that
         // + runProcess once
         // + That when run, the parameter is 'drush @mysite cim myconfig -q -y
         // + and that we return the mocked process, above.
         $expected_process_command = <<<EOF
-drush @mysite sql-drop -y &&
-            drush @mysite sql-cli < /dev/null
+gunzip /tmp/dropcat-default-db.sql.gz --force -c > /tmp/dropcat-default-db.sql
 EOF;
 
         $command_mock->expects($this->once())
@@ -149,7 +159,7 @@ EOF;
             array(
                 'command' => 'db-import',
                 '-d'      => 'mysite',
-                '-i'      => '/dev/null'
+                '-i'      => '/tmp/dropcat-default-db.sql.gz'
             )
         );
     }

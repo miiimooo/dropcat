@@ -128,7 +128,7 @@ To override config in dropcat.yml, using options:
         $content = $read->fread($read->getSize());
 
         $content = str_replace("wkstandard", "$my_profile", $content);
-        $write = new SplFileObject($read->getPathname(), 'w+');
+        $write = $this->container->get('dropcat.factory')->splfileobject($read->getPathname(), 'w+');
         $write->fwrite($content);
 
         // Replace in root composer.json
@@ -136,7 +136,7 @@ To override config in dropcat.yml, using options:
         $content = $read->fread($read->getSize());
 
         $content = str_replace("web/profiles/wkstandard/", "web/profiles/$my_profile/", $content);
-        $write = new SplFileObject($read->getPathname(), 'w+');
+        $write =$this->container->get('dropcat.factory')->splfileobject($read->getPathname(), 'w+');
         $write->fwrite($content);
 
 

@@ -143,7 +143,11 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             'factory.libs.splfileobject',
             "\\SplFileObject"
         );
-        $input = new PassThroughArgsInput([]);
+        $input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
+        $input->expects($this->any())
+            ->method('isInteractive')
+            ->will($this->returnValue(false));
+
         $output = new NullOutput();
 
         $symfonystyle_mock_placeholder = $this->getMockBuilder($this->container->getParameter('factory.libs.symfonystyle'))
@@ -202,7 +206,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $splFileObjectMock->expects($this->at(3))
             ->method('fwrite')
             ->with($this->equalTo(
-                "profilename_install Install, update and uninstall functions for profilename installation profile. web/profiles/profilename/ ('system.site')->set('uuid', '-')->save(TRUE);"
+                "wk-standard_install Install, update and uninstall functions for the wk-standard installation profile. web/profiles/wk-standard/ ('system.site')->set('uuid', '-')->save(TRUE);"
             )
             );
 
@@ -242,13 +246,13 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->filesystem_mock->expects($this->at(0))
             ->method('rename')
-            ->with($this->equalTo('web_init/web/profiles/wk-standard'), $this->equalTo( 'web_init/web/profiles/profilename'))
+            ->with($this->equalTo('web_init/web/profiles/wkstandard'), $this->equalTo( 'web_init/web/profiles/profilename'))
             ->willReturn(true);
 
         $this->filesystem_mock->expects($this->at(1))
             ->method('rename')
             ->with(
-                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wk-standard.profile'),
+                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wkstandard.profile'),
                 $this->equalTo('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.profile')
             )
             ->willReturn(true);
@@ -256,7 +260,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $this->filesystem_mock->expects($this->at(2))
             ->method('rename')
             ->with(
-                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wk-standard.install'),
+                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wkstandard.install'),
                 $this->equalTo('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.install')
             )
             ->willReturn(true);
@@ -264,7 +268,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $this->filesystem_mock->expects($this->at(3))
             ->method('rename')
             ->with(
-                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wk-standard.info.yml'),
+                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wkstandard.info.yml'),
                 $this->equalTo('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.info.yml')
             )
             ->willReturn(true);
@@ -299,7 +303,11 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             'factory.libs.splfileobject',
             "\\SplFileObject"
         );
-        $input = new PassThroughArgsInput([]);
+        $input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
+        $input->expects($this->any())
+            ->method('isInteractive')
+            ->will($this->returnValue(false));
+
         $output = new NullOutput();
 
         $symfonystyle_mock_placeholder = $this->getMockBuilder($this->container->getParameter('factory.libs.symfonystyle'))
@@ -371,7 +379,10 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             'factory.libs.splfileobject',
             "\\SplFileObject"
         );
-        $input = new PassThroughArgsInput([]);
+        $input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
+        $input->expects($this->any())
+            ->method('isInteractive')
+            ->will($this->returnValue(false));
         $output = new NullOutput();
 
         $symfonystyle_mock_placeholder = $this->getMockBuilder($this->container->getParameter('factory.libs.symfonystyle'))
@@ -415,18 +426,18 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $splFileObjectMock->expects($this->at(3))
             ->method('fwrite')
             ->with($this->equalTo(
-                "profilename_install Install, update and uninstall functions for profilename installation profile. web/profiles/profilename/ ('system.site')->set('uuid', '-')->save(TRUE);"
+                "wk-standard_install Install, update and uninstall functions for the wk-standard installation profile. web/profiles/wk-standard/ ('system.site')->set('uuid', '-')->save(TRUE);"
             )
             );
 
         $splFileObjectMock->expects($this->at(5))
             ->method('fread')
             ->with($this->equalTo(null))
-            ->willReturn('web/profiles/wk-standard/');
+            ->willReturn('web/profiles/profilename/');
 
         $splFileObjectMock->expects($this->at(7))
             ->method('fwrite')
-            ->with($this->equalTo("web/profiles/wk-standard/"));
+            ->with($this->equalTo("web/profiles/profilename/"));
 
 
         $factories_mock->method('SplFileObject')
@@ -463,13 +474,13 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->filesystem_mock->expects($this->at(0))
             ->method('rename')
-            ->with($this->equalTo('web_init/web/profiles/wk-standard'), $this->equalTo( 'web_init/web/profiles/profilename'))
+            ->with($this->equalTo('web_init/web/profiles/wkstandard'), $this->equalTo( 'web_init/web/profiles/profilename'))
             ->willReturn(true);
 
         $this->filesystem_mock->expects($this->at(1))
             ->method('rename')
             ->with(
-                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wk-standard.profile'),
+                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wkstandard.profile'),
                 $this->equalTo('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.profile')
             )
             ->willReturn(true);
@@ -477,7 +488,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $this->filesystem_mock->expects($this->at(2))
             ->method('rename')
             ->with(
-                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wk-standard.install'),
+                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wkstandard.install'),
                 $this->equalTo('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.install')
             )
             ->willReturn(true);
@@ -485,7 +496,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $this->filesystem_mock->expects($this->at(3))
             ->method('rename')
             ->with(
-                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wk-standard.info.yml'),
+                $this->equalTo('web_init/web/profiles/' . $my_profile . '/wkstandard.info.yml'),
                 $this->equalTo('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.info.yml')
             )
             ->willReturn(true);
