@@ -4,6 +4,7 @@ parameters:
     factory.libs.splfileobject: "\\SplFileObject"
     factory.libs.sftp: "\\phpseclib\Net\SFTP"
     factory.libs.mysqli: "\\mysqli"
+    factory.libs.jenkins: "\\JenkinsApi\Jenkins"
 
 services:
     symfony.application:

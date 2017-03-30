@@ -59,7 +59,7 @@ To override config in dropcat.yml, using options:
 
         $output = new ConsoleOutput();
 
-        $jenkins = new Jenkins($jenkins_server);
+        $jenkins = $this->container->get('dropcat.factory')->jenkins($jenkins_server);
 
         $resultTime = null;
         $jobLatest = $jenkins->getJob($jenkins_job)->getLastSuccessfulBuild();
