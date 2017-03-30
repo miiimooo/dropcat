@@ -47,7 +47,7 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo 'using drush alias: ' . $drush_alias . "\n";
         }
-        $process = new Process("drush @$drush_alias uli");
+        $process = $this->runProcess("drush @$drush_alias uli");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
@@ -57,6 +57,5 @@ To override config in dropcat.yml, using options:
 
         $output = new ConsoleOutput();
         $output->writeln('<info>Task: reset-login finished</info>');
-
     }
 }

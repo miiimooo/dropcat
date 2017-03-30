@@ -93,7 +93,6 @@ class JenkinsBuildCommandTest extends \PHPUnit_Framework_TestCase
         # Add job.
         $this->factories_mock->expects($this->at(0))->method('jenkins')->willReturn($this->_getFirstJob());
 
-
         $this->container->set('dropcat.factory', $this->factories_mock);
 
         $process_mock = $this->createMock('Symfony\Component\Process\Process');
