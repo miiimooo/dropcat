@@ -104,12 +104,11 @@ To override config in dropcat.yml, using options:
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
         $timeout = $input->getOption('timeout');
 
         $rsync = 'rsync -a ' . $from . ' -e "ssh -i ' . $identity_file . ' -p ' . $port . '" --progress ' . $user . '@' . $server . ':' . $to;
 
-        $newRsync = new Process("$rsync");
+        $newRsync = $this->runProcess("$rsync");
         $newRsync->setTimeout(3600);
         $newRsync->run();
         echo $newRsync->getOutput();
