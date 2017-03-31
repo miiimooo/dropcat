@@ -3,12 +3,12 @@
  * Created by PhpStorm.
  * User: henrikpejer
  * Date: 2017-03-31
- * Time: 14:06
+ * Time: 16:06
  */
 
 namespace Dropcat\Tests;
 
-use Dropcat\Command\VhostCreateCommand;
+use Dropcat\Command\VhostDeleteCommand;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Dropcat\Lib\DropcatFactories;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class VhostCreateCommandTest extends \PHPUnit_Framework_TestCase
+class VhostDeleteCommandTest extends \PHPUnit_Framework_TestCase
 {
 
     public function setUp()
@@ -34,13 +34,13 @@ class VhostCreateCommandTest extends \PHPUnit_Framework_TestCase
         $this->application = new Application();
 
         // We mock the command so that we later on can test Process.
-        $this->mock = $this->getMockBuilder('Dropcat\Command\VhostCreateCommand')
+        $this->mock = $this->getMockBuilder('Dropcat\Command\VhostDeleteCommand')
             ->setConstructorArgs(array($this->container, $this->conf));
 
         $this->factories_mock = $this->createMock('Dropcat\Lib\DropcatFactories');
     }
 
-    function testVhostCreate()
+    function testDeleteVhost()
     {
         $this->container->set('dropcat.factory', $this->factories_mock);
 
@@ -53,14 +53,7 @@ class VhostCreateCommandTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $command_mock->method('runProcess')
-            ->with($this->equalTo('ssh -o LogLevel=Error server-user@server-host -p ssh-port "echo \'<VirtualHost *:vhost-port>
-  DocumentRoot /document/root/
-  ServerName server-name
-
-server-alias
-server-extra-values
-</VirtualHost>
-\' > vhost-target-folder/vhost_file_name  && bash command to run"'))
+            ->with($this->equalTo('ssh -o LogLevel=Error server-user@server-host -p ssh-port "rm vhost-target-folder/vhost_file_name"'))
             ->willReturn($process_mock);
 
         $command_mock->method('readIdentityFile')
@@ -82,12 +75,6 @@ server-extra-values
                 'command' => 'vhost:create',
                 '-t' => 'vhost-target-folder',
                 '-f' => 'vhost_file_name',
-                '-vp' => 'vhost-port',
-                '-dr' => '/document/root/',
-                '-sn' => 'server-name',
-                '-sa' => 'server-alias',
-                '-ve' => 'server-extra-values',
-                '-bc' => 'bash command to run',
                 '-s' => 'server-host',
                 '-u' => 'server-user',
                 '-p' => 'ssh-port',
@@ -98,8 +85,7 @@ server-extra-values
         );
     }
 
-
-    function testVhostCreateErrorCreatingAlias()
+    function testDeleteVhostFailed()
     {
         $this->container->set('dropcat.factory', $this->factories_mock);
 
@@ -113,14 +99,7 @@ server-extra-values
             ->getMock();
 
         $command_mock->method('runProcess')
-            ->with($this->equalTo('ssh -o LogLevel=Error server-user@server-host -p ssh-port "echo \'<VirtualHost *:vhost-port>
-  DocumentRoot /document/root/
-  ServerName server-name
-
-server-alias
-server-extra-values
-</VirtualHost>
-\' > vhost-target-folder/vhost_file_name  && bash command to run"'))
+            ->with($this->equalTo('ssh -o LogLevel=Error server-user@server-host -p ssh-port "rm vhost-target-folder/vhost_file_name"'))
             ->willReturn($process_mock);
 
         $command_mock->method('readIdentityFile')
@@ -142,18 +121,11 @@ server-extra-values
                 'command' => 'vhost:create',
                 '-t' => 'vhost-target-folder',
                 '-f' => 'vhost_file_name',
-                '-vp' => 'vhost-port',
-                '-dr' => '/document/root/',
-                '-sn' => 'server-name',
-                '-sa' => 'server-alias',
-                '-ve' => 'server-extra-values',
-                '-bc' => 'bash command to run',
                 '-s' => 'server-host',
                 '-u' => 'server-user',
                 '-p' => 'ssh-port',
                 '-i' => '/path/to/identity/file',
                 '-skp' => 'ssh-key_password',
-
             ),
             $options
         );

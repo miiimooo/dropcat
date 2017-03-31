@@ -90,8 +90,8 @@ To override config in dropcat.yml, using options:
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
-        $aliasDelete = new Process(
+        $identity_file_content = $this->readIdentityFile($identity_file);
+        $aliasDelete = $this->runProcess(
             "ssh -o LogLevel=Error $user@$server -p $port \"rm $target/$file_name\""
         );
         $aliasDelete->setTimeout(999);
@@ -105,5 +105,15 @@ To override config in dropcat.yml, using options:
         $output = new ConsoleOutput();
 
         $output->writeln('<info>Task: vhost:delete finished</info>');
+    }
+
+    /**
+     * @param $file
+     * @codeCoverageIgnore
+     * @return bool|string
+     */
+    protected function readIdentityFile($file)
+    {
+        return file_get_contents($file);
     }
 }
