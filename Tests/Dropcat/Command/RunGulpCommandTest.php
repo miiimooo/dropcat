@@ -157,7 +157,7 @@ class RunGulpCommandTest extends \PHPUnit_Framework_TestCase
             ->willReturn($process_mock);
 
         $command_mock->method('NvmrcFileExists')
-            ->with($this->equalTo(__DIR__ . DIRECTORY_SEPARATOR . '.nvmrc'))
+            ->with($this->equalTo(getcwd() . DIRECTORY_SEPARATOR . '.nvmrc'))
             ->willReturn(true);
 
         // Add our mocked command from above.
@@ -203,7 +203,7 @@ class RunGulpCommandTest extends \PHPUnit_Framework_TestCase
             ->willReturn($process_mock);
 
         $command_mock->method('NvmrcFileExists')
-            ->with($this->equalTo(__DIR__ . DIRECTORY_SEPARATOR . '.nvmrc'))
+            ->with($this->equalTo(getcwd() . DIRECTORY_SEPARATOR . '.nvmrc'))
             ->willReturn(false);
         $this->expectException('\\Exception');
 

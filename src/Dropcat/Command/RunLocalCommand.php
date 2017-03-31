@@ -47,7 +47,7 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $input = $input->getOption('input');
-        $process = new Process("$input");
+        $process = $this->runProcess("$input");
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
