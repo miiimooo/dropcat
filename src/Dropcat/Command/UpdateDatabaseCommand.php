@@ -47,7 +47,7 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo 'using drush alias: ' . $drush_alias . "\n";
         }
-        $process = new Process("drush @$drush_alias updb -y");
+        $process = $this->runProcess("drush @$drush_alias updb -y");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
@@ -55,7 +55,6 @@ To override config in dropcat.yml, using options:
         }
         echo $process->getOutput();
 
-        $output = new ConsoleOutput();
         $output->writeln('<info>Task: entity-update finished</info>');
 
     }
