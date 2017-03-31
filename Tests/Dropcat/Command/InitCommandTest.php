@@ -196,7 +196,8 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $factories_mock->method('symfonystyle')
             ->willReturn($symfonystyle_mock);
 
-        $splFileObjectMock = $this->getMockBuilder(__NAMESPACE__.'\\SplFileObject')->getMock();
+        $splFileObjectMock = $this->getMockBuilder(__NAMESPACE__.'\\SplFileObject')
+            ->getMock();
 
         $splFileObjectMock->expects($this->at(1))
             ->method('fread')
@@ -220,6 +221,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo("web/profiles/wk-standard/"));
 
 
+
         $factories_mock->method('SplFileObject')
             ->willReturn($splFileObjectMock);
 
@@ -236,7 +238,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
 
         $command_mock->expects($this->at(0))
             ->method('runProcess')
-            ->with($this->equalTo("git clone git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init"))
+            ->with($this->equalTo("git clone -b WOPS-108 git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init"))
             ->willReturn($process_mock);
 
         $command_mock->expects($this->at(1))
@@ -273,6 +275,23 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             )
             ->willReturn(true);
 
+        $this->filesystem_mock->expects($this->at(4))
+            ->method('rename')
+            ->with(
+                $this->equalTo('web_init/web/profiles/profilename/themes/custom/wktheme'),
+                $this->equalTo('web_init/web/profiles/profilename/themes/custom/mynewawesometheme')
+            )
+            ->willReturn(true);
+
+        $this->filesystem_mock->expects($this->at(5))
+            ->method('rename')
+            ->with(
+                $this->equalTo('web_init/web/profiles/profilename/themes/custom/mynewawesometheme/wktheme.info.yml'),
+                $this->equalTo('web_init/web/profiles/profilename/themes/custom/mynewawesometheme/mynewawesometheme.info.yml')
+            )
+            ->willReturn(true);
+
+
 
         $this->container->set('filesystem', $this->filesystem_mock);
 
@@ -287,6 +306,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             array(
                 'command' => 'init',
                 '-p'      => $my_profile,
+                '-t' => 'mynewawesometheme'
             )
         );
     }

@@ -200,7 +200,7 @@ To override config in dropcat.yml, using options:
      */
     private function renameThemeFiles($my_profile, $my_theme)
     {
-        $fs = new Filesystem();
+        $fs = $this->container->get('filesystem');
 
         // Rename theme to theme name
         $fs->rename('web_init/web/profiles/'. $my_profile .'/themes/custom/wktheme', 'web_init/web/profiles/'. $my_profile .'/themes/custom/'. $my_theme);
