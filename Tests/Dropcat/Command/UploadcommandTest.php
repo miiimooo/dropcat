@@ -421,7 +421,7 @@ remote file hash is fel' ."\n". 'SHA1 for file do not match.');
         $this->application->add($command_mock);
 
         $this->expectOutputString('checksha1 is set to false 
-upload seems to be successful, but SHA1 for file is not checked false'."\n".'tar is going to be saved TRUE
+upload seems to be successful, but SHA1 for file is not checked false'."\n".'tar is going to be saved FALSE
 path to tar dirOfTaruploadTest@2.tar
 tar file is deleted '."\n");
         #$this->expectException('\\Exception');
@@ -443,7 +443,6 @@ tar file is deleted '."\n");
                 '-skp' => 'sch_secret_pass',
                 '-i' => '/path_to/keyfile',
                 '-to' => '666',
-                '-kt' => 'FALSE',
                 '-dsha1' => 'FALSE',
             ),
             $options
@@ -508,7 +507,7 @@ SHA1 for file match
 upload successful
 tar is going to be saved TRUE
 path to tar dirOfTaruploadTest@2.tar
-tar file is deleted 
+tar file is not deleted 
 ');
 
 
@@ -529,7 +528,8 @@ tar file is deleted
                 '-p' => '1234',
                 '-skp' => 'sch_secret_pass',
                 '-i' => '/path_to/keyfile',
-                '-to' => '666'
+                '-to' => '666',
+                '-kt' => 'false'
             ),
             $options
         );

@@ -145,7 +145,7 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = $this->readIdentityFile($identity_file);
         $timeout = $input->getOption('timeout');
-        $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
+        $keeptar = $input->getOption('keeptar') ? true : false;
         $checksha1 = $input->getOption('dontchecksha1') ? 'false' : 'true';
 
 
@@ -266,7 +266,7 @@ To override config in dropcat.yml, using options:
 
     /**
      * @param $identity_file
-     *
+     * @codeCoverageIgnore
      * @return bool|string
      */
     protected function readIdentityFile($identity_file)
