@@ -83,7 +83,8 @@ class RunGulpCommand extends RunCommand
         if ($nodeNvmRcFile === null) {
             $nodeNvmRcFile = getcwd() . '/.nvmrc';
         }
-        if (!file_exists($nodeNvmRcFile)) {
+
+        if (!$this->nvmrcFileExists($nodeNvmRcFile)) {
             throw new Exception('No .nvmrc file found.');
         }
 
@@ -92,7 +93,7 @@ class RunGulpCommand extends RunCommand
             $env = 'NODE_ENV=' . $nodeEnv;
         }
         $output->writeln('<info>Installing gulp stuff</info>');
-        $gulp = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
+        $gulp = $this->runProcess("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
         $gulp->setTimeout(3600);
         $gulp->run();
         echo $gulp->getOutput();
@@ -100,5 +101,15 @@ class RunGulpCommand extends RunCommand
             throw new ProcessFailedException($gulp);
         }
         $output->writeln('<info>Task: node:gulp finished</info>');
+    }
+
+    /**
+     * @param $nodeNvmRcFile
+     * @codeCoverageIgnore
+     * @return bool
+     */
+    protected function nvmrcFileExists($nodeNvmRcFile)
+    {
+        return file_exists($nodeNvmRcFile);
     }
 }
