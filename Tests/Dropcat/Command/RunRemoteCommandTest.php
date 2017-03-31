@@ -78,7 +78,7 @@ class RunRemoteCommandTest extends \PHPUnit_Framework_TestCase
         $this->container->set('rsa',$rsaMock);
 
 
-        $sshMock = $this->getMockBuilder("\\phpseclib\\Net\\SFTP")
+        $sshMock = $this->getMockBuilder("\\phpseclib\\Net\\SSH2")
             ->setConstructorArgs(['some.server'])
             ->setMethods(['login','exec'])
             ->getMock();
@@ -156,7 +156,7 @@ class RunRemoteCommandTest extends \PHPUnit_Framework_TestCase
         $this->container->set('rsa',$rsaMock);
 
 
-        $sshMock = $this->getMockBuilder("\\phpseclib\\Net\\SFTP")
+        $sshMock = $this->getMockBuilder("\\phpseclib\\Net\\SSH2")
             ->setConstructorArgs(['some.server'])
             ->setMethods(['login','exec'])
             ->getMock();

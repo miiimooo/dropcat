@@ -105,14 +105,15 @@ To override config in dropcat.yml, using options:
         $user = $input->getOption('user');
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
-        $web_root = $input->getOption('web_root');
-        $alias = $input->getOption('alias');
+        # @todo: these two are unused: planned for the future or can we remove them?
+        # $web_root = $input->getOption('web_root');
+        # $alias = $input->getOption('alias');
         $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
+        $identity_file_content = $this->readIdentityFile($identity_file);
 
-        $ssh = new SSH2($server, $port);
+        $ssh = $this->container->get('dropcat.factory')->ssh($server, $port);
         $ssh->setTimeout(999);
-        $auth = new RSA();
+        $auth = $this->container->get('rsa');
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
@@ -126,7 +127,7 @@ To override config in dropcat.yml, using options:
             }
         } catch (Exception $e) {
             echo $e->getMessage() . "\n";
-            exit(1);
+            $this->exitCommand(1);
         }
 
         $ssh->exec("rm $symlink.backup");
@@ -139,11 +140,22 @@ To override config in dropcat.yml, using options:
             $status = $ssh->getExitStatus();
             if ($status !== 0) {
                 echo "could not create orginal folder, $original, you need to create it manually, error code $status\n";
-                exit(1);
+                $this->exitCommand(1);
             }
         }
         $ssh->exec('ln --backup -snf ' . $original . ' ' . $symlink);
 
         $output->writeln('<info>Task: symlink finished</info>');
+    }
+
+    /**
+     * @param $identity_file
+     * @codeCoverageIgnore
+     * @return bool|string
+     */
+    protected function readIdentityFile($identity_file)
+    {
+        $identity_file_content = file_get_contents($identity_file);
+        return $identity_file_content;
     }
 }
