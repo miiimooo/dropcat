@@ -42,7 +42,13 @@ To override config in dropcat.yml, using options:
                         'Profile name',
                         null
                     ),
-
+                    new InputOption(
+                        'theme',
+                        't',
+                        InputOption::VALUE_REQUIRED,
+                        'Theme name',
+                        null
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -51,7 +57,9 @@ To override config in dropcat.yml, using options:
     {
 
         $my_profile = $input->getOption('profile');
+        $my_theme = $input->getOption('theme');
 
+        // Check profile name for illegal chars.
         if (!isset($my_profile)) {
             throw new Exception('You need to specify a profile name.');
         }
@@ -61,13 +69,24 @@ To override config in dropcat.yml, using options:
         if (!preg_match('/^[a-z]+$/', $my_profile)) {
             throw new Exception('Profiles must use a-z i names.');
         }
+
+        // Check theme name for illegal chars.
+        if (!isset($my_theme)) {
+            throw new Exception('You need to specify a theme name.');
+        }
+        if (preg_match('/\s/', $my_theme)) {
+            throw new Exception('Theme name can not have spaces.');
+        }
+        if (!preg_match('/^[a-z]+$/', $my_theme)) {
+            throw new Exception('Themes must use a-z i names.');
+        }
+
         $io = $this->container->get('dropcat.factory')
             ->symfonystyle($input, $output);
-
         $io->confirm('This will add files for setting up a drupal site in current folder, continue?', true);
 
         // (startdir is needed for application)
-        $process = $this->runProcess("git clone git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init");
+        $process = $this->runProcess("git clone -b WOPS-108 git@gitlab.wklive.net:mikke-schiren/wk-drupal-template.git web_init");
 
         $process->run();
         // Executes after the command finishes.
@@ -78,6 +97,36 @@ To override config in dropcat.yml, using options:
 
         $io->note('Wk Drupal Template cloned to web_init/web');
 
+        // Rename profile and theme-files and placeholder-strings.
+        $this->renameProfileFiles($my_profile);
+        $this->renameThemeFiles($my_profile, $my_theme);
+
+        $io->note('Renaming of functions and files finished');
+
+        $process = new Process("mv web_init/* . && rm -rf web_init");
+        $process->run();
+        // Executes after the command finishes.
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        echo $process->getOutput();
+
+        $io->note('Move web folder in place, removed web_init folder');
+
+        $io->newLine(2);
+        $io->success('Site is setup');
+
+    }
+
+    /**
+     * Renames the profile-files and strings within some of the depending files with the supplied profile-name.
+     *
+     * @param $my_profile
+     *      The new profile name.
+     */
+    private function renameProfileFiles($my_profile)
+    {
         // Rename files and functions
         $fs = $this->container->get('filesystem');
 
@@ -138,23 +187,49 @@ To override config in dropcat.yml, using options:
         $content = str_replace("web/profiles/wkstandard/", "web/profiles/$my_profile/", $content);
         $write =$this->container->get('dropcat.factory')->splfileobject($read->getPathname(), 'w+');
         $write->fwrite($content);
-
-
-        $io->note('Renaming of functions and files finished');
-
-        $process = $this->runProcess("mv web_init/* . && rm -rf web_init");
-        $process->run();
-        // Executes after the command finishes.
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        echo $process->getOutput();
-
-        $io->note('Move web folder in place, removed web_init folder');
-
-        $io->newLine(2);
-        $io->success('Site is setup');
-
     }
+
+    /**
+     * Renames the theme-files and strings within some of the depending files with the supplied theme-name.
+     *
+     * @param $my_profile
+     *      The new profile name.
+     *
+     * @param $my_theme
+     *      The new theme name.
+     */
+    private function renameThemeFiles($my_profile, $my_theme)
+    {
+        $fs = new Filesystem();
+
+        // Rename theme to theme name
+        $fs->rename('web_init/web/profiles/'. $my_profile .'/themes/custom/wktheme', 'web_init/web/profiles/'. $my_profile .'/themes/custom/'. $my_theme);
+
+        // Rename theme info file to theme name.
+        $fs->rename(
+            'web_init/web/profiles/' . $my_profile . '/themes/custom/'. $my_theme .'/wktheme.info.yml',
+            'web_init/web/profiles/' . $my_profile . '/themes/custom/'.  $my_theme .'/' . $my_theme . '.info.yml'
+        );
+
+        // Rename theme libraries file to theme name.
+        $fs->rename(
+            'web_init/web/profiles/' . $my_profile . '/themes/custom/'. $my_theme .'/wktheme.libraries.yml',
+            'web_init/web/profiles/' . $my_profile . '/themes/custom/'. $my_theme .'/' . $my_theme . '.libraries.yml'
+        );
+
+        // Replace wktheme with provided theme-name in theme info file.
+        $theme_info_file = new SplFileObject('web_init/web/profiles/'. $my_profile .'/themes/custom/'. $my_theme .'/'. $my_theme .'.info.yml');
+        $theme_info_file_content = $theme_info_file->fread($theme_info_file->getSize());
+        $theme_info_file_content = str_replace("WK Theme", $my_theme, $theme_info_file_content);
+        $theme_info_file_write = new SplFileObject($theme_info_file->getPathname(), 'w+');
+        $theme_info_file_write->fwrite($theme_info_file_content);
+
+        // Replace default theme name with provided theme-name in config-file.
+        $config_theme_file = new SplFileObject('web_init/web/profiles/'. $my_profile .'/config/install/system.theme.yml');
+        $config_theme_file_content = $config_theme_file->fread($config_theme_file->getSize());
+        $config_theme_file_content = str_replace("wktheme", $my_theme, $config_theme_file_content);
+        $config_theme_file_write = new SplFileObject($config_theme_file->getPathname(), 'w+');
+        $config_theme_file_write->fwrite($config_theme_file_content);
+    }
+
 }
