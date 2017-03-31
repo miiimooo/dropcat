@@ -85,22 +85,34 @@ To override config in dropcat.yml, using options:
         $user = $input->getOption('user');
         $ssh_port = $input->getOption('ssh_port');
         $identity_file = $input->getOption('identity_file');
-        $identity_file_content = file_get_contents($identity_file);
+        $identity_file_content = $this->readIdentityFile($identity_file);
         $ssh_key_password = $input->getOption('ssh_key_password');
         $input = $input->getOption('input');
 
-        $ssh = new SSH2($server, $ssh_port);
-        $auth = new RSA();
+        $ssh = $this->container->get('dropcat.factory')->ssh($server, $ssh_port);
+
+        $auth = $this->container->get('rsa');
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
         }
         $auth->loadKey($identity_file_content);
-
         if (!$ssh->login($user, $auth)) {
-            exit('Login Failed');
+            $this->exitCommand('Login Failed');
         }
         $ssh->exec($input);
 
         $output->writeln('<info>Task: run-remote finished</info>');
+    }
+
+    /**
+     * @param $identity_file
+     * @codeCoverageIgnore
+     *
+     * @return bool|string
+     */
+    protected function readIdentityFile($identity_file)
+    {
+        $identity_file_content = file_get_contents($identity_file);
+        return $identity_file_content;
     }
 }
