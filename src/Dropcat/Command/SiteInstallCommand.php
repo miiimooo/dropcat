@@ -87,7 +87,7 @@ To override config in dropcat.yml, using options:
         $admin_user       = $input->getOption('admin_user');
         $install_options  = $input->getOption('install_options');
 
-        $process = new Process(
+        $process = $this->runProcess(
             "drush @$drush_alias si $profile --account-name=$admin_user --account-pass=$admin_pass -y $install_options"
         );
         $process->setTimeout($timeout);
@@ -98,7 +98,6 @@ To override config in dropcat.yml, using options:
         }
         echo $process->getOutput();
 
-        $output = new ConsoleOutput();
         $output->writeln('<info>Task: configimport finished</info>');
 
     }
