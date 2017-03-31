@@ -214,13 +214,37 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         $splFileObjectMock->expects($this->at(5))
             ->method('fread')
             ->with($this->equalTo(null))
-            ->willReturn('web/profiles/wk-standard/');
+            ->willReturn("web/profiles/wk-standard/");
 
         $splFileObjectMock->expects($this->at(7))
             ->method('fwrite')
             ->with($this->equalTo("web/profiles/wk-standard/"));
 
+        $splFileObjectMock->expects($this->at(8))
+            ->method('getSize')
+            ->willReturn(69);
 
+        $splFileObjectMock->expects($this->at(9))
+            ->method('fread')
+            ->with($this->equalTo(69))
+            ->willReturn('WK Theme is very basic.');
+
+        $splFileObjectMock->expects($this->at(10))
+            ->method('fwrite')
+            ->with($this->equalTo('mynewawesometheme is very basic.'));
+
+        $splFileObjectMock->expects($this->at(11))
+            ->method('getSize')
+            ->willReturn(69);
+
+        $splFileObjectMock->expects($this->at(12))
+            ->method('fread')
+            ->with($this->equalTo(69))
+            ->willReturn('wktheme');
+
+        $splFileObjectMock->expects($this->at(13))
+            ->method('fwrite')
+            ->with($this->equalTo('mynewawesometheme'));
 
         $factories_mock->method('SplFileObject')
             ->willReturn($splFileObjectMock);
@@ -291,7 +315,13 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
             )
             ->willReturn(true);
 
-
+        $this->filesystem_mock->expects($this->at(6))
+            ->method('rename')
+            ->with(
+                $this->equalTo('web_init/web/profiles/profilename/themes/custom/mynewawesometheme/wktheme.libraries.yml'),
+                $this->equalTo('web_init/web/profiles/profilename/themes/custom/mynewawesometheme/mynewawesometheme.libraries.yml')
+            )
+            ->willReturn(true);
 
         $this->container->set('filesystem', $this->filesystem_mock);
 

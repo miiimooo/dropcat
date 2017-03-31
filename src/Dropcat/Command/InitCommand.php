@@ -103,7 +103,7 @@ To override config in dropcat.yml, using options:
 
         $io->note('Renaming of functions and files finished');
 
-        $process = new Process("mv web_init/* . && rm -rf web_init");
+        $process = $this->runProcess("mv web_init/* . && rm -rf web_init");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
@@ -206,9 +206,10 @@ To override config in dropcat.yml, using options:
         $fs->rename('web_init/web/profiles/'. $my_profile .'/themes/custom/wktheme', 'web_init/web/profiles/'. $my_profile .'/themes/custom/'. $my_theme);
 
         // Rename theme info file to theme name.
+        $renamed_theme_info_file_path = 'web_init/web/profiles/' . $my_profile . '/themes/custom/'.  $my_theme .'/' . $my_theme . '.info.yml';
         $fs->rename(
             'web_init/web/profiles/' . $my_profile . '/themes/custom/'. $my_theme .'/wktheme.info.yml',
-            'web_init/web/profiles/' . $my_profile . '/themes/custom/'.  $my_theme .'/' . $my_theme . '.info.yml'
+            $renamed_theme_info_file_path
         );
 
         // Rename theme libraries file to theme name.
@@ -218,17 +219,18 @@ To override config in dropcat.yml, using options:
         );
 
         // Replace wktheme with provided theme-name in theme info file.
-        $theme_info_file = new SplFileObject('web_init/web/profiles/'. $my_profile .'/themes/custom/'. $my_theme .'/'. $my_theme .'.info.yml');
+        $theme_info_file = $this->container->get('dropcat.factory')->splfileobject($renamed_theme_info_file_path);
         $theme_info_file_content = $theme_info_file->fread($theme_info_file->getSize());
         $theme_info_file_content = str_replace("WK Theme", $my_theme, $theme_info_file_content);
-        $theme_info_file_write = new SplFileObject($theme_info_file->getPathname(), 'w+');
+        $theme_info_file_write = $this->container->get('dropcat.factory')->splfileobject($renamed_theme_info_file_path, 'w+');
         $theme_info_file_write->fwrite($theme_info_file_content);
 
         // Replace default theme name with provided theme-name in config-file.
-        $config_theme_file = new SplFileObject('web_init/web/profiles/'. $my_profile .'/config/install/system.theme.yml');
+        $config_theme_file_path = 'web_init/web/profiles/'. $my_profile .'/config/install/system.theme.yml';
+        $config_theme_file = $this->container->get('dropcat.factory')->splfileobject($config_theme_file_path);
         $config_theme_file_content = $config_theme_file->fread($config_theme_file->getSize());
         $config_theme_file_content = str_replace("wktheme", $my_theme, $config_theme_file_content);
-        $config_theme_file_write = new SplFileObject($config_theme_file->getPathname(), 'w+');
+        $config_theme_file_write = $this->container->get('dropcat.factory')->splfileobject($config_theme_file_path, 'w+');
         $config_theme_file_write->fwrite($config_theme_file_content);
     }
 
