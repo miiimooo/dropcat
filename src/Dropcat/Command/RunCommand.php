@@ -11,6 +11,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+/**
+ * Class RunCommand
+ * @codeCoverageIgnore
+ * @package Dropcat\Command
+ */
 class RunCommand extends DropcatCommand
 {
 

@@ -10,6 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+/**
+ * @codeCoverageIgnore
+ */
 class SelfUpdaterCommand extends DropcatCommand
 {
     protected function configure()

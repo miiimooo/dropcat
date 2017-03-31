@@ -11,6 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Class AboutCommand
+ * @codeCoverageIgnore
+ * @package Dropcat\Command
+ */
 class AboutCommand extends DropcatCommand
 {
     protected function configure()
