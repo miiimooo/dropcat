@@ -58,10 +58,10 @@ To override config in dropcat.yml, using options:
         if ($nodeNvmRcFile === null) {
             $nodeNvmRcFile = getcwd() . '/.nvmrc';
         }
-        if (!file_exists($nodeNvmRcFile)) {
+        if (!$this->nvmrcFileExists($nodeNvmRcFile)) {
             throw new Exception('No .nvmrc file found.');
         }
-        $npmInstall = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm install && npm install");
+        $npmInstall = $this->runProcess("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm install && npm install");
         $npmInstall->setTimeout(3600);
         $npmInstall->run();
         echo $npmInstall->getOutput();
@@ -70,5 +70,14 @@ To override config in dropcat.yml, using options:
         }
 
         $output->writeln('<info>Task: node:npm-install finished</info>');
+    }
+    /**
+     * @param $nodeNvmRcFile
+     * @codeCoverageIgnore
+     * @return bool
+     */
+    protected function nvmrcFileExists($nodeNvmRcFile)
+    {
+        return file_exists($nodeNvmRcFile);
     }
 }
