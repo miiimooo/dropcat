@@ -4,10 +4,8 @@ namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
 use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -16,10 +14,15 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Yaml\Yaml;
 use Dropcat\Lib\Styles;
 
-
+/**
+ *
+ */
 class TrackerCommand extends DropcatCommand
 {
 
+  /**
+   *
+   */
     protected function configure()
     {
         $HelpText = '<info>tracker</info> tracks settings set to the tracker.
@@ -100,7 +103,9 @@ To override config in dropcat.yml, using options:
         ->setHelp($HelpText);
     }
 
-
+  /**
+   *
+   */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app_name = $input->getOption('app-name');
@@ -139,7 +144,7 @@ To override config in dropcat.yml, using options:
         if (!isset($db_host)) {
             $db_host = $this->configuration->mysqlEnvironmentHost();
         }
-        // populate the yaml.
+        // Populate the yaml.
         $conf = [
           'db-dump' => $db_dump,
           'db-name' => $db_name,
@@ -148,14 +153,13 @@ To override config in dropcat.yml, using options:
           'db-host' => $db_host,
           'site-path' => $site_path,
         ];
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $mark_formatted = $style->colorize('yellow', $mark);
 
-	    $style = new Styles;
-	    $mark = $style->heavyCheckMark();
-	    $mark_formatted = $style->colorize('yellow', $mark);
-	  
         $this->writeYaml($dir, $id, $conf);
         $output->writeln('<info>' . $mark_formatted .
-          ' tracker finished</info>');
+        ' tracker finished</info>');
     }
 
   /**
@@ -186,7 +190,7 @@ To override config in dropcat.yml, using options:
             "mkdir -p $dir"
         );
         $createTrackerDir->run();
-        // executes after the command finishes
+        // Executes after the command finishes.
         if (!$createTrackerDir->isSuccessful()) {
             throw new ProcessFailedException($createTrackerDir);
         }
