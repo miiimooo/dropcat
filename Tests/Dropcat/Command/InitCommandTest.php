@@ -131,7 +131,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInitCommand()
+    public function _testInitCommand()
     {
         $my_profile = 'profilename';
 
@@ -341,7 +341,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInitWithErrorCommand()
+    public function _testInitWithErrorCommand()
     {
         $my_profile = 'profilename';
 
@@ -417,7 +417,7 @@ class InitCommandTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInitErrorSecondRunCommand()
+    public function _testInitErrorSecondRunCommand()
     {
         $my_profile = 'profilename';
 
