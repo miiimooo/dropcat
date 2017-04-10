@@ -930,4 +930,16 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             return null;
         }
     }
+      /**
+     * Id of tracker.
+     */
+    public function trackerFile()
+    {
+        if (isset($this->configuration['tracker']['file'])) {
+            $id = $this->configuration['tracker']['file'];
+            return $id;
+        } else {
+            return null;
+        }
+    }
 }

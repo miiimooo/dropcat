@@ -195,3 +195,9 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.rollback:
+      class: Dropcat\Command\RollbackCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
