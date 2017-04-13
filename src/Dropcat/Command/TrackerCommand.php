@@ -161,11 +161,11 @@ To override config in dropcat.yml, using options:
           'db-user' => $db_user,
           'db-pass' => $db_pass,
           'db-host' => $db_host,
-          'web_host' => $web_host,
-          'web_host_user' => $web_host_user,
-          'web_host_port' => $web_host_port,
-          'web_host_id_file' => $web_host_id_file,
-          'web_host_pass' => $web_host_pass,
+          'web-host' => $web_host,
+          'web-host-user' => $web_host_user,
+          'web-host-port' => $web_host_port,
+          'web-host-id-file' => $web_host_id_file,
+          'web-host-pass' => $web_host_pass,
           'site-path' => $site_path,
         ];
 

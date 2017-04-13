@@ -885,15 +885,15 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
   /**
    * Db pass.
    */
-  public function trackerDbName()
-  {
-	if (isset($this->configuration['tracker']['db-name'])) {
-	  $db_name = $this->configuration['tracker']['db-name'];
-	  return $db_name;
-	} else {
-	  return null;
-	}
-  }
+    public function trackerDbName()
+    {
+        if (isset($this->configuration['tracker']['db-name'])) {
+            $db_name = $this->configuration['tracker']['db-name'];
+            return $db_name;
+        } else {
+            return null;
+        }
+    }
   /**
    * Db host.
    */
@@ -919,7 +919,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         }
     }
     /**
-     * Id of tracker.
+     * site path to tracker.
      */
     public function trackerSitePath()
     {
@@ -930,13 +930,26 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             return null;
         }
     }
-      /**
-     * Id of tracker.
+     /**
+     * trackerfile ro use.
      */
     public function trackerFile()
     {
         if (isset($this->configuration['tracker']['file'])) {
             $id = $this->configuration['tracker']['file'];
+            return $id;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * trackerfile ro use.
+     */
+    public function rollbackId()
+    {
+        if (isset($this->configuration['rollback']['id'])) {
+            $id = $this->configuration['rollback']['id'];
             return $id;
         } else {
             return null;
