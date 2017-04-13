@@ -3,7 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
+use Dropcat\Lib\CheckDrupal;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,6 +36,12 @@ To override config in dropcat.yml, using options:
                         'Drush alias',
                         $this->configuration->siteEnvironmentDrushAlias()
                     ),
+                    new InputOption(
+                        'no-entity-update',
+                        'noe',
+                        InputOption::VALUE_NONE,
+                        'Do not run entity-updates'
+                    ),
                 )
             )
             ->setHelp($HelpText);
@@ -44,10 +50,20 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $drush_alias = $input->getOption('drush_alias');
+        $no_entity_update = $input->getOption('no-entity-update') ? TRUE : FALSE;
+        // Some environment dependent extras.
+        $extra = '';
         if ($output->isVerbose()) {
             echo 'using drush alias: ' . $drush_alias . "\n";
         }
-        $process = new Process("drush @$drush_alias updb -y");
+        if ($no_entity_update === FALSE) {
+            // check if it is drupal 8.
+            $check = new CheckDrupal();
+            if ($check->version() === '8') {
+                $extra .= ' --entity-updates';
+            }
+        }
+        $process = new Process("drush @$drush_alias updb -y $extra");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
@@ -57,6 +73,5 @@ To override config in dropcat.yml, using options:
 
         $output = new ConsoleOutput();
         $output->writeln('<info>Task: entity-update finished</info>');
-
     }
 }
