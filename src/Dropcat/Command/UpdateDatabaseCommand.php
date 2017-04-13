@@ -57,7 +57,7 @@ To override config in dropcat.yml, using options:
             echo 'using drush alias: ' . $drush_alias . "\n";
         }
         if ($no_entity_update === 'FALSE') {
-            // check if we should use entity-updates - default to yes on d8
+            // check if it is drupal 8.
             $check = new CheckDrupal();
             if ($check->version() === '8') {
                 $extra .= ' --entity-updates';
