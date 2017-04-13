@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
+use Dropcat\Lib\Styles;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -72,6 +73,13 @@ To override config in dropcat.yml, using options:
                         'Keep symlinks',
                         null
                     ),
+                    new InputOption(
+                        'backup_name',
+                        'bn',
+                        InputOption::VALUE_OPTIONAL,
+                        'Time stamp',
+                        null
+                    ),
                 )
             )
           ->setHelp($HelpText);
@@ -86,14 +94,17 @@ To override config in dropcat.yml, using options:
         $timeout          = $input->getOption('time_out');
         $backup_site      = $input->getOption('backup_site');
         $links            = $input->getOption('links');
+        $backup_name      = $input->getOption('backup_name');
 
-
+        if (!isset($backup_name)) {
+          $backup_name = $timestamp;
+        }
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
 
         $backupDb= new Process(
             "mkdir -p $backup_path/$drush_alias &&
-            drush @$drush_alias sql-dump > $backup_path/$drush_alias/$timestamp.sql"
+            drush @$drush_alias sql-dump > $backup_path/$drush_alias/$backup_name.sql"
         );
         $backupDb->setTimeout($timeout);
         $backupDb->run();
@@ -104,7 +115,7 @@ To override config in dropcat.yml, using options:
 
         echo $backupDb->getOutput();
         $output = new ConsoleOutput();
-        $output->writeln('<info>Successfully backed up db</info>');
+        $output->writeln('<info>successfully backed up db</info>');
 
         if ($backup_site === true) {
             $options = '';
@@ -114,7 +125,7 @@ To override config in dropcat.yml, using options:
 
             $backupSite = new Process(
                 "mkdir -p $backup_path/$drush_alias &&
-                drush -y rsync @$drush_alias $backup_path/$drush_alias/$timestamp/ $options --include-conf --include-vcs"
+                drush -y rsync @$drush_alias $backup_path/$drush_alias/$backup_name/ $options --include-conf --include-vcs"
             );
             $backupSite->setTimeout($timeout);
             $backupSite->run();
@@ -122,10 +133,13 @@ To override config in dropcat.yml, using options:
             if (!$backupSite->isSuccessful()) {
                 throw new ProcessFailedException($backupSite);
             }
-            $output->writeln('<info>Successfully backed up site</info>');
+            $output->writeln('<info>successfully backed up site</info>');
             echo $backupSite->getOutput();
         }
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Task: backup finished</info>');
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $mark_formatted = $style->colorize('yellow', $mark);
+        $output->writeln('<info>' . $mark_formatted .
+        ' backup finished</info>');
     }
 }
