@@ -144,6 +144,16 @@ To override config in dropcat.yml, using options:
         if (!isset($db_host)) {
             $db_host = $this->configuration->mysqlEnvironmentHost();
         }
+        $web_host = $this->configuration->remoteEnvironmentServerName();
+        $web_host_user = $this->configuration->remoteEnvironmentSshUser();
+        $web_host_port = $this->configuration->remoteEnvironmentSshPort();
+        $web_host_id_file = $this->configuration->remoteEnvironmentIdentifyFile();
+        $web_host_pass = $this->configuration->localEnvironmentSshKeyPassword();
+
+        if (!isset($web_host, $web_host_user, $web_host_port, $web_host_id_file, $web_host_pass)) {
+            throw new Exception('mising needed values for web host');
+        }
+
         // Populate the yaml.
         $conf = [
           'db-dump' => $db_dump,
@@ -151,8 +161,14 @@ To override config in dropcat.yml, using options:
           'db-user' => $db_user,
           'db-pass' => $db_pass,
           'db-host' => $db_host,
+          'web_host' => $web_host,
+          'web_host_user' => $web_host_user,
+          'web_host_port' => $web_host_port,
+          'web_host_id_file' => $web_host_id_file,
+          'web_host_pass' => $web_host_pass,
           'site-path' => $site_path,
         ];
+
         $style = new Styles();
         $mark = $style->heavyCheckMark();
         $mark_formatted = $style->colorize('yellow', $mark);
