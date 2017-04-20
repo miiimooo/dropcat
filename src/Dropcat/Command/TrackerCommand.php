@@ -150,9 +150,9 @@ To override config in dropcat.yml, using options:
         $web_host_id_file = $this->configuration->remoteEnvironmentIdentifyFile();
         $web_host_pass = $this->configuration->localEnvironmentSshKeyPassword();
 
-        if (!isset($web_host, $web_host_user, $web_host_port, $web_host_id_file, $web_host_pass)) {
-            throw new Exception('mising needed values for web host');
-        }
+        // get server time to add to tracker file.
+        $server_time = date("Y-m-d H:i:s");
+
 
         // Populate the yaml.
         $conf = [
@@ -167,8 +167,13 @@ To override config in dropcat.yml, using options:
           'web-host-id-file' => $web_host_id_file,
           'web-host-pass' => $web_host_pass,
           'site-path' => $site_path,
+          'created' => $server_time,
         ];
 
+        $build_id = getenv('BUILD_ID');
+        if (isset($build_id)) {
+            $conf['build-id'] = $build_id;
+        }
         $style = new Styles();
         $mark = $style->heavyCheckMark();
         $mark_formatted = $style->colorize('yellow', $mark);

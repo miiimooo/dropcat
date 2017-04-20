@@ -113,7 +113,7 @@ To override config in dropcat.yml, using options:
     }
     protected function movedir()
     {
-      // login to apache, remove symlink, add new symlink
+      // login to apache, remove old symlink, add new symlink to dir in tracker.
     }
     protected function dumpDb($dbhost, $dbuser, $dbpass, $dbname, $id)
     {
