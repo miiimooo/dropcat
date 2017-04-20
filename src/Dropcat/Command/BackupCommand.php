@@ -206,7 +206,7 @@ To override config in dropcat.yml, using options:
 
         if (isset($backup_site)) {
           $rsyncSite = new Process(
-            "rsync -L -a -q -P -e \"ssh -p $ssh_port\ -o LogLevel=Error" $user@$server:$web_root/$alias $backup_path/$app"
+            "rsync -L -a -q -P -e \"ssh -p $ssh_port -o LogLevel=Error\" $user@$server:$web_root/$alias $backup_path/$app"
           );
           $rsyncSite->setTimeout($timeout);
           $rsyncSite->run();
