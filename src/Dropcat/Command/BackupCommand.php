@@ -186,15 +186,19 @@ To override config in dropcat.yml, using options:
         $ssh_port         = $input->getOption('ssh_port');
         $web_root         = $input->getOption('web_root');
         $alias            = $input->getOption('alias');
-        
+
+        // Nifty styles on output.
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $mark_formatted = $style->colorize('yellow', $mark);
+
         if (!isset($backup_name)) {
             $backup_name = $timestamp;
         }
-        if (!isset($no_db_backup)) {
+        if (isset($no_db_backup)) {
             $backupDb = new Process(
                 "mkdir -p $backup_path/$app &&
-              mysqldump --port=$mysql_port -u $mysql_user -p$mysql_password
-                -h $mysql_host $mysql_db  > $backup_path/$app/$backup_name.sql"
+              mysqldump --port=$mysql_port -u $mysql_user -p$mysql_password -h $mysql_host $mysql_db  > $backup_path/$app/$backup_name.sql"
             );
             $backupDb->setTimeout($timeout);
             $backupDb->run();
@@ -202,17 +206,12 @@ To override config in dropcat.yml, using options:
                 throw new ProcessFailedException($backupDb);
             }
             echo $backupDb->getOutput();
-
-            $style = new Styles();
-            $mark = $style->heavyCheckMark();
-            $mark_formatted = $style->colorize('yellow', $mark);
             $output->writeln('<info>' . $mark_formatted .
             ' db backup finished</info>');
         }
         if (isset($backup_site)) {
             $rsyncSite = new Process(
-                "rsync -L -a -q -P -e \"ssh -p $ssh_port -o LogLevel=Error\"
-                  $user@$server:$web_root/$alias $backup_path/$app"
+                "rsync -L -a -q -P -e \"ssh -p $ssh_port -o LogLevel=Error\" $user@$server:$web_root/$alias $backup_path/$app"
             );
             $rsyncSite->setTimeout($timeout);
             $rsyncSite->run();
