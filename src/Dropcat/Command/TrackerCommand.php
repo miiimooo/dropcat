@@ -98,6 +98,20 @@ To override config in dropcat.yml, using options:
                 'Path to site',
                 $this->configuration->trackerSitePath()
             ),
+            new InputOption(
+                'web-root',
+                'w',
+                InputOption::VALUE_OPTIONAL,
+                'Web root',
+                $this->configuration->remoteEnvironmentWebRoot()
+            ),
+            new InputOption(
+                'alias',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'Symlink alias',
+                $this->configuration->remoteEnvironmentAlias()
+            ),
             ]
         )
         ->setHelp($HelpText);
@@ -108,15 +122,17 @@ To override config in dropcat.yml, using options:
    */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app_name = $input->getOption('app-name');
-        $tracker_dir = $input->getOption('tracker-dir');
-        $id = $input->getOption('id');
-        $db_dump = $input->getOption('db-dump');
-        $db_name = $input->getOption('db-name');
-        $db_user = $input->getOption('db-user');
-        $db_pass = $input->getOption('db-pass');
-        $db_host = $input->getOption('db-host');
-        $site_path = $input->getOption('site-path');
+        $app_name         = $input->getOption('app-name');
+        $tracker_dir      = $input->getOption('tracker-dir');
+        $id               = $input->getOption('id');
+        $db_dump          = $input->getOption('db-dump');
+        $db_name          = $input->getOption('db-name');
+        $db_user          = $input->getOption('db-user');
+        $db_pass          = $input->getOption('db-pass');
+        $db_host          = $input->getOption('db-host');
+        $site_path        = $input->getOption('site-path');
+        $web_root         = $input->getOption('web-root');
+        $alias            = $input->getOption('alias');
 
         if (!isset($tracker_dir)) {
             throw new Exception('tracker dir must be set');
@@ -125,10 +141,18 @@ To override config in dropcat.yml, using options:
             throw new Exception('tracker id must be set');
         }
         if (!isset($site_path)) {
-            throw new Exception('tracker site path must be set');
+            if (!isset($web_root)) {
+                throw new Exception('web root must be set');
+            }
+            if (!isset($alias)) {
+                throw new Exception('alias must be set');
+            }
+            $site_path = "$web_root/$alias";
         }
-        // Directory to write tracker to.
+        // Dir for deploy tracker.
         $dir = "$tracker_dir/$app_name";
+        // Default dir, this is for track sites.
+        $default_dir = "$tracker_dir/default"
         // Create directory.
         $this->writeDir($dir);
 
@@ -153,7 +177,6 @@ To override config in dropcat.yml, using options:
         // get server time to add to tracker file.
         $server_time = date("Y-m-d H:i:s");
 
-
         // Populate the yaml.
         $conf = [
           'db-dump' => $db_dump,
@@ -167,18 +190,21 @@ To override config in dropcat.yml, using options:
           'web-host-id-file' => $web_host_id_file,
           'web-host-pass' => $web_host_pass,
           'site-path' => $site_path,
-          'created' => $server_time,
         ];
-
+        // the default, this is overwritten in every deploy. could be used for
+        // backup scripts or similar to track sites.
+        $this->writeTracker($default_dir, $id, $conf);
+        // add some variables that should be unique
+        $conf['created'] = $server_time;
         $build_id = getenv('BUILD_ID');
         if (isset($build_id)) {
             $conf['build-id'] = $build_id;
         }
+        // unique, identifies a deploy.
+        $this->writeTracker($dir, $id, $conf);
         $style = new Styles();
         $mark = $style->heavyCheckMark();
         $mark_formatted = $style->colorize('yellow', $mark);
-
-        $this->writeYaml($dir, $id, $conf);
         $output->writeln('<info>' . $mark_formatted .
         ' tracker finished</info>');
     }
@@ -193,7 +219,7 @@ To override config in dropcat.yml, using options:
    * @param $conf
    *   array
    */
-    private function writeYaml($dir, $id, $conf)
+    private function writeTracker($dir, $id, $conf)
     {
         $yaml = Yaml::dump($conf);
         file_put_contents($dir . '/' . $id . '.yml', $yaml);

@@ -136,19 +136,19 @@ To override config in dropcat.yml, using options:
     protected function createDb($dbhost, $dbuser, $dbpass, $dbname)
     {
         $mysql = "mysqladmin -h $dbhost -u $dbuser -p$dbpass create $dbname";
-        $drop = new Process($mysql);
-        $drop->run();
-        if (!$drop->isSuccessful()) {
-            throw new ProcessFailedException($drop);
+        $create = new Process($mysql);
+        $create->run();
+        if (!$create->isSuccessful()) {
+            throw new ProcessFailedException($create);
         }
     }
     protected function insertDb($dbhost, $dbuser, $dbpass, $dbname, $dump)
     {
         $mysql = "mysql -h $dbhost -u $dbuser -p$dbpass $dbname < $dump";
-        $dump = new Process($mysql);
-        $dump->run();
-        if (!$dump->isSuccessful()) {
-            throw new ProcessFailedException($dump);
+        $insert = new Process($mysql);
+        $insert->run();
+        if (!$insert->isSuccessful()) {
+            throw new ProcessFailedException($insert);
         }
     }
 }
