@@ -106,6 +106,13 @@ To override config in dropcat.yml, using options:
                       null
                   ),
                   new InputOption(
+                      'no-db-backup',
+                      'ndb',
+                      InputOption::VALUE_NONE,
+                      'No database backup',
+                      null
+                  ),
+                  new InputOption(
                       'links',
                       'l',
                       InputOption::VALUE_NONE,
@@ -157,7 +164,6 @@ To override config in dropcat.yml, using options:
                 )
             )
           ->setHelp($HelpText);
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -172,6 +178,7 @@ To override config in dropcat.yml, using options:
         $backup_path      = $input->getOption('backup-path');
         $timeout          = $input->getOption('time-out');
         $backup_site      = $input->getOption('backup-site');
+        $no_db_backup     = $input->getOption('no-db-backup');
         $links            = $input->getOption('links');
         $backup_name      = $input->getOption('backup-name');
         $server           = $input->getOption('server');
@@ -179,44 +186,43 @@ To override config in dropcat.yml, using options:
         $ssh_port         = $input->getOption('ssh_port');
         $web_root         = $input->getOption('web_root');
         $alias            = $input->getOption('alias');
-
-        // @todo $backup_site rsync whole site
+        
         if (!isset($backup_name)) {
-          $backup_name = $timestamp;
+            $backup_name = $timestamp;
         }
+        if (!isset($no_db_backup)) {
+            $backupDb = new Process(
+                "mkdir -p $backup_path/$app &&
+              mysqldump --port=$mysql_port -u $mysql_user -p$mysql_password
+                -h $mysql_host $mysql_db  > $backup_path/$app/$backup_name.sql"
+            );
+            $backupDb->setTimeout($timeout);
+            $backupDb->run();
+            if (!$backupDb->isSuccessful()) {
+                throw new ProcessFailedException($backupDb);
+            }
+            echo $backupDb->getOutput();
 
-        $backupDb = new Process(
-            "mkdir -p $backup_path/$app &&
-            mysqldump --port=$mysql_port -u $mysql_user -p$mysql_password -h $mysql_host $mysql_db  > $backup_path/$app/$backup_name.sql"
-        );
-        $backupDb->setTimeout($timeout);
-        $backupDb->run();
-        // executes after the command finishes
-        if (!$backupDb->isSuccessful()) {
-            throw new ProcessFailedException($backupDb);
+            $style = new Styles();
+            $mark = $style->heavyCheckMark();
+            $mark_formatted = $style->colorize('yellow', $mark);
+            $output->writeln('<info>' . $mark_formatted .
+            ' db backup finished</info>');
         }
-
-        echo $backupDb->getOutput();
-
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
-        $output->writeln('<info>' . $mark_formatted .
-        ' db backup finished</info>');
-
         if (isset($backup_site)) {
-          $rsyncSite = new Process(
-            "rsync -L -a -q -P -e \"ssh -p $ssh_port -o LogLevel=Error\" $user@$server:$web_root/$alias $backup_path/$app"
-          );
-          $rsyncSite->setTimeout($timeout);
-          $rsyncSite->run();
+            $rsyncSite = new Process(
+                "rsync -L -a -q -P -e \"ssh -p $ssh_port -o LogLevel=Error\"
+                  $user@$server:$web_root/$alias $backup_path/$app"
+            );
+            $rsyncSite->setTimeout($timeout);
+            $rsyncSite->run();
           // executes after the command finishes
-          if (!$rsyncSite->isSuccessful()) {
-              throw new ProcessFailedException($rsyncSite);
-          }
-          $mark_formatted = $style->colorize('yellow', $mark);
-          $output->writeln('<info>' . $mark_formatted .
-          ' site backup finished</info>');
+            if (!$rsyncSite->isSuccessful()) {
+                throw new ProcessFailedException($rsyncSite);
+            }
+            $mark_formatted = $style->colorize('yellow', $mark);
+            $output->writeln('<info>' . $mark_formatted .
+            ' site backup finished</info>');
         }
     }
 }
