@@ -103,21 +103,14 @@ To override config in dropcat.yml, using options:
                       'bs',
                       InputOption::VALUE_NONE,
                       'Backup whole site',
-                      null
+                      FALSE
                   ),
                   new InputOption(
                       'no-db-backup',
                       'ndb',
                       InputOption::VALUE_NONE,
                       'No database backup',
-                      null
-                  ),
-                  new InputOption(
-                      'links',
-                      'l',
-                      InputOption::VALUE_NONE,
-                      'Keep symlinks',
-                      null
+                      FALSE
                   ),
                   new InputOption(
                       'backup-name',
@@ -179,7 +172,6 @@ To override config in dropcat.yml, using options:
         $timeout          = $input->getOption('time-out');
         $backup_site      = $input->getOption('backup-site');
         $no_db_backup     = $input->getOption('no-db-backup');
-        $links            = $input->getOption('links');
         $backup_name      = $input->getOption('backup-name');
         $server           = $input->getOption('server');
         $user             = $input->getOption('user');
@@ -195,7 +187,7 @@ To override config in dropcat.yml, using options:
         if (!isset($backup_name)) {
             $backup_name = $timestamp;
         }
-        if (isset($no_db_backup)) {
+        if (!isset($no_db_backup)) {
             $backupDb = new Process(
                 "mkdir -p $backup_path/$app &&
               mysqldump --port=$mysql_port -u $mysql_user -p$mysql_password -h $mysql_host $mysql_db  > $backup_path/$app/$backup_name.sql"
@@ -215,7 +207,7 @@ To override config in dropcat.yml, using options:
             );
             $rsyncSite->setTimeout($timeout);
             $rsyncSite->run();
-          // executes after the command finishes
+            // executes after the command finishes
             if (!$rsyncSite->isSuccessful()) {
                 throw new ProcessFailedException($rsyncSite);
             }
