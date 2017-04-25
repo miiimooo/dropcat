@@ -102,15 +102,14 @@ To override config in dropcat.yml, using options:
                       'backup-site',
                       'bs',
                       InputOption::VALUE_NONE,
-                      'Backup whole site',
-                      FALSE
+                      'Backup whole site'
                   ),
                   new InputOption(
                       'no-db-backup',
                       'ndb',
                       InputOption::VALUE_NONE,
                       'No database backup',
-                      FALSE
+                      null
                   ),
                   new InputOption(
                       'backup-name',
@@ -187,7 +186,7 @@ To override config in dropcat.yml, using options:
         if (!isset($backup_name)) {
             $backup_name = $timestamp;
         }
-        if (!isset($no_db_backup)) {
+        if ($no_db_backup != TRUE) {
             $backupDb = new Process(
                 "mkdir -p $backup_path/$app &&
               mysqldump --port=$mysql_port -u $mysql_user -p$mysql_password -h $mysql_host $mysql_db  > $backup_path/$app/$backup_name.sql"
@@ -201,7 +200,7 @@ To override config in dropcat.yml, using options:
             $output->writeln('<info>' . $mark_formatted .
             ' db backup finished</info>');
         }
-        if (isset($backup_site)) {
+        if ($backup_site === TRUE) {
             $rsyncSite = new Process(
                 "rsync -L -a -q -P -e \"ssh -p $ssh_port -o LogLevel=Error\" $user@$server:$web_root/$alias $backup_path/$app"
             );
