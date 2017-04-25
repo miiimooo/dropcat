@@ -54,8 +54,8 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             $sshport = $this->configuration->remoteEnvironmentSshPort();
             $server = $this->configuration->remoteEnvironmentServerName();
             $user = $this->configuration->remoteEnvironmentSshUser();
-            $local = $input->getOption('local') ? 'true' : 'false';
-            if ($local == 'true') {
+            $local = $input->getOption('local') ? TRUE : FALSE;
+            if ($local === TRUE) {
                 $sshport = $this->configuration->remoteEnvironmentLocalSshPort() ?
                 $this->configuration->remoteEnvironmentLocalSshPort() :
                 $this->configuration->remoteEnvironmentSshPort();
