@@ -122,6 +122,12 @@ To override config in dropcat.yml, using options:
                         'Symlink alias',
                         $this->configuration->remoteEnvironmentAlias()
                     ),
+                  new InputOption(
+                    'keeptar',
+                    'kt',
+                    InputOption::VALUE_NONE,
+                    'Keep tar after move (defaults to no)'
+                  ),
                 )
             )
             ->setHelp($HelpText);
@@ -143,8 +149,9 @@ To override config in dropcat.yml, using options:
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
         $temp_folder = $input->getOption('temp_folder');
+        $keeptar = $input->getOption('keeptar') ? TRUE : FALSE;
 
-        if (isset($tar)) {
+      if (isset($tar)) {
             $tarfile = $tar;
         } else {
             $tarfile = $app_name . $separator . $build_id . '.tar';
@@ -202,14 +209,16 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo 'file ' . $tarfile . " unpacked\n";
         }
-        $ssh->exec('rm ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
-        $status = $ssh->getExitStatus();
-        if ($status !== 0) {
+        if (!($keeptar)){
+          $ssh->exec('rm ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
+          $status = $ssh->getExitStatus();
+          if ($status !== 0) {
             echo "Could not remove tar file, error code $status\n";
             exit($status);
-        }
-        if ($output->isVerbose()) {
+          }
+          if ($output->isVerbose()) {
             echo 'removed tar file ' . $tarfile . "\n";
+          }
         }
         $ssh->exec('mv ' . $temp_folder . '/' . $deploy_folder . ' ' . $web_root . '/' . $deploy_folder);
         $status = $ssh->getExitStatus();

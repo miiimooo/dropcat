@@ -144,8 +144,8 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
         $timeout = $input->getOption('timeout');
-        $keeptar = $input->getOption('keeptar') ? 'TRUE' : 'FALSE';
-        $checksha1 = $input->getOption('dontchecksha1') ? 'false' : 'true';
+        $keeptar = $input->getOption('keeptar') ? TRUE : FALSE;
+        $checksha1 = $input->getOption('dontchecksha1') ? FALSE : TRUE;
 
         if (isset($tar)) {
             $tarfile = $tar;
@@ -183,7 +183,7 @@ To override config in dropcat.yml, using options:
         }
         $remoteFileSha1 = null;
         if ($tarExists) {
-            if ($checksha1 == 'true') {
+            if ($checksha1 === TRUE) {
                 $remoteFileSha1 = $sftp->exec("sha1sum $tar_dir$tarfile | awk '{print $1}'");
                 if ($output->isVerbose()) {
                     echo "tar is at $tar_dir$tarfile\n";
@@ -215,7 +215,7 @@ To override config in dropcat.yml, using options:
             echo 'tar is going to be saved ' . $keeptar . "\n";
             echo 'path to tar ' . "$tar_dir$tarfile" . "\n";
         }
-        if ($keeptar === true) {
+        if ($keeptar === TRUE) {
             if ($output->isVerbose()) {
                 echo "tar file is not deleted \n";
             }

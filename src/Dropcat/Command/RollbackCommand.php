@@ -77,6 +77,21 @@ To override config in dropcat.yml, using options:
         if (!isset($rollback['db-host'])) {
             throw new Exception('db-host missing');
         }
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $mark_formatted = $style->colorize('yellow', $mark);
+
+        $this->movedir(
+          $rollback['web-host'],
+          $rollback['web-host-user'],
+          $rollback['web-host-port'],
+          $rollback['web-host-id-file'],
+          $rollback['web-host-pass'],
+          $rollback['site-path'],
+          $rollback['alias-path']
+        );
+        $output->writeln('<info>' . $mark_formatted .
+          ' site rollback finished</info>');
         // Do db backup.
         $this->dumpDb(
             $rollback['db-host'],
@@ -105,14 +120,42 @@ To override config in dropcat.yml, using options:
             $rollback['db-dump']
         );
 
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
         $output->writeln('<info>' . $mark_formatted .
-          ' rollback finished</info>');
+          ' db rollback finished</info>');
     }
-    protected function movedir()
+    protected function movedir($server, $user, $port, $key, $pass, $path, $alias)
     {
+      $ssh = new SSH2($server, $port);
+      $ssh->setTimeout(999);
+      $auth = new RSA();
+      if (isset($pass)) {
+          $auth->setPassword($pass);
+      }
+      $identity_file_content = file_get_contents($key);
+      $auth->loadKey($identity_file_content);
+
+      try {
+          $login = $ssh->login($user, $auth);
+          if (!$login) {
+              throw new Exception('Login Failed using ' . $key . ' at port ' . $port . ' and user ' . $user . ' at ' . $server
+                . ' ' . $ssh->getLastError());
+          }
+      } catch (Exception $e) {
+          echo $e->getMessage() . "\n";
+          exit(1);
+      }
+
+      $ssh->exec("rm $alias && ln -snf $path $alias");
+
+      $status = $ssh->getExitStatus();
+      if ($status !== 0) {
+          echo "Could not set path, error code $status\n";
+          $ssh->disconnect();
+          exit($status);
+      }
+      $ssh->disconnect();
+      return $path;
+
       // login to apache, remove old symlink, add new symlink to dir in tracker.
     }
     protected function dumpDb($dbhost, $dbuser, $dbpass, $dbname, $id)
