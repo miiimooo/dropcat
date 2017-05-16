@@ -18,7 +18,7 @@ class RunGulpCommand extends RunCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>node:gulp</info> command will run npm install.
+        $HelpText = 'The <info>node:gulp</info> command will run gulp.
     <comment>Samples:</comment>
     To run with default options (using config from dropcat.yml in the currrent dir):
     <info>dropcat node:gulp</info>
