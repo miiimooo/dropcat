@@ -3,7 +3,6 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Lib\Styles;
 use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -177,11 +176,6 @@ To override config in dropcat.yml, using options:
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
 
-        // Nifty styles on output.
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
-
         if (!isset($backup_name)) {
             $backup_name = $timestamp;
         }
@@ -196,7 +190,7 @@ To override config in dropcat.yml, using options:
                 throw new ProcessFailedException($backupDb);
             }
             echo $backupDb->getOutput();
-            $output->writeln('<info>' . $mark_formatted .
+            $output->writeln('<info>' . $this->mark_formatted .
               ' db backup finished</info>');
         }
         if ($backup_site === true) {
@@ -210,8 +204,7 @@ To override config in dropcat.yml, using options:
             if (!$rsyncSite->isSuccessful()) {
                 throw new ProcessFailedException($rsyncSite);
             }
-            $mark_formatted = $style->colorize('yellow', $mark);
-            $output->writeln('<info>' . $mark_formatted .
+            $output->writeln('<info>' . $this->mark_formatted .
               ' site backup finished</info>');
         }
     }

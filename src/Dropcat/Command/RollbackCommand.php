@@ -4,7 +4,6 @@ namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
 use Dropcat\Lib\UUID;
-use Dropcat\Lib\Styles;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -77,20 +76,17 @@ To override config in dropcat.yml, using options:
         if (!isset($rollback['db-host'])) {
             throw new Exception('db-host missing');
         }
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
 
         $this->movedir(
-          $rollback['web-host'],
-          $rollback['web-host-user'],
-          $rollback['web-host-port'],
-          $rollback['web-host-id-file'],
-          $rollback['web-host-pass'],
-          $rollback['site-path'],
-          $rollback['alias-path']
+            $rollback['web-host'],
+            $rollback['web-host-user'],
+            $rollback['web-host-port'],
+            $rollback['web-host-id-file'],
+            $rollback['web-host-pass'],
+            $rollback['site-path'],
+            $rollback['alias-path']
         );
-        $output->writeln('<info>' . $mark_formatted .
+        $output->writeln('<info>' . $this->mark_formatted .
           ' site rollback finished</info>');
         // Do db backup.
         $this->dumpDb(
@@ -120,44 +116,54 @@ To override config in dropcat.yml, using options:
             $rollback['db-dump']
         );
 
-        $output->writeln('<info>' . $mark_formatted .
+        $output->writeln('<info>' . $this->mark_formatted .
           ' db rollback finished</info>');
     }
-    protected function movedir($server, $user, $port, $key, $pass, $path, $alias)
-    {
-      $ssh = new SSH2($server, $port);
-      $ssh->setTimeout(999);
-      $auth = new RSA();
-      if (isset($pass)) {
-          $auth->setPassword($pass);
-      }
-      $identity_file_content = file_get_contents($key);
-      $auth->loadKey($identity_file_content);
 
-      try {
-          $login = $ssh->login($user, $auth);
-          if (!$login) {
-              throw new Exception('Login Failed using ' . $key . ' at port ' . $port . ' and user ' . $user . ' at ' . $server
-                . ' ' . $ssh->getLastError());
-          }
-      } catch (Exception $e) {
-          echo $e->getMessage() . "\n";
-          exit(1);
-      }
+    protected function movedir(
+        $server,
+        $user,
+        $port,
+        $key,
+        $pass,
+        $path,
+        $alias
+    ) {
+        $ssh = new SSH2($server, $port);
+        $ssh->setTimeout(999);
+        $auth = new RSA();
+        if (isset($pass)) {
+            $auth->setPassword($pass);
+        }
+        $identity_file_content = file_get_contents($key);
+        $auth->loadKey($identity_file_content);
 
-      $ssh->exec("rm $alias && ln -snf $path $alias");
+        try {
+            $login = $ssh->login($user, $auth);
+            if (!$login) {
+                throw new Exception('Login Failed using ' . $key . ' at port ' .
+                  $port . ' and user ' . $user . ' at ' . $server
+                  . ' ' . $ssh->getLastError());
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage() . "\n";
+            exit(1);
+        }
 
-      $status = $ssh->getExitStatus();
-      if ($status !== 0) {
-          echo "Could not set path, error code $status\n";
-          $ssh->disconnect();
-          exit($status);
-      }
-      $ssh->disconnect();
-      return $path;
+        $ssh->exec("rm $alias && ln -snf $path $alias");
 
-      // login to apache, remove old symlink, add new symlink to dir in tracker.
+        $status = $ssh->getExitStatus();
+        if ($status !== 0) {
+            echo "Could not set path, error code $status\n";
+            $ssh->disconnect();
+            exit($status);
+        }
+        $ssh->disconnect();
+        return $path;
+
+        // login to apache, remove old symlink, add new symlink to dir in tracker.
     }
+
     protected function dumpDb($dbhost, $dbuser, $dbpass, $dbname, $id)
     {
         $mysql = "mysqldump -h $dbhost -u $dbuser -p$dbpass $dbname > /tmp/$dbname" . '_' . "$id" . '.sql';
@@ -167,6 +173,7 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($dump);
         }
     }
+
     protected function dropDb($dbhost, $dbuser, $dbpass, $dbname)
     {
         $mysql = "mysqladmin -h $dbhost -u $dbuser -p$dbpass drop $dbname -f";
@@ -176,6 +183,7 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($drop);
         }
     }
+
     protected function createDb($dbhost, $dbuser, $dbpass, $dbname)
     {
         $mysql = "mysqladmin -h $dbhost -u $dbuser -p$dbpass create $dbname";
@@ -185,6 +193,7 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($create);
         }
     }
+
     protected function insertDb($dbhost, $dbuser, $dbpass, $dbname, $dump)
     {
         $mysql = "mysql -h $dbhost -u $dbuser -p$dbpass $dbname < $dump";
