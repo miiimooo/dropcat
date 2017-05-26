@@ -23,6 +23,9 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         $input = new ArgvInput();
         $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
         $running_path = getcwd();
+        if (file_exists($running_path . '/.dropcat') && is_dir($running_path . '/.dropcat')) {
+          $running_path .= './dropcat';
+        }
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
                 file_get_contents($running_path . '/dropcat.yml')
