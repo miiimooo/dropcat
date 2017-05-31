@@ -96,6 +96,11 @@ To override config in dropcat.yml, using options:
             'web_init/web/profiles/' . $my_profile . '/wkstandard.info.yml',
             'web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.info.yml'
         );
+        // Use .gitignore
+        $fs->rename(
+           'web_init/.gitignore',
+           '.gitignore'
+        );
 
         // Replace in profile composer.json
         // Create uuid for profile
