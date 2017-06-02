@@ -76,6 +76,12 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.init-wp:
+      class: Dropcat\Command\InitWPCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
     dropcat.command.about:
       class: Dropcat\Command\AboutCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
@@ -185,6 +191,18 @@ services:
         - {name: console.command}
     dropcat.command.varnish-purge:
       class: Dropcat\Command\VarnishPurgeCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.tracker:
+      class: Dropcat\Command\TrackerCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.rollback:
+      class: Dropcat\Command\RollbackCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
       lazy: true
       tags:

@@ -23,6 +23,9 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         $input = new ArgvInput();
         $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
         $running_path = getcwd();
+        if (file_exists($running_path . '/.dropcat') && is_dir($running_path . '/.dropcat')) {
+          $running_path .= '/.dropcat';
+        }
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
                 file_get_contents($running_path . '/dropcat.yml')
@@ -508,11 +511,11 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     */
     public function deployVarnishIP()
     {
-      if (isset($this->configuration['deploy']['varnish_ip'])) {
-        return $this->configuration['deploy']['varnish_ip'];
-      } else {
-        return null;
-      }
+        if (isset($this->configuration['deploy']['varnish_ip'])) {
+            return $this->configuration['deploy']['varnish_ip'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -520,11 +523,11 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     */
     public function deployVarnishPort()
     {
-      if (isset($this->configuration['deploy']['varnish_port'])) {
-        return $this->configuration['deploy']['varnish_port'];
-      } else {
-        return null;
-      }
+        if (isset($this->configuration['deploy']['varnish_port'])) {
+            return $this->configuration['deploy']['varnish_port'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -828,6 +831,129 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     {
         if (isset($this->configuration['vhost']['extra'])) {
             return $this->configuration['vhost']['extra'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Directory to save tracker data.
+     */
+    public function trackerDir()
+    {
+        if (isset($this->configuration['tracker']['dir'])) {
+            $dir = $this->configuration['tracker']['dir'];
+            return $dir;
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Absolute path to db dump.
+     */
+    public function trackerDbDump()
+    {
+        if (isset($this->configuration['tracker']['db-dump'])) {
+            $db = $this->configuration['tracker']['db-dump'];
+            return $db;
+        } else {
+            return null;
+        }
+    }
+  /**
+   * Db user.
+   */
+    public function trackerDbUser()
+    {
+        if (isset($this->configuration['tracker']['db-user'])) {
+            $db = $this->configuration['tracker']['db-user'];
+            return $db;
+        } else {
+            return null;
+        }
+    }
+
+  /**
+   * Db pass.
+   */
+    public function trackerDbPass()
+    {
+        if (isset($this->configuration['tracker']['db-pass'])) {
+            $db = $this->configuration['tracker']['db-pass'];
+            return $db;
+        } else {
+            return null;
+        }
+    }
+  /**
+   * Db pass.
+   */
+    public function trackerDbName()
+    {
+        if (isset($this->configuration['tracker']['db-name'])) {
+            $db_name = $this->configuration['tracker']['db-name'];
+            return $db_name;
+        } else {
+            return null;
+        }
+    }
+  /**
+   * Db host.
+   */
+    public function trackerDbHost()
+    {
+        if (isset($this->configuration['tracker']['db-host'])) {
+            $db = $this->configuration['tracker']['db-host'];
+            return $db;
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Id of tracker.
+     */
+    public function trackerId()
+    {
+        if (isset($this->configuration['tracker']['id'])) {
+            $id = $this->configuration['tracker']['id'];
+            return $id;
+        } else {
+            return null;
+        }
+    }
+    /**
+     * site path to tracker.
+     */
+    public function trackerSitePath()
+    {
+        if (isset($this->configuration['tracker']['site-path'])) {
+            $id = $this->configuration['tracker']['site-path'];
+            return $id;
+        } else {
+            return null;
+        }
+    }
+     /**
+     * trackerfile ro use.
+     */
+    public function trackerFile()
+    {
+        if (isset($this->configuration['tracker']['file'])) {
+            $id = $this->configuration['tracker']['file'];
+            return $id;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * trackerfile ro use.
+     */
+    public function rollbackId()
+    {
+        if (isset($this->configuration['rollback']['id'])) {
+            $id = $this->configuration['rollback']['id'];
+            return $id;
         } else {
             return null;
         }
