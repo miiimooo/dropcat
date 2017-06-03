@@ -229,6 +229,22 @@ To override config in dropcat.yml, using options:
         $config_theme_file_content = str_replace("wktheme", $my_theme, $config_theme_file_content);
         $config_theme_file_write = new SplFileObject($config_theme_file->getPathname(), 'w+');
         $config_theme_file_write->fwrite($config_theme_file_content);
+
+        // Replace default theme-name in paths in theme gulpfile.
+        $theme_gulp_file = new SplFileObject('web_init/gulpfile.js');
+        $theme_gulp_file_content = $theme_gulp_file->fread($theme_gulp_file->getSize());
+        $theme_gulp_file_content = str_replace("wk-standard", $my_profile, $theme_gulp_file_content);
+        $theme_gulp_file_content = str_replace("wkstandard", $my_profile, $theme_gulp_file_content);
+        $theme_gulp_file_content = str_replace("wktheme", $my_theme, $theme_gulp_file_content);
+        $theme_gulp_file_write = new SplFileObject($theme_gulp_file->getPathname(), 'w+');
+        $theme_gulp_file_write->fwrite($theme_gulp_file_content);
+
+        // Replace defalt theme-name in npm packages.json-file.
+        $theme_npm_packages_file = new SplFileObject('web_init/package.json');
+        $theme_npm_packages_file_content = $theme_npm_packages_file->fread($theme_npm_packages_file->getSize());
+        $theme_npm_packages_file_content = str_replace("wk-standard", $my_profile, $theme_npm_packages_file_content);
+        $theme_npm_packages_file_write = new SplFileObject($theme_npm_packages_file->getPathname(), 'w+');
+        $theme_npm_packages_file_write->fwrite($theme_npm_packages_file_content);
     }
 
 }
