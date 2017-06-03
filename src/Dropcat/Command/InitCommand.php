@@ -176,6 +176,7 @@ To override config in dropcat.yml, using options:
         $read = new SplFileObject('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.info.yml', 'r');
         $content = $read->fread($read->getSize());
         $content = str_replace("wkstandard", "$my_profile", $content);
+        $content = str_replace("WK-standard", "$my_profile", $content);
         $write = new SplFileObject($read->getPathname(), 'w+');
         $write->fwrite($content);
 
