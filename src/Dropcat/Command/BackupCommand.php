@@ -38,90 +38,90 @@ To override config in dropcat.yml, using options:
                   'app-name',
                   'ap',
                   InputOption::VALUE_OPTIONAL,
-                  'Mysql host',
+                  'application name',
                   $this->configuration->localEnvironmentAppName()
               ),
               new InputOption(
                   'mysql-host',
                   'mh',
                   InputOption::VALUE_OPTIONAL,
-                  'Mysql host',
+                  'mysql host',
                   $this->configuration->mysqlEnvironmentHost()
               ),
               new InputOption(
                   'mysql-port',
                   'mp',
                   InputOption::VALUE_OPTIONAL,
-                  'Mysql port',
+                  'mysql port',
                   $this->configuration->mysqlEnvironmentPort()
               ),
               new InputOption(
                   'mysql-db',
                   'md',
                   InputOption::VALUE_OPTIONAL,
-                  'Mysql db',
+                  'mysql db',
                   $this->configuration->mysqlEnvironmentDataBase()
               ),
               new InputOption(
                   'mysql-user',
                   'mu',
                   InputOption::VALUE_OPTIONAL,
-                  'Mysql user',
+                  'mysql user',
                   $this->configuration->mysqlEnvironmentUser()
               ),
               new InputOption(
                   'mysql-password',
                   'mpd',
                   InputOption::VALUE_OPTIONAL,
-                  'Mysql password',
+                  'mysql password',
                   $this->configuration->mysqlEnvironmentPassword()
               ),
               new InputOption(
                   'backup-path',
                   'b',
                   InputOption::VALUE_OPTIONAL,
-                  'Backup path',
+                  'backup path',
                   $this->configuration->siteEnvironmentBackupPath()
               ),
               new InputOption(
                   'time-stamp',
                   't',
                   InputOption::VALUE_OPTIONAL,
-                  'Time stamp',
+                  'time stamp',
                   $this->configuration->timeStamp()
               ),
               new InputOption(
                   'time-out',
                   'to',
                   InputOption::VALUE_OPTIONAL,
-                  'Time out',
+                  'time out',
                   $this->configuration->timeOut()
               ),
               new InputOption(
                   'backup-site',
                   'bs',
                   InputOption::VALUE_NONE,
-                  'Backup whole site'
+                  'backup whole site'
               ),
               new InputOption(
                   'no-db-backup',
                   'ndb',
                   InputOption::VALUE_NONE,
-                  'No database backup',
+                  'no database backup',
                   null
               ),
               new InputOption(
                   'backup-name',
                   'bn',
                   InputOption::VALUE_OPTIONAL,
-                  'Time stamp',
+                  'name of backup',
                   null
               ),
               new InputOption(
                   'server',
                   's',
                   InputOption::VALUE_OPTIONAL,
-                  'Server',
+                  'server',
                   $this->configuration->remoteEnvironmentServerName()
               ),
               new InputOption(
@@ -142,14 +142,14 @@ To override config in dropcat.yml, using options:
                   'web_root',
                   'w',
                   InputOption::VALUE_OPTIONAL,
-                  'Web root',
+                  'web root',
                   $this->configuration->remoteEnvironmentWebRoot()
               ),
               new InputOption(
                   'alias',
                   'a',
                   InputOption::VALUE_OPTIONAL,
-                  'Symlink alias',
+                  'symlink alias',
                   $this->configuration->remoteEnvironmentAlias()
               ),
               ]
