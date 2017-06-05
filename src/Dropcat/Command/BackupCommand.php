@@ -84,13 +84,6 @@ To override config in dropcat.yml, using options:
                   $this->configuration->siteEnvironmentBackupPath()
               ),
               new InputOption(
-                  'time-stamp',
-                  't',
-                  InputOption::VALUE_OPTIONAL,
-                  'time stamp',
-                  $this->configuration->timeStamp()
-              ),
-              new InputOption(
                   'time-out',
                   'to',
                   InputOption::VALUE_OPTIONAL,
@@ -165,7 +158,6 @@ To override config in dropcat.yml, using options:
         $mysql_db = $input->getOption('mysql-db');
         $mysql_user = $input->getOption('mysql-user');
         $mysql_password = $input->getOption('mysql-password');
-        $timestamp = $input->getOption('time-stamp');
         $backup_path = $input->getOption('backup-path');
         $timeout = $input->getOption('time-out');
         $backup_site = $input->getOption('backup-site');
@@ -176,6 +168,8 @@ To override config in dropcat.yml, using options:
         $ssh_port = $input->getOption('ssh_port');
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
+        $timestamp = $this->configuration->timeStamp();
+
 
         // Nifty styles on output.
         $style = new Styles();
