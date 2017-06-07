@@ -3,8 +3,7 @@ namespace Dropcat\Services;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Dropcat\Lib\UUID;
+
 
 /**
  * Class AppConfiguration
