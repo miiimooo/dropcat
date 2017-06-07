@@ -3,6 +3,7 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
+use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -14,16 +15,13 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Dropcat\Lib\CheckDrupal;
+use Dropcat\Lib\Styles;
 
 /**
  *
  */
 class TrackerCommand extends DropcatCommand
 {
-
-    protected $drupal;
-    protected $drupal_version;
 
     /**
      *
@@ -117,6 +115,13 @@ To override config in dropcat.yml, using options:
                 'Symlink alias',
                 $this->configuration->remoteEnvironmentAlias()
               ),
+              new InputOption(
+                'drush-alias',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Drush alias',
+                $this->configuration->siteEnvironmentDrushAlias()
+              ),
             ]
           )
           ->setHelp($HelpText);
@@ -127,36 +132,31 @@ To override config in dropcat.yml, using options:
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app_name = $input->getOption('app-name');
-        $tracker_dir = $input->getOption('tracker-dir');
-        $id = $input->getOption('id');
-        $db_dump = $input->getOption('db-dump');
-        $db_name = $input->getOption('db-name');
-        $db_user = $input->getOption('db-user');
-        $db_pass = $input->getOption('db-pass');
-        $db_host = $input->getOption('db-host');
-        $site_path = $input->getOption('site-path');
-        $web_root = $input->getOption('web-root');
-        $alias = $input->getOption('alias');
 
-        $site_path = $this->getSitePath();
+        $app_name         = $input->getOption('app-name');
+        $tracker_dir      = $input->getOption('tracker-dir');
+        $id               = $input->getOption('id');
+        $db_dump          = $input->getOption('db-dump');
+        $db_name          = $input->getOption('db-name');
+        $db_user          = $input->getOption('db-user');
+        $db_pass          = $input->getOption('db-pass');
+        $db_host          = $input->getOption('db-host');
+        $site_path        = $input->getOption('site-path');
+        $web_root         = $input->getOption('web-root');
+        $alias            = $input->getOption('alias');
+        $drush_alias            = $input->getOption('drush-alias');
+
+        if (!isset($site_path)) {
+            $site_path = $this->getSitePath();
+        }
+
         $site_alias = "$web_root/$alias";
 
-
         if (!isset($tracker_dir)) {
-            $this->getSitePath();
             throw new Exception('tracker dir must be set');
         }
         if (!isset($id)) {
             throw new Exception('tracker id must be set');
-        }
-
-        $check = new CheckDrupal();
-        if ($check->isDrupal() === true) {
-            $this->drupal = true;
-        }
-        if ($this->drupal == true) {
-            $this->drupal_version = $check->version();
         }
 
         // Dir for deploy tracker.
@@ -190,37 +190,49 @@ To override config in dropcat.yml, using options:
         $server_time = date("Y-m-d H:i:s");
 
         // Populate the yaml.
+
         $conf = [
-          'db-dump' => $db_dump,
-          'db-name' => $db_name,
-          'db-user' => $db_user,
-          'db-pass' => $db_pass,
-          'db-host' => $db_host,
-          'web-host' => $web_host,
-          'web-host-user' => $web_host_user,
-          'web-host-port' => $web_host_port,
-          'web-host-id-file' => $web_host_id_file,
-          'web-host-pass' => $web_host_pass,
-          'alias-path' => $site_alias,
+          'sites' => [
+            'default' => [
+              'db' => [
+                'dump' =>$db_dump,
+                'name' => $db_name,
+                'user' => $db_user,
+                'pass' => $db_pass,
+                'host' => $db_host,
+              ],
+              'web' => [
+                'host' => $web_host,
+                'user' => $web_host_user,
+                'port' => $web_host_port,
+                'id-file' => $web_host_id_file,
+                'pass' => $web_host_pass,
+                'alias-path' => $site_alias,
+              ],
+              'drush' => [
+                'alias' => $drush_alias,
+              ]
+            ],
+          ],
         ];
-        if ($this->drupal == true) {
-            $conf['drupal'] = $this->drupal;
-            $conf['drupal-version'] = $this->drupal_version;
-        }
         // the default, this is overwritten in every deploy. could be used for
         // backup scripts or similar to track sites.
+        array_filter($conf);
+
         $this->writeTracker($default_dir, $app_name, $conf);
         // add some variables that should be unique
         $conf['created'] = $server_time;
         $build_id = getenv('BUILD_ID');
-        $conf['site-path'] = $site_path;
+        $conf['sites']['default']['web']['site-path'] = $site_path;
         if (isset($build_id)) {
             $conf['build-id'] = $build_id;
         }
-        // unique, identifies a deploy.
+        array_filter($conf);
         $this->writeTracker($dir, $id, $conf);
-
-        $output->writeln('<info>' . $this->mark_formatted .
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $mark_formatted = $style->colorize('yellow', $mark);
+        $output->writeln('<info>' . $mark_formatted .
           ' tracker finished</info>');
     }
 
@@ -237,7 +249,7 @@ To override config in dropcat.yml, using options:
     private function writeTracker($dir, $id, $conf)
     {
         $file = new Filesystem();
-        $yaml = Yaml::dump($conf);
+        $yaml = Yaml::dump($conf, 4, 2);
         try {
             $file->dumpFile($dir . '/' . $id . '.yml', $yaml);
         } catch (IOExceptionInterface $e) {
@@ -262,9 +274,7 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($createTrackerDir);
         }
     }
-
-    private function getSitePath()
-    {
+    private function getSitePath() {
         $alias = $this->configuration->remoteEnvironmentAlias();
         $web_root = $this->configuration->remoteEnvironmentWebRoot();
         $remote_path = "$web_root/$alias";
@@ -296,7 +306,8 @@ To override config in dropcat.yml, using options:
 
         $get_real_path = $ssh->exec("readlink -f $remote_path");
         $path = str_replace(array("\r", "\n"), '', trim($get_real_path));
-        
+        //$basename = $ssh->exec("basename $get_real_path");
+
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not get path, error code $status\n";

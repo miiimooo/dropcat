@@ -3,8 +3,6 @@ namespace Dropcat\Services;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Dropcat\Lib\UUID;
 
 /**
  * Class AppConfiguration
@@ -944,7 +942,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     }
 
     /**
-     * trackerfile ro use.
+     * rollback id.
      */
     public function rollbackId()
     {
@@ -954,5 +952,12 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         } else {
             return null;
         }
+    }
+    /**
+     * create site
+     */
+    public function createSite()
+    {
+            return null;
     }
 }

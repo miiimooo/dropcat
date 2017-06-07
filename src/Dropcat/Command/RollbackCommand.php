@@ -4,6 +4,7 @@ namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
 use Dropcat\Lib\UUID;
+use Dropcat\Lib\Styles;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,22 +36,22 @@ To override config in dropcat.yml, using options:
         $this->setName("rollback")
           ->setDescription("Rollback a site")
           ->setDefinition(
-              [
+            [
               new InputOption(
-                  'tracker-file',
-                  't',
-                  InputOption::VALUE_OPTIONAL,
-                  'Trackerfile',
-                  $this->configuration->trackerFile()
+                'tracker-file',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Trackerfile',
+                $this->configuration->trackerFile()
               ),
               new InputOption(
-                  'id',
-                  'i',
-                  InputOption::VALUE_OPTIONAL,
-                  'Id (used for backups done during rollback, og not set a UUID will be generated instead',
-                  $this->configuration->rollbackId()
+                'id',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'Id (used for backups done during rollback, og not set a UUID will be generated instead',
+                $this->configuration->rollbackId()
               ),
-              ]
+            ]
           )
           ->setHelp($HelpText);
     }
@@ -63,6 +64,11 @@ To override config in dropcat.yml, using options:
         $tracker_file = $input->getOption('tracker-file');
         $rollback_id = $input->getOption('id');
 
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $mark_formatted = $style->colorize('yellow', $mark);
+        $rollback = [];
+
         if (!isset($rollback_id)) {
             $uuid = new UUID();
             $rollback_id = $uuid->v4();
@@ -73,62 +79,57 @@ To override config in dropcat.yml, using options:
         } catch (ParseException $e) {
             printf("unable to parse the YAML string: %s", $e->getMessage());
         }
-        if (!isset($rollback['db-host'])) {
-            throw new Exception('db-host missing');
+        $sites = $rollback['sites'];
+
+        foreach ($sites as $site => $siteProperty) {
+            if (!isset($siteProperty['db']['host'])) {
+                throw new Exception('db host missing');
+            }
+            $this->movedir(
+              $siteProperty['web']['host'],
+              $siteProperty['web']['user'],
+              $siteProperty['web']['port'],
+              $siteProperty['web']['id-file'],
+              $siteProperty['web']['pass'],
+              $siteProperty['web']['site-path'],
+              $siteProperty['web']['alias-path']
+            );
+            $output->writeln('<info>' . $mark_formatted .
+              ' site rollback finished</info>');
+            // Do db backup.
+            $this->dumpDb(
+              $siteProperty['db']['host'],
+              $siteProperty['db']['user'],
+              $siteProperty['db']['pass'],
+              $siteProperty['db']['name'],
+              $rollback_id
+            );
+            $this->dropDb(
+              $siteProperty['db']['host'],
+              $siteProperty['db']['user'],
+              $siteProperty['db']['pass'],
+              $siteProperty['db']['name']
+            );
+            $this->createDb(
+              $siteProperty['db']['host'],
+              $siteProperty['db']['user'],
+              $siteProperty['db']['pass'],
+              $siteProperty['db']['name']
+            );
+            $this->insertDb(
+              $siteProperty['db']['host'],
+              $siteProperty['db']['user'],
+              $siteProperty['db']['pass'],
+              $siteProperty['db']['name'],
+              $siteProperty['db']['dump']
+            );
         }
 
-        $this->movedir(
-            $rollback['web-host'],
-            $rollback['web-host-user'],
-            $rollback['web-host-port'],
-            $rollback['web-host-id-file'],
-            $rollback['web-host-pass'],
-            $rollback['site-path'],
-            $rollback['alias-path']
-        );
-        $output->writeln('<info>' . $this->mark_formatted .
-          ' site rollback finished</info>');
-        // Do db backup.
-        $this->dumpDb(
-            $rollback['db-host'],
-            $rollback['db-user'],
-            $rollback['db-pass'],
-            $rollback['db-name'],
-            $rollback_id
-        );
-        $this->dropDb(
-            $rollback['db-host'],
-            $rollback['db-user'],
-            $rollback['db-pass'],
-            $rollback['db-name']
-        );
-        $this->createDb(
-            $rollback['db-host'],
-            $rollback['db-user'],
-            $rollback['db-pass'],
-            $rollback['db-name']
-        );
-        $this->insertDb(
-            $rollback['db-host'],
-            $rollback['db-user'],
-            $rollback['db-pass'],
-            $rollback['db-name'],
-            $rollback['db-dump']
-        );
-
-        $output->writeln('<info>' . $this->mark_formatted .
+        $output->writeln('<info>' . $mark_formatted .
           ' db rollback finished</info>');
     }
-
-    protected function movedir(
-        $server,
-        $user,
-        $port,
-        $key,
-        $pass,
-        $path,
-        $alias
-    ) {
+    protected function movedir($server, $user, $port, $key, $pass, $path, $alias)
+    {
         $ssh = new SSH2($server, $port);
         $ssh->setTimeout(999);
         $auth = new RSA();
@@ -141,8 +142,8 @@ To override config in dropcat.yml, using options:
         try {
             $login = $ssh->login($user, $auth);
             if (!$login) {
-                throw new Exception('Login Failed using ' . $key . ' at port ' .
-                  $port . ' and user ' . $user . ' at ' . $server
+                throw new Exception('Login Failed using ' . $key . ' at port '
+                  . $port . ' and user ' . $user . ' at ' . $server
                   . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
@@ -163,7 +164,6 @@ To override config in dropcat.yml, using options:
 
         // login to apache, remove old symlink, add new symlink to dir in tracker.
     }
-
     protected function dumpDb($dbhost, $dbuser, $dbpass, $dbname, $id)
     {
         $mysql = "mysqldump -h $dbhost -u $dbuser -p$dbpass $dbname > /tmp/$dbname" . '_' . "$id" . '.sql';
@@ -173,7 +173,6 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($dump);
         }
     }
-
     protected function dropDb($dbhost, $dbuser, $dbpass, $dbname)
     {
         $mysql = "mysqladmin -h $dbhost -u $dbuser -p$dbpass drop $dbname -f";
@@ -183,7 +182,6 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($drop);
         }
     }
-
     protected function createDb($dbhost, $dbuser, $dbpass, $dbname)
     {
         $mysql = "mysqladmin -h $dbhost -u $dbuser -p$dbpass create $dbname";
@@ -193,7 +191,6 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($create);
         }
     }
-
     protected function insertDb($dbhost, $dbuser, $dbpass, $dbname, $dump)
     {
         $mysql = "mysql -h $dbhost -u $dbuser -p$dbpass $dbname < $dump";
