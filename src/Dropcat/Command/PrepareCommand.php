@@ -5,6 +5,8 @@ namespace Dropcat\Command;
 use Dropcat\Lib\DropcatCommand;
 use Dropcat\Lib\CreateDrushAlias;
 use Dropcat\Lib\CheckDrupal;
+use Dropcat\Lib\Tracker;
+use Dropcat\Lib\Db;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,153 +14,166 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use mysqli;
 use Exception;
 
 class PrepareCommand extends DropcatCommand
 {
+
     protected function configure()
     {
-        $HelpText = 'The <info>prepare</info> command setups what is needed for a drupal site on a remote server.
+        $HelpText = 'The <info>prepare</info> command setups what is needed for a site.
 <comment>Samples:</comment>
-To run with default options (using config from dropcat.yml in the currrent dir):
+To run with default options (using config from dropcat.yml):
 <info>dropcat prepare</info>
 To override config in dropcat.yml, using options:
-<info>dropcat prepare -url http://mysite --drush-alias=mysite</info>';
+<info>dropcat prepare --ssh_port=2200 --drush-alias=mysite</info>';
 
         $this->setName('prepare')
           ->setDescription('Prepare site')
           ->setDefinition(
-            [
+              [
               new InputOption(
-                'drush_folder',
-                'df',
-                InputOption::VALUE_OPTIONAL,
-                'Drush folder',
-                $this->configuration->localEnvironmentDrushFolder()
+                  'drush_folder',
+                  'df',
+                  InputOption::VALUE_OPTIONAL,
+                  'Drush folder',
+                  $this->configuration->localEnvironmentDrushFolder()
               ),
               new InputOption(
-                'drush_script',
-                'ds',
-                InputOption::VALUE_OPTIONAL,
-                'Drush script path (can be remote)'
+                  'drush_script',
+                  'ds',
+                  InputOption::VALUE_OPTIONAL,
+                  'Drush script path (can be remote)'
               ),
               new InputOption(
-                'drush_alias',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Drush alias',
-                $this->configuration->siteEnvironmentDrushAlias()
+                  'drush_alias',
+                  'd',
+                  InputOption::VALUE_OPTIONAL,
+                  'Drush alias',
+                  $this->configuration->siteEnvironmentDrushAlias()
               ),
               new InputOption(
-                'server',
-                's',
-                InputOption::VALUE_OPTIONAL,
-                'Server',
-                $this->configuration->remoteEnvironmentServerName()
+                  'server',
+                  's',
+                  InputOption::VALUE_OPTIONAL,
+                  'Server',
+                  $this->configuration->remoteEnvironmentServerName()
               ),
               new InputOption(
-                'user',
-                'u',
-                InputOption::VALUE_OPTIONAL,
-                'User (ssh)',
-                $this->configuration->remoteEnvironmentSshUser()
+                  'user',
+                  'u',
+                  InputOption::VALUE_OPTIONAL,
+                  'User (ssh)',
+                  $this->configuration->remoteEnvironmentSshUser()
               ),
               new InputOption(
-                'ssh_port',
-                'p',
-                InputOption::VALUE_OPTIONAL,
-                'SSH port',
-                $this->configuration->remoteEnvironmentSshPort()
+                  'ssh_port',
+                  'p',
+                  InputOption::VALUE_OPTIONAL,
+                  'SSH port',
+                  $this->configuration->remoteEnvironmentSshPort()
               ),
               new InputOption(
-                'web_root',
-                'w',
-                InputOption::VALUE_OPTIONAL,
-                'Web root',
-                $this->configuration->remoteEnvironmentWebRoot()
+                  'ssh_key_password',
+                  'skp',
+                  InputOption::VALUE_OPTIONAL,
+                  'SSH key password',
+                  $this->configuration->localEnvironmentSshKeyPassword()
               ),
               new InputOption(
-                'alias',
-                'a',
-                InputOption::VALUE_OPTIONAL,
-                'Symlink alias',
-                $this->configuration->remoteEnvironmentAlias()
+                  'identity_file',
+                  'i',
+                  InputOption::VALUE_OPTIONAL,
+                  'Identify file',
+                  $this->configuration->remoteEnvironmentIdentifyFile()
               ),
               new InputOption(
-                'url',
-                'url',
-                InputOption::VALUE_OPTIONAL,
-                'Site url',
-                $this->configuration->siteEnvironmentUrl()
+                  'web_root',
+                  'w',
+                  InputOption::VALUE_OPTIONAL,
+                  'Web root',
+                  $this->configuration->remoteEnvironmentWebRoot()
               ),
               new InputOption(
-                'site_name',
-                'sn',
-                InputOption::VALUE_OPTIONAL,
-                'Site name',
-                $this->configuration->siteEnvironmentName()
+                  'alias',
+                  'a',
+                  InputOption::VALUE_OPTIONAL,
+                  'Symlink alias',
+                  $this->configuration->remoteEnvironmentAlias()
               ),
               new InputOption(
-                'mysql_host',
-                'mh',
-                InputOption::VALUE_OPTIONAL,
-                'Mysql host',
-                $this->configuration->mysqlEnvironmentHost()
+                  'url',
+                  'url',
+                  InputOption::VALUE_OPTIONAL,
+                  'Site url',
+                  $this->configuration->siteEnvironmentUrl()
               ),
               new InputOption(
-                'mysql_port',
-                'mp',
-                InputOption::VALUE_OPTIONAL,
-                'Mysql port',
-                $this->configuration->mysqlEnvironmentPort()
+                  'site_name',
+                  'sn',
+                  InputOption::VALUE_OPTIONAL,
+                  'Site name',
+                  $this->configuration->siteEnvironmentName()
               ),
               new InputOption(
-                'mysql_db',
-                'md',
-                InputOption::VALUE_OPTIONAL,
-                'Mysql db',
-                $this->configuration->mysqlEnvironmentDataBase()
+                  'mysql_host',
+                  'mh',
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql host',
+                  $this->configuration->mysqlEnvironmentHost()
               ),
               new InputOption(
-                'mysql_user',
-                'mu',
-                InputOption::VALUE_OPTIONAL,
-                'Mysql user',
-                $this->configuration->mysqlEnvironmentUser()
+                  'mysql_port',
+                  'mp',
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql port',
+                  $this->configuration->mysqlEnvironmentPort()
               ),
               new InputOption(
-                'mysql_password',
-                'mpd',
-                InputOption::VALUE_OPTIONAL,
-                'Mysql password',
-                $this->configuration->mysqlEnvironmentPassword()
+                  'mysql_db',
+                  'md',
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql db',
+                  $this->configuration->mysqlEnvironmentDataBase()
               ),
               new InputOption(
-                'timeout',
-                'to',
-                InputOption::VALUE_OPTIONAL,
-                'Timeout',
-                $this->configuration->timeOut()
+                  'mysql_user',
+                  'mu',
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql user',
+                  $this->configuration->mysqlEnvironmentUser()
               ),
               new InputOption(
-                'tracker-file',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Trackerfile',
-                $this->configuration->trackerFile()
+                  'mysql_password',
+                  'mpd',
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql password',
+                  $this->configuration->mysqlEnvironmentPassword()
               ),
               new InputOption(
-                'create-site',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Create site',
-                $this->configuration->createSite()
+                  'timeout',
+                  'to',
+                  InputOption::VALUE_OPTIONAL,
+                  'Timeout',
+                  $this->configuration->timeOut()
               ),
-            ]
+              new InputOption(
+                  'tracker-file',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Trackerfile',
+                  $this->configuration->trackerFile()
+              ),
+              new InputOption(
+                  'create-site',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Create site',
+                  $this->configuration->createSite()
+              ),
+              ]
           )
           ->setHelp($HelpText);
     }
@@ -171,6 +186,8 @@ To override config in dropcat.yml, using options:
         $server = $input->getOption('server');
         $user = $input->getOption('user');
         $ssh_port = $input->getOption('ssh_port');
+        $identity_file = $input->getOption('identity_file');
+        $ssh_key_password = $input->getOption('ssh_key_password');
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
         $url = $input->getOption('url');
@@ -184,17 +201,26 @@ To override config in dropcat.yml, using options:
         $tracker_file = $input->getOption('tracker-file');
         $create_site = $input->getOption('create-site');
 
+        $tracker_dir = $this->configuration->trackerDir();
+        $app_name = $this->configuration->localEnvironmentAppName();
 
-        $sites = $this->getTracker($tracker_file);
+        if ($tracker_file == null) {
+            $tracker_file = $tracker_dir . '/default/' . $app_name . '.yml';
+        }
+
+        $tracker = new Tracker();
+        $sites = $tracker->read($tracker_file);
 
         foreach ($sites as $site => $siteProperty) {
-            if($site === 'default') {
-                $mysql_host =$siteProperty['db']['host'];
+            // getting the default user - same as the root user.
+            if ($site === 'default') {
+                $mysql_host = $siteProperty['db']['host'];
                 $mysql_root_user = $siteProperty['db']['user'];
                 $mysql_root_pass = $siteProperty['db']['pass'];
             }
 
             if (isset($create_site)) {
+                // check if a site already exists with that name.
                 if (strstr($site, $create_site)) {
                     throw new Exception('site already exists');
                 }
@@ -202,47 +228,99 @@ To override config in dropcat.yml, using options:
         }
         // Use the $create_site variable for setting up.
         if (isset($create_site)) {
-            $cleaned_string = str_replace(".","", $create_site);
+            $cleaned_string = str_replace(".", "", $create_site);
             $truncated_string = mb_strimwidth($cleaned_string, 0, 59);
             $drush_alias = $truncated_string;
-            $new_mysql_user = $truncated_string . '_u1';
-            $new_mysql_db = $truncated_string . '_db1';
-            $new_mysql_pass = uniqid();
+            $mysql_user = $truncated_string . '_u1';
+            $mysql_db = $truncated_string . '_db1';
+            $mysql_password = uniqid();
 
-            #mysql -uroot -ppassword -e "CREATE USER 'foobar'@'%' IDENTIFIED BY 'foo';"
+            $db = new Db();
+            $db->createUser(
+                $mysql_root_user,
+                $mysql_root_pass,
+                $mysql_host,
+                $mysql_user,
+                $mysql_password,
+                $timeout
+            );
+
+            $site_name = $drush_alias;
+            $url = 'http://' . $create_site;
+            $site_alias = "$web_root/$alias";
+            $new_site = [
+                  $site_name => [
+                    'db' => [
+                      'dump' => null,
+                      'name' => $mysql_db,
+                      'user' => $mysql_user,
+                      'pass' => $mysql_password,
+                      'host' => $mysql_host,
+                    ],
+                    'web' => [
+                      'host' => $server,
+                      'user' => $user,
+                      'port' => $ssh_port,
+                      'id-file' => $identity_file,
+                      'pass' => $ssh_key_password,
+                      'alias-path' => $site_alias,
+                    ],
+                    'drush' => [
+                      'alias' => $drush_alias,
+                    ]
+                  ],
+                ];
+
+            $write = new Tracker();
+            $write->add($tracker_file, $new_site, $tracker_dir, $app_name);
+
         }
+        $db = new Db();
+        $db->create(
+            $mysql_host,
+            $mysql_user,
+            $mysql_password,
+            $mysql_db,
+            $mysql_port,
+            $timeout,
+            $mysql_root_user,
+            $mysql_root_pass
+        );
 
-/*
         $check = new CheckDrupal();
         if ($check->isDrupal()) {
-            $this->writeDrushAlias($site_name, $server, $user, $web_root,
-              $alias, $url, $ssh_port, $drush_script, $drush_folder,
-              $drush_alias);
+            // Create drush alias.
+            $this->writeDrushAlias(
+                $site_name,
+                $server,
+                $user,
+                $web_root,
+                $alias,
+                $url,
+                $ssh_port,
+                $drush_script,
+                $drush_folder,
+                $drush_alias
+            );
         }
 
-        // Add db if does not exist.
-        $this->manageDb($mysql_host, $mysql_user, $mysql_password, $mysql_db,
-          $mysql_port, $timeout);
-*/
-
-
-        $output->writeln('<info>prepare finished</info>');
+        $output->writeln('<info>' . $this->mark_formatted . ' prepare finished</info>');
     }
 
     /**
      * Write drush alias.
      */
     private function writeDrushAlias(
-      $site_name,
-      $server,
-      $user,
-      $web_root,
-      $alias,
-      $url,
-      $ssh_port,
-      $drush_script,
-      $drush_folder,
-      $drush_alias
+        $site_name,
+        $server,
+        $user,
+        $web_root,
+        $alias,
+        $url,
+        $ssh_port,
+        $drush_script,
+        $drush_folder,
+        $drush_alias
     ) {
         $output = new ConsoleOutput();
 
@@ -261,71 +339,15 @@ To override config in dropcat.yml, using options:
         $drush_file = new Filesystem();
 
         try {
-            $drush_file->dumpFile($drush_folder . '/' . $drush_alias . '.aliases.drushrc.php',
-              $drushAlias->getValue());
+            $drush_file->dumpFile(
+                $drush_folder . '/' . $drush_alias . '.aliases.drushrc.php',
+                $drushAlias->getValue()
+            );
         } catch (IOExceptionInterface $e) {
             echo 'an error occurred while creating your file at ' . $e->getPath();
             exit(1);
         }
-        $output->writeln('<info>drush alias created</info>');
+        $output->writeln('<info>' . $this->mark_formatted . ' drush alias ' .  $drush_alias  . ' created</info>');
     }
 
-    /**
-     * Create db if it does not exist.
-     */
-    private function manageDb(
-      $mysql_host,
-      $mysql_user,
-      $mysql_password,
-      $mysql_db,
-      $mysql_port,
-      $timeout
-    ) {
-
-        $output = new ConsoleOutput();
-        try {
-            $mysqli = new mysqli("$mysql_host", "$mysql_user",
-              "$mysql_password");
-        } catch (\Exception $e) {
-            echo $e->getMessage(), PHP_EOL;
-            exit(1);
-        }
-
-
-
-        // If db does not exist
-        if ($mysqli->select_db("$mysql_db") === false) {
-            $process = new Process(
-              "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
-            );
-            $process->setTimeout($timeout);
-            $process->run();
-            // Executes after the command finishes.
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-            echo $process->getOutput();
-
-            $output->writeln('<info>database created</info>');
-        } else {
-            $output->writeln('<info>database exists</info>');
-        }
-    }
-
-    /**
-     * Get yaml from tracker.
-     *
-     */
-    private function getTracker($tracker_file)
-    {
-        // read tracker file
-        $conf = [];
-        try {
-            $conf = Yaml::parse(file_get_contents($tracker_file));
-        } catch (ParseException $e) {
-            printf("unable to parse the YAML string: %s", $e->getMessage());
-        }
-        $sites = $conf['sites'];
-        return $sites;
-    }
 }

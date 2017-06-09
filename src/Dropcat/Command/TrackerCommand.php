@@ -3,7 +3,6 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,7 +14,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Dropcat\Lib\Styles;
 
 /**
  *
@@ -144,7 +142,7 @@ To override config in dropcat.yml, using options:
         $site_path        = $input->getOption('site-path');
         $web_root         = $input->getOption('web-root');
         $alias            = $input->getOption('alias');
-        $drush_alias            = $input->getOption('drush-alias');
+        $drush_alias      = $input->getOption('drush-alias');
 
         if (!isset($site_path)) {
             $site_path = $this->getSitePath();
@@ -195,7 +193,7 @@ To override config in dropcat.yml, using options:
           'sites' => [
             'default' => [
               'db' => [
-                'dump' =>$db_dump,
+                'dump' => $db_dump,
                 'name' => $db_name,
                 'user' => $db_user,
                 'pass' => $db_pass,
@@ -229,10 +227,7 @@ To override config in dropcat.yml, using options:
         }
         array_filter($conf);
         $this->writeTracker($dir, $id, $conf);
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
-        $output->writeln('<info>' . $mark_formatted .
+        $output->writeln('<info>' . $this->mark_formatted .
           ' tracker finished</info>');
     }
 
