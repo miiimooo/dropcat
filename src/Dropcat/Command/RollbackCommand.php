@@ -4,7 +4,6 @@ namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
 use Dropcat\Lib\UUID;
-use Dropcat\Lib\Styles;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,7 +50,7 @@ To override config in dropcat.yml, using options:
                   'Id (used for backups done during rollback, og not set a UUID will be generated instead',
                   $this->configuration->rollbackId()
               ),
-              ]
+            ]
           )
           ->setHelp($HelpText);
     }
@@ -64,9 +63,6 @@ To override config in dropcat.yml, using options:
         $tracker_file = $input->getOption('tracker-file');
         $rollback_id = $input->getOption('id');
 
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
         $rollback = [];
 
         if (!isset($rollback_id)) {
@@ -77,7 +73,7 @@ To override config in dropcat.yml, using options:
         try {
             $rollback = Yaml::parse(file_get_contents($tracker_file));
         } catch (ParseException $e) {
-            printf("unable to parse the YAML string: %s", $e->getMessage());
+            echo $e->getMessage() . "\n";
         }
         $sites = $rollback['sites'];
 
@@ -94,7 +90,7 @@ To override config in dropcat.yml, using options:
                 $siteProperty['web']['site-path'],
                 $siteProperty['web']['alias-path']
             );
-            $output->writeln('<info>' . $mark_formatted .
+            $output->writeln('<info>' . $this->mark .
               ' site rollback finished</info>');
             // Do db backup.
             $this->dumpDb(
@@ -125,7 +121,7 @@ To override config in dropcat.yml, using options:
             );
         }
 
-        $output->writeln('<info>' . $mark_formatted .
+        $output->writeln('<info>' . $this->mark .
           ' db rollback finished</info>');
     }
     protected function movedir($server, $user, $port, $key, $pass, $path, $alias)
@@ -162,7 +158,7 @@ To override config in dropcat.yml, using options:
         $ssh->disconnect();
         return $path;
 
-      // login to apache, remove old symlink, add new symlink to dir in tracker.
+        // login to apache, remove old symlink, add new symlink to dir in tracker.
     }
     protected function dumpDb($dbhost, $dbuser, $dbpass, $dbname, $id)
     {

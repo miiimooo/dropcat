@@ -2480,6 +2480,7 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
             "version": "5.7.20",
             "source": {
                 "type": "git",
@@ -2490,6 +2491,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3cb94a5f8c07a03c8b7527ed7468a2926203f58b",
                 "reference": "3cb94a5f8c07a03c8b7527ed7468a2926203f58b",
+=======
+            "version": "5.7.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "69c4f49ff376af2692bad9cebd883d17ebaa98a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/69c4f49ff376af2692bad9cebd883d17ebaa98a1",
+                "reference": "69c4f49ff376af2692bad9cebd883d17ebaa98a1",
+>>>>>>> rollbacks
                 "shasum": ""
             },
             "require": {
@@ -2558,7 +2571,11 @@
                 "testing",
                 "xunit"
             ],
+<<<<<<< HEAD
             "time": "2017-05-22T07:42:55+00:00"
+=======
+            "time": "2017-04-03T02:22:27+00:00"
+>>>>>>> rollbacks
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2778,7 +2795,11 @@
             "keywords": [
                 "diff"
             ],
+<<<<<<< HEAD
             "time": "2017-05-22T07:24:03+00:00"
+=======
+            "time": "2015-12-08T07:14:41+00:00"
+>>>>>>> rollbacks
         },
         {
             "name": "sebastian/environment",

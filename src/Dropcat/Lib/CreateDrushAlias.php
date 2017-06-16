@@ -1,6 +1,15 @@
 <?php
 namespace Dropcat\Lib;
 
+/**
+ * Class CheckDrupal
+ *
+ * Checking if it is Drupal, and which version.
+ *
+ * @package Dropcat\Lib
+ */
+
+
 class CreateDrushAlias
 {
     private $sitename;

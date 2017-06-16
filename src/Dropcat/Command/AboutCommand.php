@@ -2,7 +2,6 @@
 
 namespace Dropcat\Command;
 
-use Dropcat\Services\Configuration;
 use Dropcat\Lib\DropcatCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -23,14 +22,7 @@ class AboutCommand extends DropcatCommand
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $style = new OutputFormatterStyle('black', 'green', array('blink', 'bold'));
-        $output = new ConsoleOutput();
-
-        $output->getFormatter()->setStyle('meow', $style);
-        $io->newLine(1);
-
-        $output->writeln('<meow>
+        $output->writeln('<info>
 
           ____                              __
          / __ \_________  ____  _________ _/ /_
@@ -40,9 +32,6 @@ class AboutCommand extends DropcatCommand
                       /__/
 
       Dropcat is a deploy tool for Drupal 8 sites, developed by Wunderkraut Sweden. Meow!
-      </meow>');
-        $io->newLine(1);
-
-
+      </info>');
     }
 }

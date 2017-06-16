@@ -23,7 +23,8 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
         $running_path = getcwd();
         if (file_exists($running_path . '/.dropcat') && is_dir($running_path . '/.dropcat')) {
-          $running_path .= '/.dropcat';
+            $running_path .= '/.dropcat';
+
         }
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
@@ -767,7 +768,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             $target = $this->configuration['vhost']['target'];
             return $target;
         } else {
-            return null;
+            return '';
         }
     }
     public function vhostPort()
@@ -946,7 +947,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     }
 
     /**
-     * trackerfile ro use.
+     * rollback id.
      */
     public function rollbackId()
     {
@@ -956,5 +957,42 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         } else {
             return null;
         }
+    }
+    /**
+     * create site
+     */
+    public function createSite()
+    {
+            return null;
+    }
+    /**
+     * Sync config name
+     */
+    public function syncFolder()
+    {
+        if (isset($this->configuration['site']['environment']['sync'])) {
+            return $this->configuration['site']['environment']['sync'];
+        } else {
+            return '../sync';
+        }
+    }
+    /**
+     * Sync config name
+     */
+    public function configSplitFolder()
+    {
+        if (isset($this->configuration['site']['environment']['config-split'])) {
+            return $this->configuration['site']['environment']['config-split'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Drupal install profile to use, defaults to minimal.
+     */
+    public function drupalInstallProfile()
+    {
+        return 'minimal';
     }
 }
