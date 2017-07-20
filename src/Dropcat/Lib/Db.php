@@ -61,6 +61,7 @@ class Db
         echo $process->getOutput();
         $this->output->writeln('<info>' . $this->mark . ' database user created</info>');
     }
+
     public function createDb($conf) {
         $mysql_host = $conf['mysql-host'];
         $mysql_user = $conf['mysql-user'];
@@ -70,6 +71,7 @@ class Db
         $timeout = $conf['timeout'];
         $mysql_root_user = $conf['mysql-root-user'];
         $mysql_root_pass = $conf['mysql-root-pass'];
+        $db_dump_path = $conf['db-dump-path'];
 
 
         try {
@@ -110,7 +112,23 @@ class Db
 
             $this->output->writeln('<info>' . $this->mark . ' database created</info>');
         } else {
+            if (isset($db_dump_path)) {
+                $process = new Process(
+                    "mysqldump -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port $mysql_db > $db_dump_path"
+                );
+                $process->setTimeout($timeout);
+                $process->run();
+                // Executes after the command finishes.
+                if (!$process->isSuccessful()) {
+                    throw new ProcessFailedException($process);
+                }
+                echo $process->getOutput();
+                $this->output->writeln("<info>$this->mark database backed up to $db_dump_path</info>");
+            }
+
             $this->output->writeln('<info>' . $this->mark . ' database exists</info>');
         }
     }
+
+
 }

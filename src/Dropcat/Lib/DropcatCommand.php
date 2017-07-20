@@ -28,6 +28,8 @@ class DropcatCommand extends Command
      */
     protected $container;
     public $mark;
+    public $heart;
+    public $error;
     /**
      * @var \Dropcat\Services\Configuration
      */
@@ -42,6 +44,10 @@ class DropcatCommand extends Command
         $style = new Styles();
         $mark = $style->heavyCheckMark();
         $this->mark = $style->colorize('yellow', $mark);
+        $error = $style->heavyMulti();
+        $this->error = $style->colorize('red', $error);
+        $heart = $style->heart();
+        $this->heart = $style->colorize('red', $heart);
     }
 
     protected function runProcess($command)

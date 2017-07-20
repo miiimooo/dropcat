@@ -42,7 +42,7 @@ class Write
                 $out .=  "  '$domain' => '$domain',\n";
             }
         }
-        $out .= "\n];\n";
+        $out .= "];\n";
         $file = $this->fs;
         $file->dumpFile('/tmp/' . $conf['app-name'] . '-sites.php', $out);
     }
@@ -78,10 +78,42 @@ class Write
         $this->output->writeln('<info>' . $this->mark . ' drush alias ' .  $conf['drush-alias']  . ' created</info>');
     }
 
+
     /**
      * Write local.settings.php
      */
     public function localSettingsPhp($conf)
+    {
+        $tracker = new Tracker();
+
+        $sites = $tracker->read($conf['tracker-file']);
+        foreach ($sites as $site => $siteProperty) {
+            if ($site == $conf['site']) {
+                $out = '<?php' . "\n";
+                $out .= '$settings[\'hash_salt\'] = \'' . $siteProperty['web']['hash']. '\';' . "\n\n";
+                $out .= '$databases[\'default\'][\'default\'] = [' . "\n";
+                $out .= '  \'database\' => \'' . $siteProperty['db']['name'] . '\',' . "\n";
+                $out .= '  \'username\' => \'' . $siteProperty['db']['user'] . '\',' . "\n";
+                $out .= '  \'password\' => \'' . $siteProperty['db']['pass'] . '\',' . "\n";
+                $out .= '  \'host\' => \'' . $siteProperty['db']['host'] . '\',' . "\n";
+                $out .= "  'prefix' => '',\n";
+                $out .= "  'port' => '',\n";
+                $out .= "  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',\n";
+                $out .= "  'driver' => 'mysql',\n";
+                $out .= '];';
+                $out .= "\n\n";
+                $out .= "if (file_exists('../global.overrides.php')) {\n";
+                $out .= "  include '../global.overrides.php';\n";
+                $out .= "}\n";
+            }
+        }
+        $this->fs->dumpFile('/tmp/' . $conf['app-name'] . '.local.settings.php', $out);
+    }
+
+    /**
+     * Write local.settings.php for multi setup
+     */
+    public function localSettingsPhpMulti($conf)
     {
         $tracker = new Tracker();
         $sites = $tracker->read($conf['tracker-file']);

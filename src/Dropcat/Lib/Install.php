@@ -3,6 +3,7 @@ namespace Dropcat\Lib;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * Class Install
@@ -14,6 +15,17 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class Install
 {
 
+    public $mark;
+    public $output;
+
+    public function __construct()
+    {
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $this->mark = $style->colorize('yellow', $mark);
+        $this->output = new ConsoleOutput();
+    }
+
     public function drupal($config, $verbose)
     {
         $profile = $config['profile'];
@@ -24,6 +36,7 @@ class Install
         if ($verbose == true) {
             $v = ' -v';
         }
+        $this->output->writeln("<info>$this->mark starting installation of $alias</info>");
         $install= new Process(
           "drush @$alias si $profile --account-name=admin --account-pass=admin --site-name=$site_name --sites-subdir=$subdir --yes $v"
         );

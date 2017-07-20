@@ -995,4 +995,29 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     {
         return 'minimal';
     }
+
+    /**
+     * Gets all settings overrides.
+     */
+    public function siteSettings()
+    {
+        if (isset($this->configuration['site']['settings'])) {
+            return $this->configuration['site']['settings'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets all config overrides.
+     */
+    public function siteConfig()
+    {
+        if (isset($this->configuration['site']['config'])) {
+            return $this->configuration['site']['config'];
+        } else {
+            return null;
+        }
+    }
+
 }

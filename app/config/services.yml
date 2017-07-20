@@ -124,12 +124,6 @@ services:
       lazy: true
       tags:
         - {name: console.command}
-    dropcat.command.update-database:
-      class: Dropcat\Command\UpdateDatabaseCommand
-      arguments: ['@DropcatContainer','@dropcat.configuration']
-      lazy: true
-      tags:
-        - {name: console.command}
     dropcat.command.check-connection:
       class: Dropcat\Command\CheckConnectionCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
@@ -203,6 +197,19 @@ services:
         - {name: console.command}
     dropcat.command.rollback:
       class: Dropcat\Command\RollbackCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.multi:move:
+      class: Dropcat\Command\MultiMoveCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+
+    dropcat.command.update:
+      class: Dropcat\Command\UpdateCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
       lazy: true
       tags:

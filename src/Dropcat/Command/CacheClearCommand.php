@@ -56,7 +56,7 @@ To override config in dropcat.yml, using options:
         echo $process->getOutput();
 
         $output = new ConsoleOutput();
-        $output->writeln('<info>' . $this->mark_formatted .
+        $output->writeln('<info>' . $this->mark .
           'entity-update finished</info>');
     }
 }
