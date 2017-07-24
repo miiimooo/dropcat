@@ -3,7 +3,6 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,7 +14,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Dropcat\Lib\Styles;
 
 /**
  *
@@ -23,9 +21,9 @@ use Dropcat\Lib\Styles;
 class TrackerCommand extends DropcatCommand
 {
 
-  /**
-   *
-   */
+    /**
+     *
+     */
     protected function configure()
     {
         $HelpText = '<info>tracker</info> tracks settings set to the tracker.
@@ -35,96 +33,104 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 To override config in dropcat.yml, using options:
 <info>dropcat move --tracker-dir=/my/dir</info>';
         $this->setName("tracker")
-        ->setDescription("Tracks configuration")
-        ->setDefinition(
+          ->setDescription("Tracks configuration")
+          ->setDefinition(
             [
-            new InputOption(
+              new InputOption(
                 'app-name',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'App name',
                 $this->configuration->localEnvironmentAppName()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'tracker-dir',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Tracker direcory',
                 $this->configuration->trackerDir()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'db-dump',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Complete path to db backup',
                 $this->configuration->trackerDbDump()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'db-name',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Database name.',
                 $this->configuration->trackerDbName()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'db-user',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Database name.',
                 $this->configuration->trackerDbUser()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'db-pass',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Database password.',
                 $this->configuration->trackerDbPass()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'db-host',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Database host.',
                 $this->configuration->trackerDbHost()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'id',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Id of tracker',
                 $this->configuration->trackerId()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'site-path',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Path to site',
                 $this->configuration->trackerSitePath()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'web-root',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Web root',
                 $this->configuration->remoteEnvironmentWebRoot()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'alias',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Symlink alias',
                 $this->configuration->remoteEnvironmentAlias()
+              ),
+              new InputOption(
+                'drush-alias',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Drush alias',
+                $this->configuration->siteEnvironmentDrushAlias()
             ),
             ]
-        )
-        ->setHelp($HelpText);
+          )
+          ->setHelp($HelpText);
     }
 
-  /**
-   *
-   */
+    /**
+     *
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $app_name         = $input->getOption('app-name');
         $tracker_dir      = $input->getOption('tracker-dir');
         $id               = $input->getOption('id');
@@ -136,12 +142,16 @@ To override config in dropcat.yml, using options:
         $site_path        = $input->getOption('site-path');
         $web_root         = $input->getOption('web-root');
         $alias            = $input->getOption('alias');
+        $drush_alias      = $input->getOption('drush-alias');
 
-        $site_path = $this->getSitePath();
+
+        if (!isset($site_path)) {
+            $site_path = $this->getSitePath();
+        }
+
         $site_alias = "$web_root/$alias";
 
-
-        if (!isset($tracker_dir)) {$this->getSitePath();
+        if (!isset($tracker_dir)) {
             throw new Exception('tracker dir must be set');
         }
         if (!isset($id)) {
@@ -179,52 +189,63 @@ To override config in dropcat.yml, using options:
         $server_time = date("Y-m-d H:i:s");
 
         // Populate the yaml.
+
         $conf = [
-          'db-dump' => $db_dump,
-          'db-name' => $db_name,
-          'db-user' => $db_user,
-          'db-pass' => $db_pass,
-          'db-host' => $db_host,
-          'web-host' => $web_host,
-          'web-host-user' => $web_host_user,
-          'web-host-port' => $web_host_port,
-          'web-host-id-file' => $web_host_id_file,
-          'web-host-pass' => $web_host_pass,
-          'alias-path' => $site_alias,
+            'sites' => [
+                'default' => [
+                  'db' => [
+                    'dump' =>$db_dump,
+                    'name' => $db_name,
+                    'user' => $db_user,
+                    'pass' => $db_pass,
+                    'host' => $db_host,
+                    ],
+                  'web' => [
+                    'host' => $web_host,
+                    'user' => $web_host_user,
+                    'port' => $web_host_port,
+                    'id-file' => $web_host_id_file,
+                    'pass' => $web_host_pass,
+                    'alias-path' => $site_alias,
+                  ],
+                  'drush' => [
+                      'alias' => $drush_alias,
+                  ]
+                ],
+            ],
         ];
         // the default, this is overwritten in every deploy. could be used for
         // backup scripts or similar to track sites.
+        array_filter($conf);
+
         $this->writeTracker($default_dir, $app_name, $conf);
         // add some variables that should be unique
         $conf['created'] = $server_time;
         $build_id = getenv('BUILD_ID');
-        $conf['site-path'] = $site_path;
+        $conf['sites']['default']['web']['site-path'] = $site_path;
         if (isset($build_id)) {
             $conf['build-id'] = $build_id;
         }
-        // unique, identifies a deploy.
-        $this->writeTracker($dir, $id, $conf);
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
-        $output->writeln('<info>' . $mark_formatted .
-        ' tracker finished</info>');
+        array_filter($conf);
+        $this->writeTracker($dir, $id, $conf);        $build_id = getenv('BUILD_ID');
+        $output->writeln('<info>' . $this->mark .
+          ' tracker finished</info>');
     }
 
-  /**
-   * Write Yaml file.
-   *
-   * @param $dir
-   *   string
-   * @param $id
-   *   string
-   * @param $conf
-   *   array
-   */
+    /**
+     * Write Yaml file.
+     *
+     * @param $dir
+     *   string
+     * @param $id
+     *   string
+     * @param $conf
+     *   array
+     */
     private function writeTracker($dir, $id, $conf)
     {
         $file = new Filesystem();
-        $yaml = Yaml::dump($conf);
+        $yaml = Yaml::dump($conf, 4, 2);
         try {
             $file->dumpFile($dir . '/' . $id . '.yml', $yaml);
         } catch (IOExceptionInterface $e) {
@@ -232,16 +253,16 @@ To override config in dropcat.yml, using options:
         }
     }
 
-  /**
-   * Create tracker dir.
-   *
-   * @param $dir
-   *   string
-   */
+    /**
+     * Create tracker dir.
+     *
+     * @param $dir
+     *   string
+     */
     private function writeDir($dir)
     {
         $createTrackerDir = new Process(
-            "mkdir -p $dir"
+          "mkdir -p $dir"
         );
         $createTrackerDir->run();
         // Executes after the command finishes.

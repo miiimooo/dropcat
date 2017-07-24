@@ -23,7 +23,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat vhost:create</info>
 To override config in dropcat.yml, using options:
 <info>dropcat vhost:create --target=/etc/httpd/conf.d</info>';
-        $this->setName("vhost:create")
+            $this->setName("vhost:create")
             ->setDescription("create a vhost on a remote server")
             ->setDefinition(
                 array(
@@ -35,7 +35,7 @@ To override config in dropcat.yml, using options:
                       $this->configuration->vhostTarget()
                   ),
                     new InputOption(
-                        'file_name',
+                        'file-name',
                         'f',
                         InputOption::VALUE_OPTIONAL,
                         'Vhost file name',
@@ -49,21 +49,21 @@ To override config in dropcat.yml, using options:
                         $this->configuration->vhostPort()
                     ),
                     new InputOption(
-                        'document_root',
+                        'document-root',
                         'dr',
                         InputOption::VALUE_OPTIONAL,
                         'Document root',
                         $this->configuration->vhostDocumentRoot()
                     ),
                     new InputOption(
-                        'server_name',
+                        'server-name',
                         'sn',
                         InputOption::VALUE_OPTIONAL,
                         'Document root',
                         $this->configuration->vhostServerName()
                     ),
                     new InputOption(
-                        'server_alias',
+                        'server-alias',
                         'sa',
                         InputOption::VALUE_OPTIONAL,
                         'Server alias',
@@ -77,7 +77,7 @@ To override config in dropcat.yml, using options:
                         $this->configuration->vhostExtra()
                     ),
                     new InputOption(
-                        'bash_command',
+                        'bash-command',
                         'bc',
                         InputOption::VALUE_OPTIONAL,
                         'Bash command',
@@ -98,21 +98,21 @@ To override config in dropcat.yml, using options:
                         $this->configuration->remoteEnvironmentSshUser()
                     ),
                     new InputOption(
-                        'ssh_port',
+                        'ssh-port',
                         'p',
                         InputOption::VALUE_OPTIONAL,
                         'SSH port',
                         $this->configuration->remoteEnvironmentSshPort()
                     ),
                     new InputOption(
-                        'identity_file',
+                        'identity-file',
                         'i',
                         InputOption::VALUE_OPTIONAL,
                         'Identify file',
                         $this->configuration->remoteEnvironmentIdentifyFile()
                     ),
                     new InputOption(
-                        'ssh_key_password',
+                        'ssh-key-password',
                         'skp',
                         InputOption::VALUE_OPTIONAL,
                         'SSH key password',
@@ -126,18 +126,18 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $target = $input->getOption('target');
-        $file_name = $input->getOption('file_name');
-        $document_root = $input->getOption('document_root');
+        $file_name = $input->getOption('file-name');
+        $document_root = $input->getOption('document-root');
         $vhost_port = $input->getOption('port');
-        $server_name = $input->getOption('server_name');
-        $server_alias = $input->getOption('server_alias');
+        $server_name = $input->getOption('server-name');
+        $server_alias = $input->getOption('server-alias');
         $extra = $input->getOption('extra');
-        $bash_command = $input->getOption('bash_command');
+        $bash_command = $input->getOption('bash-command');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
-        $port = $input->getOption('ssh_port');
-        $ssh_key_password = $input->getOption('ssh_key_password');
-        $identity_file = $input->getOption('identity_file');
+        $port = $input->getOption('ssh-port');
+        $ssh_key_password = $input->getOption('ssh-key-password');
+        $identity_file = $input->getOption('identity-file');
         $identity_file_content = file_get_contents($identity_file);
 
         $runbash = '';

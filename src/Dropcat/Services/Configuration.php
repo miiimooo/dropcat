@@ -3,8 +3,7 @@ namespace Dropcat\Services;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Dropcat\Lib\UUID;
+
 
 /**
  * Class AppConfiguration
@@ -24,7 +23,8 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
         $running_path = getcwd();
         if (file_exists($running_path . '/.dropcat') && is_dir($running_path . '/.dropcat')) {
-          $running_path .= '/.dropcat';
+            $running_path .= '/.dropcat';
+
         }
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
@@ -113,19 +113,19 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['local']['environment']['tmp_path'])) {
             return $this->configuration['local']['environment']['tmp_path'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
     /**
-     * Gets the separator in names.
+     * Gets the separator in names if set, otherwise defaults to _.
      */
     public function localEnvironmentSeparator()
     {
         if (isset($this->configuration['local']['environment']['separator'])) {
             return $this->configuration['local']['environment']['separator'];
         } else {
-            return null;
+            return '_';
         }
     }
 
@@ -161,7 +161,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['local']['environment']['tar_dir'])) {
             return $this->configuration['local']['environment']['tar_dir'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
@@ -341,7 +341,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['remote']['environment']['temp_folder'])) {
             return $this->configuration['remote']['environment']['temp_folder'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
@@ -365,7 +365,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['remote']['environment']['target_dir'])) {
             return $this->configuration['remote']['environment']['target_dir'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
@@ -464,7 +464,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['site']['environment']['url'])) {
             return $this->configuration['site']['environment']['url'];
         } else {
-            return null;
+             return null;
         }
     }
 
@@ -768,7 +768,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             $target = $this->configuration['vhost']['target'];
             return $target;
         } else {
-            return null;
+            return '';
         }
     }
     public function vhostPort()
@@ -947,7 +947,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
     }
 
     /**
-     * trackerfile ro use.
+     * rollback id.
      */
     public function rollbackId()
     {
@@ -958,4 +958,66 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             return null;
         }
     }
+    /**
+     * create site
+     */
+    public function createSite()
+    {
+            return null;
+    }
+    /**
+     * Sync config name
+     */
+    public function syncFolder()
+    {
+        if (isset($this->configuration['site']['environment']['sync'])) {
+            return $this->configuration['site']['environment']['sync'];
+        } else {
+            return '../sync';
+        }
+    }
+    /**
+     * Sync config name
+     */
+    public function configSplitFolder()
+    {
+        if (isset($this->configuration['site']['environment']['config-split'])) {
+            return $this->configuration['site']['environment']['config-split'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Drupal install profile to use, defaults to minimal.
+     */
+    public function drupalInstallProfile()
+    {
+        return 'minimal';
+    }
+
+    /**
+     * Gets all settings overrides.
+     */
+    public function siteSettings()
+    {
+        if (isset($this->configuration['site']['settings'])) {
+            return $this->configuration['site']['settings'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets all config overrides.
+     */
+    public function siteConfig()
+    {
+        if (isset($this->configuration['site']['config'])) {
+            return $this->configuration['site']['config'];
+        } else {
+            return null;
+        }
+    }
+
 }

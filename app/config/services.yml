@@ -2,8 +2,8 @@ services:
     symfony.application:
       class: Symfony\Component\Console\Application
       arguments:
-        - 'Dropcat'
-        - '0.2.0'
+        - 'dropcat'
+        - '1.0.0-beta1'
     symfony.console_output:
       class: Symfony\Component\Console\Output\ConsoleOutput
 
@@ -124,12 +124,6 @@ services:
       lazy: true
       tags:
         - {name: console.command}
-    dropcat.command.update-database:
-      class: Dropcat\Command\UpdateDatabaseCommand
-      arguments: ['@DropcatContainer','@dropcat.configuration']
-      lazy: true
-      tags:
-        - {name: console.command}
     dropcat.command.check-connection:
       class: Dropcat\Command\CheckConnectionCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
@@ -203,6 +197,19 @@ services:
         - {name: console.command}
     dropcat.command.rollback:
       class: Dropcat\Command\RollbackCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.multi:move:
+      class: Dropcat\Command\MultiMoveCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+
+    dropcat.command.update:
+      class: Dropcat\Command\UpdateCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
       lazy: true
       tags:

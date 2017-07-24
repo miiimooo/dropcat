@@ -1,6 +1,15 @@
 <?php
 namespace Dropcat\Lib;
 
+/**
+ * Class CheckDrupal
+ *
+ * Checking if it is Drupal, and which version.
+ *
+ * @package Dropcat\Lib
+ */
+
+
 // Source: https://gist.github.com/dahnielson/508447
 
 class UUID {

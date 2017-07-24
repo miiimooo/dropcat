@@ -50,6 +50,8 @@ To override config in dropcat.yml, using options:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('<info>' . $this->start . ' node:npm-install started</info>');
+
         $nvmDir = $input->getOption('nvm-dir');
         if (!isset($nvmDir)) {
             throw new Exception('No nvm dir found in options.');
@@ -64,11 +66,13 @@ To override config in dropcat.yml, using options:
         $npmInstall = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm install && npm install");
         $npmInstall->setTimeout(3600);
         $npmInstall->run();
-        echo $npmInstall->getOutput();
+        if ($output->isVerbose()) {
+            echo $npmInstall->getOutput();
+        }
         if (!$npmInstall->isSuccessful()) {
             throw new ProcessFailedException($npmInstall);
         }
 
-        $output->writeln('<info>Task: node:npm-install finished</info>');
+        $output->writeln('<info>' . $this->heart . ' node:npm-install finished</info>');
     }
 }

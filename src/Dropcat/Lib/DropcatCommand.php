@@ -27,6 +27,12 @@ class DropcatCommand extends Command
      * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
     protected $container;
+    public $mark;
+    public $heart;
+    public $error;
+    public $start;
+    public $cat;
+
     /**
      * @var \Dropcat\Services\Configuration
      */
@@ -38,6 +44,17 @@ class DropcatCommand extends Command
         $this->configuration = $conf;
         parent::__construct();
         $this->container = $container;
+        $style = new Styles();
+        $mark = $style->heavyCheckMark();
+        $this->mark = $style->colorize('yellow', $mark);
+        $error = $style->heavyMulti();
+        $this->error = $style->colorize('red', $error);
+        $heart = $style->heart();
+        $this->heart = $style->colorize('red', $heart);
+        $start = $style->start();
+        $this->start = $style->colorize('red', $start);
+        $cat = $style->cat();
+        $this->cat = $style->colorize('yellow', $cat);
     }
 
     protected function runProcess($command)

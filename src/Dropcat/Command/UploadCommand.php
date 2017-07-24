@@ -3,13 +3,10 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SFTP;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Exception;
 
@@ -147,12 +144,17 @@ To override config in dropcat.yml, using options:
         $keeptar = $input->getOption('keeptar') ? TRUE : FALSE;
         $checksha1 = $input->getOption('dontchecksha1') ? FALSE : TRUE;
 
+        $output->writeln('<info>' . $this->start . ' upload started</info>');
+
+        // for backwards compatibility, remove trailing slash if it exists.
+        $tar_dir = rtrim($tar_dir, '/\\');
+
         if (isset($tar)) {
             $tarfile = $tar;
         } else {
             $tarfile = $app_name . $separator . $build_id . '.tar';
         }
-        $localFileSha1 = sha1_file("$tar_dir$tarfile");
+        $localFileSha1 = sha1_file("$tar_dir/$tarfile");
         $sftp = new SFTP($server, $port, $timeout);
         $sftp->setTimeout(999);
 
@@ -166,7 +168,7 @@ To override config in dropcat.yml, using options:
             if (!$login) {
                 throw new Exception('login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
             }
-            $transfer = $sftp->put("$targetdir/$tarfile", "$tar_dir$tarfile", 1);
+            $transfer = $sftp->put("$targetdir/$tarfile", "$tar_dir/$tarfile", 1);
             if (!$transfer) {
                 throw new Exception('Upload failed of ' . $tarfile);
             }
@@ -175,7 +177,7 @@ To override config in dropcat.yml, using options:
             exit(1);
         }
 
-        $tarExists = $sftp->file_exists("$tar_dir$tarfile");
+        $tarExists = $sftp->file_exists("$tar_dir/$tarfile");
         // Setting default value
 
         if ($output->isVerbose()) {
@@ -184,15 +186,15 @@ To override config in dropcat.yml, using options:
         $remoteFileSha1 = null;
         if ($tarExists) {
             if ($checksha1 === TRUE) {
-                $remoteFileSha1 = $sftp->exec("sha1sum $tar_dir$tarfile | awk '{print $1}'");
+                $remoteFileSha1 = $sftp->exec("sha1sum $tar_dir/$tarfile | awk '{print $1}'");
                 if ($output->isVerbose()) {
-                    echo "tar is at $tar_dir$tarfile\n";
+                    echo "tar is at $tar_dir/$tarfile\n";
                     echo "local file hash is $localFileSha1\n";
                     echo "remote file hash is $remoteFileSha1\n";
+                    echo "SHA1 for file match\n";
                 }
                 if (trim($localFileSha1) == trim($remoteFileSha1)) {
-                    echo "SHA1 for file match\n";
-                    echo 'upload successful' . "\n";
+                    $output->writeln("<info>$this->mark tar uploaded</info>");
                 } else {
                     echo "SHA1 for file do not match.";
                     exit(1);
@@ -202,7 +204,7 @@ To override config in dropcat.yml, using options:
             }
         } else {
             if ($output->isVerbose()) {
-                echo "tar is at $tar_dir$tarfile\n";
+                echo "tar is at $tar_dir/$tarfile\n";
                 echo "local file hash is $localFileSha1\n";
                 echo "remote file hash is $remoteFileSha1\n";
             }
@@ -210,17 +212,18 @@ To override config in dropcat.yml, using options:
             exit(1);
         }
         $sftp->disconnect();
-        $output->writeln('<info>Task: upload finished</info>');
+        $output->writeln("<info>$this->heart upload finished</info>");
+
         if ($output->isVerbose()) {
             echo 'tar is going to be saved ' . $keeptar . "\n";
-            echo 'path to tar ' . "$tar_dir$tarfile" . "\n";
+            echo 'path to tar ' . "$tar_dir/$tarfile" . "\n";
         }
         if ($keeptar === TRUE) {
             if ($output->isVerbose()) {
                 echo "tar file is not deleted \n";
             }
         } else {
-            unlink("$tar_dir$tarfile");
+            unlink("$tar_dir/$tarfile");
             if ($output->isVerbose()) {
                 echo "tar file is deleted \n";
             }

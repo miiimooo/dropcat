@@ -13,6 +13,7 @@ abstract class DropcatConfigurationBase
   public function deployIgnoreFilesTarString()
   {
     $ignore_files_array = $this->deployIgnoreFiles();
+
     $ignore_files = null;
     foreach ($ignore_files_array as $ignore_file) {
       $ignore_files .= "--exclude='$ignore_file' ";

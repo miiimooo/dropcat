@@ -3,15 +3,9 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Lib\Styles;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -28,7 +22,7 @@ class BackupCommand extends DropcatCommand
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat backup</info>
 To override config in dropcat.yml, using options:
-<info>dropcat backup -d mysite -b /var/dump -t 20160101</info>';
+<info>dropcat backup -d mysite -b /backup/dir</info>';
 
         $this->setName("backup")
           ->setDescription("Backup site")
@@ -125,14 +119,14 @@ To override config in dropcat.yml, using options:
                   $this->configuration->remoteEnvironmentSshUser()
               ),
               new InputOption(
-                  'ssh_port',
+                  'ssh-port',
                   'p',
                   InputOption::VALUE_OPTIONAL,
                   'SSH port',
                   $this->configuration->remoteEnvironmentSshPort()
               ),
               new InputOption(
-                  'web_root',
+                  'web-root',
                   'w',
                   InputOption::VALUE_OPTIONAL,
                   'web root',
@@ -165,16 +159,10 @@ To override config in dropcat.yml, using options:
         $backup_name = $input->getOption('backup-name');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
-        $ssh_port = $input->getOption('ssh_port');
-        $web_root = $input->getOption('web_root');
+        $ssh_port = $input->getOption('ssh-port');
+        $web_root = $input->getOption('web-root');
         $alias = $input->getOption('alias');
         $timestamp = $this->configuration->timeStamp();
-
-
-        // Nifty styles on output.
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $mark_formatted = $style->colorize('yellow', $mark);
 
         if (!isset($backup_name)) {
             $backup_name = $timestamp;
@@ -190,7 +178,7 @@ To override config in dropcat.yml, using options:
                 throw new ProcessFailedException($backupDb);
             }
             echo $backupDb->getOutput();
-            $output->writeln('<info>' . $mark_formatted .
+            $output->writeln('<info>' . $this->mark .
               ' db backup finished</info>');
         }
         if ($backup_site === true) {
@@ -204,8 +192,7 @@ To override config in dropcat.yml, using options:
             if (!$rsyncSite->isSuccessful()) {
                 throw new ProcessFailedException($rsyncSite);
             }
-            $mark_formatted = $style->colorize('yellow', $mark);
-            $output->writeln('<info>' . $mark_formatted .
+            $output->writeln('<info>' . $this->mark .
               ' site backup finished</info>');
         }
     }
