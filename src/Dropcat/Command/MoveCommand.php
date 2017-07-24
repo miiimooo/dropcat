@@ -5,14 +5,9 @@ namespace Dropcat\Command;
 use Dropcat\Lib\DropcatCommand;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SSH2;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class MoveCommand extends DropcatCommand
@@ -151,7 +146,9 @@ To override config in dropcat.yml, using options:
         $temp_folder = $input->getOption('temp_folder');
         $keeptar = $input->getOption('keeptar') ? TRUE : FALSE;
 
-      if (isset($tar)) {
+        $output->writeln('<info>' . $this->start . ' move started</info>');
+
+        if (isset($tar)) {
             $tarfile = $tar;
         } else {
             $tarfile = $app_name . $separator . $build_id . '.tar';
@@ -242,6 +239,6 @@ To override config in dropcat.yml, using options:
         }
         $ssh->disconnect();
 
-        $output->writeln('<info>Task: move finished</info>');
+        $output->writeln("<info>$this->heart move finished</info>");
     }
 }

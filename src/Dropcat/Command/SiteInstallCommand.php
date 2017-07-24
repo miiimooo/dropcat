@@ -3,14 +3,9 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -23,7 +18,7 @@ class SiteInstallCommand extends DropcatCommand
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat site-install</info>
 To override config in dropcat.yml, using options:
-<info>dropcat site-install -d mysite -c myconfig</info>';
+<info>dropcat site-install -d mysite</info>';
 
         $this->setName("site-install")
           ->setDescription("Site install")
@@ -87,6 +82,8 @@ To override config in dropcat.yml, using options:
         $admin_user       = $input->getOption('admin_user');
         $install_options  = $input->getOption('install_options');
 
+        $output->writeln('<info>' . $this->start . ' site-install started</info>');
+
         $process = new Process(
             "drush @$drush_alias si $profile --account-name=$admin_user --account-pass=$admin_pass -y $install_options"
         );
@@ -96,10 +93,10 @@ To override config in dropcat.yml, using options:
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        echo $process->getOutput();
+        if ($output->isVerbose()) {
+            echo $process->getOutput();
+        }
 
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Task: configimport finished</info>');
-
+        $output->writeln('<info>' . $this->heart . ' site-install finished</info>');
     }
 }

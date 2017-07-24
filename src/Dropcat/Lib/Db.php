@@ -19,9 +19,11 @@ class Db
     public $fs;
     public $mark;
     public $output;
+    public $verbose;
 
-    public function __construct()
+    public function __construct($verbose = false)
     {
+        $this->verbose = $verbose;
         $this->fs = new Filesystem();
         $this->output = new ConsoleOutput();
         $style = new Styles();
@@ -47,7 +49,9 @@ class Db
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        echo $process->getOutput();
+        if ($this->verbose == true) {
+            echo $process->getOutput();
+        }
         // Flush Privileges.
         $process = new Process(
             "mysqladmin -u$mysql_root_user -p$mysql_root_pass -h $mysql_host FLUSH-PRIVILEGES"
@@ -58,7 +62,9 @@ class Db
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        echo $process->getOutput();
+        if ($this->verbose == true) {
+            echo $process->getOutput();
+        }
         $this->output->writeln('<info>' . $this->mark . ' database user created</info>');
     }
 
@@ -71,8 +77,11 @@ class Db
         $timeout = $conf['timeout'];
         $mysql_root_user = $conf['mysql-root-user'];
         $mysql_root_pass = $conf['mysql-root-pass'];
-        $db_dump_path = $conf['db-dump-path'];
+        $db_dump_path = null;
 
+        if (isset($conf['db-dump-path'])) {
+            $db_dump_path = $conf['db-dump-path'];
+        }
 
         try {
             $mysqli = new mysqli(
@@ -97,7 +106,9 @@ class Db
             if (!$process->isSuccessful()) {
                 throw new ProcessFailedException($process);
             }
-            echo $process->getOutput();
+            if ($this->verbose == true) {
+                echo $process->getOutput();
+            }
 
             $process = new Process(
                 "mysqladmin -u $mysql_user -p$mysql_password -h $mysql_host -P $mysql_port create $mysql_db"
@@ -108,7 +119,9 @@ class Db
             if (!$process->isSuccessful()) {
                 throw new ProcessFailedException($process);
             }
-            echo $process->getOutput();
+            if ($this->verbose == true) {
+                echo $process->getOutput();
+            }
 
             $this->output->writeln('<info>' . $this->mark . ' database created</info>');
         } else {
@@ -122,7 +135,9 @@ class Db
                 if (!$process->isSuccessful()) {
                     throw new ProcessFailedException($process);
                 }
-                echo $process->getOutput();
+                if ($this->verbose == true) {
+                    echo $process->getOutput();
+                }
                 $this->output->writeln("<info>$this->mark database backed up to $db_dump_path</info>");
             }
 

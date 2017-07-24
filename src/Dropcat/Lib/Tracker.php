@@ -17,9 +17,12 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class Tracker
 {
     public $fs;
+    public $mark;
+    public $verbose;
 
-    public function __construct()
+    public function __construct($verbose = false)
     {
+        $this->verbose = $verbose;
         $this->fs = new Filesystem();
         $this->output = new ConsoleOutput();
         $style = new Styles();
@@ -27,14 +30,14 @@ class Tracker
         $this->mark = $style->colorize('yellow', $mark);
     }
 
-    public function addDefault($conf, $app_name, $dir, $multi)
+    public function addDefault($conf, $app_name, $dir, $multi, $env)
     {
 
         $file = new Filesystem();
         $yaml = Yaml::dump($conf, 4, 2);
         $recreate_tracker = false;
 
-        $default_tracker = "$dir/default/$app_name.yml";
+        $default_tracker = "$dir/default/$app_name-$env.yml";
 
         // Check if the tracker need to be recreated.
         if (file_exists($default_tracker)) {
@@ -46,7 +49,7 @@ class Tracker
 
         if (!file_exists($default_tracker) || $recreate_tracker == true) {
             try {
-                $file->dumpFile($dir . '/default/' . $app_name . '.yml', $yaml);
+                $file->dumpFile($default_tracker, $yaml);
             } catch (IOExceptionInterface $e) {
                 echo "An error occurred while creating your file at " . $e->getPath();
             }
@@ -77,7 +80,19 @@ class Tracker
         $file = new Filesystem();
         $yaml = Yaml::dump($conf, 4, 2);
         try {
-            $file->dumpFile($dir . '/default/' . $id . '.yml', $yaml);
+            $file->dumpFile($tracker_file, $yaml);
+        } catch (IOExceptionInterface $e) {
+            echo "An error occurred while creating your file at " . $e->getPath();
+        }
+    }
+
+    public function rollback($conf, $name)
+    {
+        $file = new Filesystem();
+        $yaml = Yaml::dump($conf, 4, 2);
+
+        try {
+            $file->dumpFile($name, $yaml);
         } catch (IOExceptionInterface $e) {
             echo "An error occurred while creating your file at " . $e->getPath();
         }
@@ -85,7 +100,6 @@ class Tracker
 
     public function read($tracker_file)
     {
-        // read tracker file
         $conf = [];
         try {
             $conf = Yaml::parse(file_get_contents($tracker_file));

@@ -3,15 +3,11 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
 use phpseclib\Net\SSH2;
 use phpseclib\Crypt\RSA;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Exception;
 
 class SymlinkCommand extends DropcatCommand
@@ -110,6 +106,9 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity_file');
         $identity_file_content = file_get_contents($identity_file);
 
+        $output->writeln('<info>' . $this->start . ' symlink started</info>');
+
+
         $ssh = new SSH2($server, $port);
         $ssh->setTimeout(999);
         $auth = new RSA();
@@ -143,7 +142,6 @@ To override config in dropcat.yml, using options:
             }
         }
         $ssh->exec('ln --backup -snf ' . $original . ' ' . $symlink);
-
-        $output->writeln('<info>Task: symlink finished</info>');
+        $output->writeln("<info>$this->heart symlink finished</info>");
     }
 }

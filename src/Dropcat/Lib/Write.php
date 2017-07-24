@@ -51,7 +51,6 @@ class Write
      * Write a drush alias.
      */
     public function drushAlias($conf) {
-
         $drushAlias = new CreateDrushAlias();
         $drushAlias->setName($conf['site-name']);
         $drushAlias->setServer($conf['server']);

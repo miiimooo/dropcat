@@ -25,6 +25,11 @@ class Styles
         return "\xE2\x9C\x94";
     }
 
+    public function start()
+    {
+        return "\xF0\x9F\x9A\x80";
+    }
+
     public function heart()
     {
         return "\xE2\x9D\xA4";
@@ -33,6 +38,11 @@ class Styles
     public function heavyMulti()
     {
         return "\xE2\x9C\x96";
+    }
+
+    public function cat()
+    {
+        return "\xF0\x9F\x98\xB8";
     }
 
     /**

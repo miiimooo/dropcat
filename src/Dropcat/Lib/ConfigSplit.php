@@ -7,22 +7,27 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 /**
  * Class ConfigSplit
  *
- * Checking if it is Drupal, and which version.
- *
  * @package Dropcat\Lib
  */
 class ConfigSplit
 {
 
-    public function export($config, $verbose)
+    public $verbose;
+
+    public function __construct($verbose = false)
+    {
+        $this->verbose = $verbose;
+    }
+
+    public function export($config)
     {
         $alias = $config['drush-alias'];
         $v = '';
-        if ($verbose == true) {
+        if ($this->verbose == true) {
             $v = ' -v';
         }
         $install= new Process(
-          "drush @$alias csex --yes $v"
+            "drush @$alias csex --yes $v"
         );
         $install->setTimeout(999);
         $install->run();
@@ -30,6 +35,8 @@ class ConfigSplit
         if (!$install->isSuccessful()) {
             throw new ProcessFailedException($install);
         }
-        echo $install->getOutput();
+        if ($this->verbose == true) {
+            echo $install->getOutput();
+        }
     }
 }

@@ -12,9 +12,12 @@ use Dropcat\Lib\Create;
 use Dropcat\Lib\Vhost;
 use Dropcat\Lib\Install;
 use Dropcat\Lib\Config;
+use Dropcat\Lib\RemotePath;
+use Dropcat\Lib\Cleanup;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Exception;
 use Dropcat\Lib\UUID;
 
@@ -202,6 +205,13 @@ To override config in dropcat.yml, using options:
                 'Tracker direcory',
                 $this->configuration->trackerDir()
               ),
+              new InputOption(
+                'backup-path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Backup path',
+                $this->configuration->siteEnvironmentBackupPath()
+              ),
             ]
           )
           ->setHelp($HelpText);
@@ -233,14 +243,17 @@ To override config in dropcat.yml, using options:
         $config_split_folder = $input->getOption('config-split-folder');
         $profile = $input->getOption('profile');
         $tracker_dir = $input->getOption('tracker-dir');
+        $backup_path = $input->getOption('backup-path');
 
+        $output->writeln('<info>' . $this->start . ' prepare started</info>');
         $verbose = false;
-
         if ($output->isVerbose()) {
             $verbose = true;
         }
 
         $app_name = $this->configuration->localEnvironmentAppName();
+        $env = getenv('DROPCAT_ENV');
+
 
         $mysql_root_user = $mysql_user;
         $mysql_root_pass = $mysql_password;
@@ -251,11 +264,23 @@ To override config in dropcat.yml, using options:
 
         $db_dump_path = getenv('DB_DUMP_PATH');
 
-        $conf = [
+        $db_dump_path_mkdir = "mkdir -p $backup_path" . '/' . "$app_name";
+        $create_backup_dir = $this->runProcess($db_dump_path_mkdir);
+        $create_backup_dir->setTimeout($timeout);
+        $create_backup_dir->run();
+        // Executes after the command finishes.
+        if (!$create_backup_dir->isSuccessful()) {
+            throw new ProcessFailedException($create_backup_dir);
+        }
+        if ($verbose == true) {
+            echo $create_backup_dir->getOutput();
+        }
+
+
+        $default_tracker_conf = [
           'sites' => [
             'default' => [
               'db' => [
-                'dump' => $db_dump_path,
                 'name' => $mysql_db,
                 'user' => $mysql_user,
                 'pass' => $mysql_password,
@@ -283,16 +308,16 @@ To override config in dropcat.yml, using options:
         else {
             $multi = false;
         }
-        $write = new Tracker();
-        $write->addDefault($conf, $app_name, $tracker_dir, $multi);
+        $write = new Tracker($verbose);
+        $write->addDefault($default_tracker_conf, $app_name, $tracker_dir, $multi, $env);
 
         // Use the $create_site variable for setting up.
         if (isset($create_site)) {
             if ($tracker_file == null) {
-                $tracker_file = $tracker_dir . '/default/' . $app_name . '.yml';
+                $tracker_file = $tracker_dir . '/default/' . $app_name . '-' . $env . '.yml';
             }
 
-            $tracker = new Tracker();
+            $tracker = new Tracker($verbose);
             $sites = $tracker->read($tracker_file);
 
             foreach ($sites as $site => $siteProperty) {
@@ -330,7 +355,7 @@ To override config in dropcat.yml, using options:
               'timeout' => $timeout,
             ];
 
-            $db = new Db();
+            $db = new Db($verbose);
             $db->createUser($mysql_conf);
 
             $new_db_conf = [
@@ -344,7 +369,7 @@ To override config in dropcat.yml, using options:
               'mysql-root-pass' => $mysql_root_pass,
             ];
             // Create database.
-            $db = new Db();
+            $db = new Db($verbose);
             $db->createDb($new_db_conf);
 
             $site_name = $drush_alias;
@@ -389,7 +414,7 @@ To override config in dropcat.yml, using options:
               'app-name' => $app_name,
             ];
 
-            $write = new Tracker();
+            $write = new Tracker($verbose);
             $write->addMulti($tracker_conf);
 
             // Create drush alias, if it is drupal.
@@ -418,6 +443,8 @@ To override config in dropcat.yml, using options:
             $sitesphp = new Write();
             $sitesphp->sitesPhp($sites_php_conf);
 
+            //echo $tracker_file;
+
             $conf = [
               'tracker-file' => $tracker_file,
               'site' => $site_name,
@@ -425,6 +452,7 @@ To override config in dropcat.yml, using options:
             ];
             $localSettings = new Write();
             $localSettings->localSettingsPhpMulti($conf);
+
 
             $target = $site_alias . '/web/sites/' . $site_domain;
 
@@ -520,8 +548,6 @@ To override config in dropcat.yml, using options:
                 throw new Exception('you need a tracker dir defined');
             }
 
-
-
             // write drush alias.
             $check = new CheckDrupal();
             if ($check->isDrupal()) {
@@ -530,7 +556,7 @@ To override config in dropcat.yml, using options:
                   'server' => $server,
                   'user' => $user,
                   'web-root' => $web_root,
-                  'alias' => $site_alias,
+                  'alias' => $alias,
                   'url' => $url,
                   'ssh-port' => $ssh_port,
                   'drush-script' => $drush_script,
@@ -557,6 +583,69 @@ To override config in dropcat.yml, using options:
 
             $db = new Db();
             $db->createDb($new_db_conf);
+
+            // Write rollback tracker.
+
+            $build_tracker_conf = $default_tracker_conf;
+            $server_time = date("Ymd_His");
+            $id = getenv('BUILD_ID');
+            if (!isset($id)) {
+                $id = $server_time;
+            }
+
+            $build_tracker_dir = "$tracker_dir" . '/' . "$app_name" . '/';
+            $build_tracker_file_name = $build_tracker_dir . $app_name . '-' . $env . '_' . "$id.yml";
+
+            $create_build_tracker_dir = "mkdir -p $build_tracker_dir";
+
+            $mkdir = $this->runProcess($create_build_tracker_dir);
+            $mkdir->setTimeout($timeout);
+            $mkdir->run();
+            // Executes after the command finishes.
+            if (!$mkdir->isSuccessful()) {
+                throw new ProcessFailedException($mkdir);
+            }
+            if ($verbose == true) {
+                echo $mkdir->getOutput();
+            }
+
+            $web_server_conf = [
+                'server' => $server,
+                'user' => $user,
+                'port' => $ssh_port,
+                'pass' => $ssh_key_password,
+                'key' => $identity_file,
+                'alias' => $alias,
+                'web-root' => $web_root,
+            ];
+            $get_site_path = new RemotePath($verbose);
+            $real_path =  $get_site_path->siteRealPath($web_server_conf);
+
+            if (isset($real_path)) {
+                $build_tracker_conf['sites']['default']['web']['site-path'] = $real_path;
+            }
+            $build_tracker_conf['created'] = $server_time;
+            $build_id = getenv('BUILD_ID');
+
+            if (isset($build_id)) {
+                $build_tracker_conf['build-id'] = $build_id;
+            }
+            $build_tracker_conf['db']['db-dump-path'] = $db_dump_path;
+
+
+            $build_tracker = new Tracker($verbose);
+            $build_tracker->rollback($build_tracker_conf, $build_tracker_file_name);
+            $output->writeln('<info>' . $this->mark . ' created a rollback tracker file.</info>');
+
+
+            $clean = new Cleanup();
+            $clean->deleteOldRollbackTrackers($build_tracker_dir);
+            $output->writeln('<info>' . $this->mark . ' deleted old rollback tracker files.</info>');
+
+            $backups_path = "$backup_path" . '/' . "$app_name" . '/';
+            $clean = new Cleanup();
+            $clean->deleteAutomaticDbBackups($backups_path);
+            $output->writeln('<info>' . $this->mark . ' deleted old automatic db backups.</info>');
 
         }
         $output->writeln('<info>' . $this->heart . ' prepare finished</info>');

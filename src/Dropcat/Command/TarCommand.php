@@ -3,8 +3,6 @@ namespace Dropcat\Command;
 
 use Archive_Tar;
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,9 +71,16 @@ To override config in dropcat.yml, using options:
         $app_name         = $input->getOption('app-name');
         $separator        = $input->getOption('separator');
 
-        $path_to_tar_file = $temp_path . $app_name . $separator . $build_id . '.tar';
+        // for backwards compatibility, remove trailing slash.
+        $temp_path = rtrim($temp_path, '/\\');
+
+        $path_to_tar_file = "$temp_path/$app_name$separator$build_id.tar";
         $basepath_for_tar = $path_to_app;
-        
+
+
+        $output->writeln('<info>' . $this->start . ' tar started</info>');
+
+
         $tar = new Archive_Tar($path_to_tar_file, true);
 
         if ($output->isVerbose()) {
@@ -96,7 +101,8 @@ To override config in dropcat.yml, using options:
             );
             throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
-        $output->writeln('<info>Task: tar finished</info>');
+        $output->writeln("<info>$this->heart tar finished</info>");
+
 
     }
 

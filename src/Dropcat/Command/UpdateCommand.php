@@ -7,7 +7,6 @@ use Dropcat\Lib\Tracker;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Exception;
@@ -95,20 +94,29 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         $no_db_update = $input->getOption('no-db-update') ? true : false;
         $no_config_import = $input->getOption('no-config-import') ? true : false;
         $config_split = $input->getOption('use-config-split') ? true : false;
-        $config_partial = $input->getOption('use-config-import-partial') ? false : true;
+        $config_partial = $input->getOption('use-config-import-partial') ? true : false;
         $multi = $input->getOption('multi') ? true : false;
         $only_site = $input->getOption('site');
         $config_split_settings = $input->getOption('config-split-settings');
+
+        $env = getenv('DROPCAT_ENV');
+
+        $output->writeln('<info>' . $this->start . ' update started</info>');
 
         if ($tracker_file == null) {
             $tracker_dir = $this->configuration->trackerDir();
             if (isset($tracker_dir)) {
                 $app_name = $this->configuration->localEnvironmentAppName();
-                $tracker_file = $tracker_dir . '/default/' . $app_name . '.yml';
+                $tracker_file = $tracker_dir . '/default/' . $app_name . '-' . $env . '.yml';
             } else {
                 $output->writeln("<info>$this->error no tracker dir defined</info>");
                 throw new Exception('no tracker dir defined');
             }
+        }
+
+        $verbose = false;
+        if ($output->isVerbose()) {
+            $verbose = true;
         }
 
         $ent = '';
@@ -124,7 +132,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         }
 
         // load tracker file, for each site drush alias
-        $tracker = new Tracker();
+        $tracker = new Tracker($verbose);
         $sites = $tracker->read($tracker_file);
         foreach ($sites as $site => $siteProperty) {
             if ($multi == true) {
@@ -132,7 +140,9 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                 echo 'excluding default';
             }
             if ($site != $exclude) {
-                echo 'running trough trackerfile';
+                if ($site == 'default') {
+                    $site = $this->configuration->localEnvironmentAppName();
+                }
                 if (isset($siteProperty['drush']['alias'])) {
                     $alias = $siteProperty['drush']['alias'];
 
@@ -144,7 +154,10 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             $output->writeln("<info>$this->error could not update db for $site</info>");
                             throw new ProcessFailedException($process);
                         }
-                        echo $process->getOutput();
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
+
                         $output->writeln("<info>$this->mark update db done for $site</info>");
                     }
                     if ($config_split == true) {
@@ -159,7 +172,9 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             throw new ProcessFailedException($process);
                         }
                         $output->writeln("<info>$this->mark cleared drush cache for $site</info>");
-                        echo $process->getOutput();
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
 
                         $process = new Process("drush @$alias en config_split -y");
                         $process->run();
@@ -168,7 +183,9 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             $output->writeln("<info>$this->error could not enable config split for $site</info>");
                             throw new ProcessFailedException($process);
                         }
-                        echo $process->getOutput();
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
                         $output->writeln("<info>$this->mark config split is enabled for $site</info>");
 
                         $process = new Process("drush @$alias csex $config_split_settings -y");
@@ -178,7 +195,9 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             $output->writeln("<info>$this->error config split failed for $site</info>");
                             throw new ProcessFailedException($process);
                         }
-                        echo $process->getOutput();
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
                         $output->writeln("<info>$this->mark config split export done for $site</info>");
                     }
                     if ($no_config_import == false) {
@@ -190,14 +209,15 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             $output->writeln("<info>$this->error config import failed for $site</info>");
                             throw new ProcessFailedException($process);
                         }
-                        echo $process->getOutput();
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
                         $output->writeln("<info>$this->mark config import done for $site</info>");
                     }
                 }
             }
         }
 
-        $output = new ConsoleOutput();
-        $output->writeln("<info>$this->mark update finished</info>");
+        $output->writeln("<info>$this->heart update finished</info>");
     }
 }

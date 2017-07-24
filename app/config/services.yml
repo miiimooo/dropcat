@@ -2,8 +2,8 @@ services:
     symfony.application:
       class: Symfony\Component\Console\Application
       arguments:
-        - 'Dropcat'
-        - '0.2.0'
+        - 'dropcat'
+        - '1.0.0-beta1'
     symfony.console_output:
       class: Symfony\Component\Console\Output\ConsoleOutput
 

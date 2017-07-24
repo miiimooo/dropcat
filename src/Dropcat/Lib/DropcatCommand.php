@@ -30,6 +30,9 @@ class DropcatCommand extends Command
     public $mark;
     public $heart;
     public $error;
+    public $start;
+    public $cat;
+
     /**
      * @var \Dropcat\Services\Configuration
      */
@@ -48,6 +51,10 @@ class DropcatCommand extends Command
         $this->error = $style->colorize('red', $error);
         $heart = $style->heart();
         $this->heart = $style->colorize('red', $heart);
+        $start = $style->start();
+        $this->start = $style->colorize('red', $start);
+        $cat = $style->cat();
+        $this->cat = $style->colorize('yellow', $cat);
     }
 
     protected function runProcess($command)

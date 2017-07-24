@@ -227,7 +227,7 @@ To override config in dropcat.yml, using options:
             $conf['build-id'] = $build_id;
         }
         array_filter($conf);
-        $this->writeTracker($dir, $id, $conf);
+        $this->writeTracker($dir, $id, $conf);        $build_id = getenv('BUILD_ID');
         $output->writeln('<info>' . $this->mark .
           ' tracker finished</info>');
     }

@@ -2,17 +2,12 @@
 
 namespace Dropcat\Command;
 
-use Dropcat\Services\Configuration;
 use Exception;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Dropcat\Command\RunCommand;
 
 class RunGulpCommand extends RunCommand
 {
@@ -77,6 +72,8 @@ class RunGulpCommand extends RunCommand
         $nodeEnv = $input->getOption('node-env');
         $nodeNvmRcFile = $input->getOption('nvmrc');
 
+        $output->writeln('<info>' . $this->start . ' node:gulp started</info>');
+
         if ($gulpDir === null) {
             $gulpDir = '.';
         }
@@ -91,14 +88,15 @@ class RunGulpCommand extends RunCommand
         if (isset($nodeEnv)) {
             $env = 'NODE_ENV=' . $nodeEnv;
         }
-        $output->writeln('<info>Installing gulp stuff</info>');
         $gulp = new Process("bash -c 'source $nvmDir/nvm.sh' && . $nvmDir/nvm.sh && nvm use && cd $gulpDir && $env gulp $gulpOptions");
         $gulp->setTimeout(3600);
         $gulp->run();
-        echo $gulp->getOutput();
+        if ($output->isVerbose()) {
+            echo $gulp->getOutput();
+        }
         if (!$gulp->isSuccessful()) {
             throw new ProcessFailedException($gulp);
         }
-        $output->writeln('<info>Task: node:gulp finished</info>');
+        $output->writeln('<info>' . $this->heart . ' node:gulp finished</info>');
     }
 }

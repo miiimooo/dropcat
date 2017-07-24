@@ -113,19 +113,19 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['local']['environment']['tmp_path'])) {
             return $this->configuration['local']['environment']['tmp_path'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
     /**
-     * Gets the separator in names.
+     * Gets the separator in names if set, otherwise defaults to _.
      */
     public function localEnvironmentSeparator()
     {
         if (isset($this->configuration['local']['environment']['separator'])) {
             return $this->configuration['local']['environment']['separator'];
         } else {
-            return null;
+            return '_';
         }
     }
 
@@ -161,7 +161,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['local']['environment']['tar_dir'])) {
             return $this->configuration['local']['environment']['tar_dir'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
@@ -341,7 +341,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['remote']['environment']['temp_folder'])) {
             return $this->configuration['remote']['environment']['temp_folder'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
@@ -365,7 +365,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['remote']['environment']['target_dir'])) {
             return $this->configuration['remote']['environment']['target_dir'];
         } else {
-            return null;
+            return '/tmp';
         }
     }
 
@@ -464,7 +464,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         if (isset($this->configuration['site']['environment']['url'])) {
             return $this->configuration['site']['environment']['url'];
         } else {
-            return null;
+             return null;
         }
     }
 
