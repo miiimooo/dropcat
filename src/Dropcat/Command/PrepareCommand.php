@@ -21,7 +21,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Exception;
 use Dropcat\Lib\UUID;
 
-
 class PrepareCommand extends DropcatCommand
 {
 
@@ -37,182 +36,182 @@ To override config in dropcat.yml, using options:
         $this->setName('prepare')
           ->setDescription('Prepare site')
           ->setDefinition(
-            [
+              [
               new InputOption(
-                'drush-folder',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Drush folder',
-                $this->configuration->localEnvironmentDrushFolder()
+                  'drush-folder',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Drush folder',
+                  $this->configuration->localEnvironmentDrushFolder()
               ),
               new InputOption(
-                'drush-script',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Drush script path (can be remote)'
+                  'drush-script',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Drush script path (can be remote)'
               ),
               new InputOption(
-                'drush-alias',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Drush alias',
-                $this->configuration->siteEnvironmentDrushAlias()
+                  'drush-alias',
+                  'd',
+                  InputOption::VALUE_OPTIONAL,
+                  'Drush alias',
+                  $this->configuration->siteEnvironmentDrushAlias()
               ),
               new InputOption(
-                'server',
-                's',
-                InputOption::VALUE_OPTIONAL,
-                'Server',
-                $this->configuration->remoteEnvironmentServerName()
+                  'server',
+                  's',
+                  InputOption::VALUE_OPTIONAL,
+                  'Server',
+                  $this->configuration->remoteEnvironmentServerName()
               ),
               new InputOption(
-                'user',
-                'u',
-                InputOption::VALUE_OPTIONAL,
-                'User (ssh)',
-                $this->configuration->remoteEnvironmentSshUser()
+                  'user',
+                  'u',
+                  InputOption::VALUE_OPTIONAL,
+                  'User (ssh)',
+                  $this->configuration->remoteEnvironmentSshUser()
               ),
               new InputOption(
-                'ssh-port',
-                'p',
-                InputOption::VALUE_OPTIONAL,
-                'SSH port',
-                $this->configuration->remoteEnvironmentSshPort()
+                  'ssh-port',
+                  'p',
+                  InputOption::VALUE_OPTIONAL,
+                  'SSH port',
+                  $this->configuration->remoteEnvironmentSshPort()
               ),
               new InputOption(
-                'ssh-key-password',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'SSH key password',
-                $this->configuration->localEnvironmentSshKeyPassword()
+                  'ssh-key-password',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'SSH key password',
+                  $this->configuration->localEnvironmentSshKeyPassword()
               ),
               new InputOption(
-                'ssh-key',
-                'i',
-                InputOption::VALUE_OPTIONAL,
-                'SSH key',
-                $this->configuration->remoteEnvironmentIdentifyFile()
+                  'ssh-key',
+                  'i',
+                  InputOption::VALUE_OPTIONAL,
+                  'SSH key',
+                  $this->configuration->remoteEnvironmentIdentifyFile()
               ),
               new InputOption(
-                'web-root',
-                'w',
-                InputOption::VALUE_OPTIONAL,
-                'Web root',
-                $this->configuration->remoteEnvironmentWebRoot()
+                  'web-root',
+                  'w',
+                  InputOption::VALUE_OPTIONAL,
+                  'Web root',
+                  $this->configuration->remoteEnvironmentWebRoot()
               ),
               new InputOption(
-                'alias',
-                'a',
-                InputOption::VALUE_OPTIONAL,
-                'Symlink alias',
-                $this->configuration->remoteEnvironmentAlias()
+                  'alias',
+                  'a',
+                  InputOption::VALUE_OPTIONAL,
+                  'Symlink alias',
+                  $this->configuration->remoteEnvironmentAlias()
               ),
               new InputOption(
-                'url',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Site url',
-                $this->configuration->siteEnvironmentUrl()
+                  'url',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Site url',
+                  $this->configuration->siteEnvironmentUrl()
               ),
               new InputOption(
-                'site-name',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Site name',
-                $this->configuration->siteEnvironmentName()
+                  'site-name',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Site name',
+                  $this->configuration->siteEnvironmentName()
               ),
               new InputOption(
-                'mysql-host',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Mysql host',
-                $this->configuration->mysqlEnvironmentHost()
+                  'mysql-host',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql host',
+                  $this->configuration->mysqlEnvironmentHost()
               ),
               new InputOption(
-                'mysql-port',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Mysql port',
-                $this->configuration->mysqlEnvironmentPort()
+                  'mysql-port',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql port',
+                  $this->configuration->mysqlEnvironmentPort()
               ),
               new InputOption(
-                'mysql-db',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Mysql db',
-                $this->configuration->mysqlEnvironmentDataBase()
+                  'mysql-db',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql db',
+                  $this->configuration->mysqlEnvironmentDataBase()
               ),
               new InputOption(
-                'mysql-user',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Mysql user',
-                $this->configuration->mysqlEnvironmentUser()
+                  'mysql-user',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql user',
+                  $this->configuration->mysqlEnvironmentUser()
               ),
               new InputOption(
-                'mysql-password',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Mysql password',
-                $this->configuration->mysqlEnvironmentPassword()
+                  'mysql-password',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Mysql password',
+                  $this->configuration->mysqlEnvironmentPassword()
               ),
               new InputOption(
-                'timeout',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Timeout',
-                $this->configuration->timeOut()
+                  'timeout',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Timeout',
+                  $this->configuration->timeOut()
               ),
               new InputOption(
-                'tracker-file',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Trackerfile',
-                $this->configuration->trackerFile()
+                  'tracker-file',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Trackerfile',
+                  $this->configuration->trackerFile()
               ),
               new InputOption(
-                'create-site',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Create site',
-                $this->configuration->createSite()
+                  'create-site',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Create site',
+                  $this->configuration->createSite()
               ),
               new InputOption(
-                'sync-folder',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Sync folder',
-                $this->configuration->syncFolder()
+                  'sync-folder',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Sync folder',
+                  $this->configuration->syncFolder()
               ),
               new InputOption(
-                'config-split-folder',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Config split folder',
-                $this->configuration->configSplitFolder()
+                  'config-split-folder',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Config split folder',
+                  $this->configuration->configSplitFolder()
               ),
               new InputOption(
-                'profile',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Install profile to use',
-                $this->configuration->drupalInstallProfile()
+                  'profile',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Install profile to use',
+                  $this->configuration->drupalInstallProfile()
               ),
               new InputOption(
-                'tracker-dir',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Tracker direcory',
-                $this->configuration->trackerDir()
+                  'tracker-dir',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Tracker direcory',
+                  $this->configuration->trackerDir()
               ),
               new InputOption(
-                'backup-path',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Backup path',
-                $this->configuration->siteEnvironmentBackupPath()
+                  'backup-path',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Backup path',
+                  $this->configuration->siteEnvironmentBackupPath()
               ),
-            ]
+              ]
           )
           ->setHelp($HelpText);
     }
@@ -251,20 +250,22 @@ To override config in dropcat.yml, using options:
             $verbose = true;
         }
 
+        // set need variables.
         $app_name = $this->configuration->localEnvironmentAppName();
         $env = getenv('DROPCAT_ENV');
-
-
         $mysql_root_user = $mysql_user;
         $mysql_root_pass = $mysql_password;
         $new_site_name = '';
-
-        // Create default tracker file.
         $site_alias = "$web_root/$alias";
-
         $db_dump_path = getenv('DB_DUMP_PATH');
+        $db_dump_dir = $backup_path . '/' . $app_name;
+        $server_time = date("Ymd_His");
 
-        $db_dump_path_mkdir = "mkdir -p $backup_path" . '/' . "$app_name";
+        if (!isset($db_dump_path)) {
+            $db_dump_path = $db_dump_dir . '/' . $server_time . '.sql';
+        }
+
+        $db_dump_path_mkdir = "mkdir -p $db_dump_dir";
         $create_backup_dir = $this->runProcess($db_dump_path_mkdir);
         $create_backup_dir->setTimeout($timeout);
         $create_backup_dir->run();
@@ -275,7 +276,6 @@ To override config in dropcat.yml, using options:
         if ($verbose == true) {
             echo $create_backup_dir->getOutput();
         }
-
 
         $default_tracker_conf = [
           'sites' => [
@@ -304,8 +304,7 @@ To override config in dropcat.yml, using options:
         // Write the default tracker.
         if (isset($create_site)) {
             $multi = true;
-        }
-        else {
+        } else {
             $multi = false;
         }
         $write = new Tracker($verbose);
@@ -377,8 +376,11 @@ To override config in dropcat.yml, using options:
             $site_alias = "$web_root/$alias";
             $uuid = UUID::v4();
             $hash = hash('ripemd320', $uuid);
-            $url_safe_hash = str_replace(['+', '/', '='], ['-', '_', ''],
-              $hash);
+            $url_safe_hash = str_replace(
+                ['+', '/', '='],
+                ['-', '_', ''],
+                $hash
+            );
 
             $site = [
               $site_name => [
@@ -587,7 +589,7 @@ To override config in dropcat.yml, using options:
             // Write rollback tracker.
 
             $build_tracker_conf = $default_tracker_conf;
-            $server_time = date("Ymd_His");
+
             $id = getenv('BUILD_ID');
             if (!isset($id)) {
                 $id = $server_time;
@@ -646,9 +648,7 @@ To override config in dropcat.yml, using options:
             $clean = new Cleanup();
             $clean->deleteAutomaticDbBackups($backups_path);
             $output->writeln('<info>' . $this->mark . ' deleted old automatic db backups.</info>');
-
         }
         $output->writeln('<info>' . $this->heart . ' prepare finished</info>');
     }
-
 }
