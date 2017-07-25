@@ -239,7 +239,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             }
                             $output->writeln("<info>$this->mark config import done for $site</info>");
                         }
-                        echo
                     }
                 }
             }
