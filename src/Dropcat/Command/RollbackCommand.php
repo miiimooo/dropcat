@@ -50,7 +50,7 @@ To override config in dropcat.yml, using options:
                   'Id (used for backups done during rollback, og not set a UUID will be generated instead',
                   $this->configuration->rollbackId()
               ),
-            ]
+              ]
           )
           ->setHelp($HelpText);
     }

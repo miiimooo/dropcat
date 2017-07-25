@@ -19,7 +19,7 @@ class CreateDrushAlias
     private $alias;
     private $url;
     private $sshport;
-    private $drushScript = NULL;
+    private $drushScript = null;
 
     public function setName($sitename)
     {
@@ -58,7 +58,7 @@ class CreateDrushAlias
 
     public function setDrushScriptPath($script_path)
     {
-      $this->drushScript = $script_path;
+        $this->drushScript = $script_path;
     }
 
 
@@ -71,13 +71,12 @@ class CreateDrushAlias
     "root" => "' . $this->webroot . '/' . $this->alias . '/web",
     "uri"  => "' . $this->url . '",
     "ssh-options" => "-o LogLevel=Error -q -p ' . $this->sshport . '",';
-    if ($this->drushScript)
-    {
-      $aliasOut .= '
+        if ($this->drushScript) {
+            $aliasOut .= '
       "path-aliases" =>  array(
          "%drush-script"  => "'. $this->drushScript .'",
       ),';
-    }
+        }
         $aliasOut .= ');';
         return ($aliasOut);
     }

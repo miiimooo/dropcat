@@ -58,7 +58,8 @@ class DropcatFactories
         return $this->__call(__FUNCTION__, func_get_args());
     }
 
-    public function __call($name, $args) {
+    public function __call($name, $args)
+    {
         $name = strtolower($name);
         $class = new \ReflectionClass($this->container->getParameter('factory.libs.' . $name));
         return $class->newInstanceArgs($args);

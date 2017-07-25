@@ -3,14 +3,9 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -44,8 +39,11 @@ To override config in dropcat.yml, using options:
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $drush_alias = $input->getOption('drush_alias');
+
+        $output->writeln("<info>$this->start reset-login started</info>");
+
         if ($output->isVerbose()) {
-            echo 'using drush alias: ' . $drush_alias . "\n";
+            $output->writeln("<info>$this->mark using drush alias: ' . $drush_alias</info>");
         }
         $process = new Process("drush @$drush_alias uli");
         $process->run();
@@ -54,9 +52,6 @@ To override config in dropcat.yml, using options:
             throw new ProcessFailedException($process);
         }
         echo $process->getOutput();
-
-        $output = new ConsoleOutput();
-        $output->writeln('<info>Task: reset-login finished</info>');
-
+        $output->writeln("<info>$this->heart reset-login finished</info>");
     }
 }

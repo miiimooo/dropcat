@@ -5,7 +5,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-
 /**
  * Class CheckDrupal
  *
@@ -50,7 +49,8 @@ class Write
     /**
      * Write a drush alias.
      */
-    public function drushAlias($conf) {
+    public function drushAlias($conf)
+    {
         $drushAlias = new CreateDrushAlias();
         $drushAlias->setName($conf['site-name']);
         $drushAlias->setServer($conf['server']);
@@ -135,12 +135,11 @@ class Write
                 $out .= "if (file_exists('../global.overrides.php')) {\n";
                 $out .= "  include '../global.overrides.php';\n";
                 $out .= "}\n";
-                if (isset( $siteProperty['web']['config-split-folder'])) {
+                if (isset($siteProperty['web']['config-split-folder'])) {
                     $out .= '$config[\'config_split.config_split.basic_site_settings\'][\'folder\'] =\'' . $siteProperty['web']['config-split-folder'] . "';\n";
                 }
             }
         }
         $this->fs->dumpFile('/tmp/' . $conf['app-name'] . '.local.settings.php', $out);
     }
-
 }

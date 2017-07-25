@@ -3,17 +3,10 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
 use Dropcat\Lib\CreateDrushAlias;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Dropcat\Command\RunCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
@@ -54,8 +47,8 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             $sshport = $this->configuration->remoteEnvironmentSshPort();
             $server = $this->configuration->remoteEnvironmentServerName();
             $user = $this->configuration->remoteEnvironmentSshUser();
-            $local = $input->getOption('local') ? TRUE : FALSE;
-            if ($local === TRUE) {
+            $local = $input->getOption('local') ? true : false;
+            if ($local === true) {
                 $sshport = $this->configuration->remoteEnvironmentLocalSshPort() ?
                 $this->configuration->remoteEnvironmentLocalSshPort() :
                 $this->configuration->remoteEnvironmentSshPort();

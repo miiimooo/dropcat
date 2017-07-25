@@ -145,6 +145,5 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 
         $io->newLine(2);
         $io->success('Site is setup');
-
     }
 }

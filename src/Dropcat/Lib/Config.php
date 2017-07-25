@@ -44,5 +44,4 @@ class Config
         echo $import->getOutput();
         $this->output->writeln("<info>$this->mark config imported for $alias</info>");
     }
-
 }

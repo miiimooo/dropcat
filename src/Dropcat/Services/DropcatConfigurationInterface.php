@@ -7,288 +7,286 @@ interface DropcatConfigurationInterface
   /**
    * Gets the app name.
    */
-  public function localEnvironmentAppName();
+    public function localEnvironmentAppName();
 
   /**
    * Gets the absolute path of the actual app we want to deploy.
    */
-  public function localEnvironmentAppPath();
+    public function localEnvironmentAppPath();
 
 
   /**
    * Get build id, prefderable overriden with option.
    */
-  public function localEnvironmentBuildId();
+    public function localEnvironmentBuildId();
 
   /**
    * Gets the absolute path of a tmp-folder in this environment.
    */
-  public function localEnvironmentTmpPath();
+    public function localEnvironmentTmpPath();
 
   /**
    * Gets the separator in names.
    */
-  public function localEnvironmentSeparator();
+    public function localEnvironmentSeparator();
 
   /**
    * Gets the db to import.
    */
-  public function localEnvironmentDbImport();
+    public function localEnvironmentDbImport();
 
   /**
    * Get name of tar to deploy.
    */
-  public function localEnvironmentTarName();
+    public function localEnvironmentTarName();
 
   /**
    * Get name of dir that tar is in.
    */
-  public function localEnvironmentTarDir();
+    public function localEnvironmentTarDir();
 
   /**
    * Get ssh-key password
    */
-  public function localEnvironmentSshKeyPassword();
+    public function localEnvironmentSshKeyPassword();
 
   /**
    * Get path to drush folder.
    */
-  public function localEnvironmentDrushFolder();
+    public function localEnvironmentDrushFolder();
 
   /**
    * Get path to drush folder.
    */
-  public function localEnvironmentRun();
+    public function localEnvironmentRun();
 
   /**
    * Get server for backups.
    */
-  public function localEnvironmentBackupServer();
+    public function localEnvironmentBackupServer();
 
   /**
    * Get port for server for backups.
    */
-  public function localEnvironmentBackupServerPort();
+    public function localEnvironmentBackupServerPort();
 
   /**
    * Get user to login to server for backups.
    */
-  public function localEnvironmentBackupServerUser();
+    public function localEnvironmentBackupServerUser();
 
   /**
    * Get path to backups
    */
-  public function localEnvironmentBackupPath();
+    public function localEnvironmentBackupPath();
 
   /**
    * Get user to login to server for backups.
    */
-  public function localEnvironmentBackupDbName();
+    public function localEnvironmentBackupDbName();
 
   /**
    * Get remote server name.
    */
-  public function remoteEnvironmentServerName();
+    public function remoteEnvironmentServerName();
 
   /**
    * Get ssh user.
    */
-  public function remoteEnvironmentSshUser();
+    public function remoteEnvironmentSshUser();
 
   /**
    * Get ssh user.
    */
-  public function remoteEnvironmentTargetPath();
+    public function remoteEnvironmentTargetPath();
 
   /**
    * Get ssh user.
    */
-  public function remoteEnvironmentSshPort();
+    public function remoteEnvironmentSshPort();
 
   /**
    * Get ssh pub key.
    */
-  public function remoteEnvironmentIdentifyFile();
+    public function remoteEnvironmentIdentifyFile();
 
   /**
    * Get ssh web root.
    */
-  public function remoteEnvironmentWebRoot();
+    public function remoteEnvironmentWebRoot();
 
   /**
    * Get remote temp folder.
    */
-  public function remoteEnvironmentTempFolder();
+    public function remoteEnvironmentTempFolder();
 
   /**
    * Get environment alias.
    */
-  public function remoteEnvironmentAlias();
+    public function remoteEnvironmentAlias();
 
   /**
    * Get upload target dir.
    */
-  public function remoteEnvironmentTargetDir();
+    public function remoteEnvironmentTargetDir();
 
   /**
    * Get command, script to run remote.
    */
-  public function remoteEnvironmentRun();
+    public function remoteEnvironmentRun();
 
   /**
    * Gets the drush alias.
    */
-  public function siteEnvironmentDrushAlias();
+    public function siteEnvironmentDrushAlias();
 
   /**
    * Gets site install drush extra options.
    */
-  public function siteEnvironmentDrushInstallOptions();
+    public function siteEnvironmentDrushInstallOptions();
 
   /**
    * Gets the sites backup path.
    */
-  public function siteEnvironmentBackupPath();
+    public function siteEnvironmentBackupPath();
 
   /**
    * Gets the sites backup path.
    */
-  public function siteEnvironmentConfigName();
+    public function siteEnvironmentConfigName();
 
   /**
    * Gets the sites backup path.
    */
-  public function siteEnvironmentOriginalPath();
+    public function siteEnvironmentOriginalPath();
 
   /**
    * Gets the sites backup path.
    */
-  public function siteEnvironmentSymLink();
+    public function siteEnvironmentSymLink();
 
   /**
    * Gets the sites backup path.
    */
-  public function siteEnvironmentUrl();
+    public function siteEnvironmentUrl();
 
   /**
    * Gets the sites name.
    */
-  public function siteEnvironmentName();
+    public function siteEnvironmentName();
 
   /**
    * Get the profile name
    */
-  public function siteEnvironmentProfile();
+    public function siteEnvironmentProfile();
 
 
   /**
    * Gets varnish IP from config-file.
    */
-  public function deployVarnishIP();
+    public function deployVarnishIP();
 
   /**
    * Gets varnish port from config-file.
    */
-  public function deployVarnishPort();
+    public function deployVarnishPort();
 
   /**
    * Gets Mysql/MariaDB host
    */
-  public function mysqlEnvironmentHost();
+    public function mysqlEnvironmentHost();
 
   /**
    * Gets Mysql database
    */
-  public function mysqlEnvironmentDataBase();
+    public function mysqlEnvironmentDataBase();
 
   /**
    * Gets Mysql user
    */
-  public function mysqlEnvironmentUser();
+    public function mysqlEnvironmentUser();
 
   /**
    * Gets Mysql port
    */
-  public function mysqlEnvironmentPort();
+    public function mysqlEnvironmentPort();
 
   /**
    * Gets Mysql port
    */
-  public function mysqlEnvironmentPassword();
+    public function mysqlEnvironmentPassword();
 
   /**
    * Gets Jenkins server
    */
-  public function deployJenkinsServer();
+    public function deployJenkinsServer();
 
   /**
    * Gets Jenkins job
    */
-  public function deployJenkinsJob();
+    public function deployJenkinsJob();
 
   /**
    * Get admin pass for site.
    */
-  public function siteEnvironmentAdminPass();
+    public function siteEnvironmentAdminPass();
 
   /**
    * Get admin pass for site.
    */
-  public function siteEnvironmentAdminUser();
+    public function siteEnvironmentAdminUser();
 
   /**
    * Gets all ignore-files formatted for tar-excluding.
    */
-  public function deployIgnoreFilesTarString();
+    public function deployIgnoreFilesTarString();
 
 
-  public function nodeNvmDirectory();
+    public function nodeNvmDirectory();
 
-  public function nodeNvmRcFile();
+    public function nodeNvmRcFile();
 
-  public function gulpDirectory();
+    public function gulpDirectory();
 
-  public function gulpOptions();
+    public function gulpOptions();
 
-  public function nodeEnvironment();
+    public function nodeEnvironment();
 
-  public function localEnvironmentRsyncFrom();
+    public function localEnvironmentRsyncFrom();
 
-  public function remoteEnvironmentRsyncTo();
+    public function remoteEnvironmentRsyncTo();
 
   /**
    * Get ssh port for local use.
    */
-  public function remoteEnvironmentLocalSshPort();
+    public function remoteEnvironmentLocalSshPort();
 
   /**
    * Get server for local use.
    */
-  public function remoteEnvironmentLocalServerName();
+    public function remoteEnvironmentLocalServerName();
 
   /**
    * Get ssh user for local use.
    */
-  public function remoteEnvironmentLocalSshUser();
+    public function remoteEnvironmentLocalSshUser();
 
-  public function remoteEnvironmentRsyncFrom();
+    public function remoteEnvironmentRsyncFrom();
 
-  public function localEnvironmentRsyncTo();
+    public function localEnvironmentRsyncTo();
 
-  public function vhostFileName();
+    public function vhostFileName();
 
-  public function vhostTarget();
+    public function vhostTarget();
 
-  public function vhostPort();
+    public function vhostPort();
 
-  public function vhostDocumentRoot();
+    public function vhostDocumentRoot();
 
-  public function vhostServerName();
+    public function vhostServerName();
 
   /**
    * Return extra config for vhost.
    */
-  public function vhostBashCommand();
-
-
+    public function vhostBashCommand();
 }

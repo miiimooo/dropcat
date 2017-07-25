@@ -31,7 +31,8 @@ class Db
         $this->mark = $style->colorize('yellow', $mark);
     }
 
-    public function createUser($conf) {
+    public function createUser($conf)
+    {
         $mysql_root_user = $conf['mysql-root-user'];
         $mysql_root_pass = $conf['mysql-root-pass'];
         $mysql_host = $conf['mysql-host'];
@@ -68,7 +69,8 @@ class Db
         $this->output->writeln('<info>' . $this->mark . ' database user created</info>');
     }
 
-    public function createDb($conf) {
+    public function createDb($conf)
+    {
         $mysql_host = $conf['mysql-host'];
         $mysql_user = $conf['mysql-user'];
         $mysql_password = $conf['mysql-password'];
@@ -144,6 +146,4 @@ class Db
             $this->output->writeln('<info>' . $this->mark . ' database exists</info>');
         }
     }
-
-
 }

@@ -22,7 +22,7 @@ class UpdateDb
             $v = ' -v';
         }
         $install= new Process(
-          "drush @$alias updb --yes $v"
+            "drush @$alias updb --yes $v"
         );
         $install->setTimeout(999);
         $install->run();

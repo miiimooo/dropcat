@@ -54,7 +54,6 @@ class Tracker
                 echo "An error occurred while creating your file at " . $e->getPath();
             }
             $this->output->writeln('<info>' . $this->mark . ' default tracker created</info>');
-
         } else {
             $this->output->writeln('<info>' . $this->mark . ' default tracker exists</info>');
         }

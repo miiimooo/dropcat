@@ -118,10 +118,10 @@ To override config in dropcat.yml, using options:
                         $this->configuration->remoteEnvironmentAlias()
                     ),
                   new InputOption(
-                    'keeptar',
-                    'kt',
-                    InputOption::VALUE_NONE,
-                    'Keep tar after move (defaults to no)'
+                      'keeptar',
+                      'kt',
+                      InputOption::VALUE_NONE,
+                      'Keep tar after move (defaults to no)'
                   ),
                 )
             )
@@ -144,7 +144,7 @@ To override config in dropcat.yml, using options:
         $web_root = $input->getOption('web_root');
         $alias = $input->getOption('alias');
         $temp_folder = $input->getOption('temp_folder');
-        $keeptar = $input->getOption('keeptar') ? TRUE : FALSE;
+        $keeptar = $input->getOption('keeptar') ? true : false;
 
         $output->writeln('<info>' . $this->start . ' move started</info>');
 
@@ -206,16 +206,16 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             echo 'file ' . $tarfile . " unpacked\n";
         }
-        if (!($keeptar)){
-          $ssh->exec('rm ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
-          $status = $ssh->getExitStatus();
-          if ($status !== 0) {
-            echo "Could not remove tar file, error code $status\n";
-            exit($status);
-          }
-          if ($output->isVerbose()) {
-            echo 'removed tar file ' . $tarfile . "\n";
-          }
+        if (!($keeptar)) {
+            $ssh->exec('rm ' . $temp_folder . '/' . $deploy_folder . '/' . $tarfile);
+            $status = $ssh->getExitStatus();
+            if ($status !== 0) {
+                echo "Could not remove tar file, error code $status\n";
+                exit($status);
+            }
+            if ($output->isVerbose()) {
+                echo 'removed tar file ' . $tarfile . "\n";
+            }
         }
         $ssh->exec('mv ' . $temp_folder . '/' . $deploy_folder . ' ' . $web_root . '/' . $deploy_folder);
         $status = $ssh->getExitStatus();

@@ -38,7 +38,7 @@ class DropcatCommand extends Command
      */
     protected $configuration;
 
-    public function __construct(ContainerBuilder $container,  DropcatConfigurationInterface $conf)
+    public function __construct(ContainerBuilder $container, DropcatConfigurationInterface $conf)
     {
 
         $this->configuration = $conf;

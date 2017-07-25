@@ -52,7 +52,7 @@ class Create
                 throw new Exception('login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
             }
             $mkdir = $sftp->mkdir($target);
-            if(!$mkdir) {
+            if (!$mkdir) {
                     throw new Exception('Could not create directory at ' . $target);
             }
         } catch (Exception $e) {

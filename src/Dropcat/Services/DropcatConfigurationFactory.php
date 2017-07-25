@@ -2,9 +2,11 @@
 
 namespace Dropcat\Services;
 
-class DropcatConfigurationFactory {
+class DropcatConfigurationFactory
+{
 
-    public static function createConfigurationService() {
+    public static function createConfigurationService()
+    {
         $running_path = getcwd();
         if (file_exists($running_path . '/.dropcat') && is_dir($running_path . '/.dropcat')) {
             $running_path .= '/.dropcat';

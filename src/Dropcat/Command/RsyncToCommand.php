@@ -120,6 +120,5 @@ To override config in dropcat.yml, using options:
 
 
         $output->writeln('<info>Task: rsync:to finished</info>');
-
     }
 }

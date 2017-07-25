@@ -41,7 +41,5 @@ class SetupJenkinsJobCommand extends DropcatCommand
        // echo json_encode($json);
 
     //    $output = new ConsoleOutput();
-
-
     }
 }

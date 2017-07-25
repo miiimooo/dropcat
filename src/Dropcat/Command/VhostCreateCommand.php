@@ -142,7 +142,7 @@ To override config in dropcat.yml, using options:
 
         $runbash = '';
         if (isset($bash_command)) {
-          $runbash = " && $bash_command";
+            $runbash = " && $bash_command";
         }
 
         $virtualHost ="<VirtualHost *:$vhost_port>\n" .

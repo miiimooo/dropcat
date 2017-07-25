@@ -77,9 +77,7 @@ To override config in dropcat.yml, using options:
         $path_to_tar_file = "$temp_path/$app_name$separator$build_id.tar";
         $basepath_for_tar = $path_to_app;
 
-
         $output->writeln('<info>' . $this->start . ' tar started</info>');
-
 
         $tar = new Archive_Tar($path_to_tar_file, true);
 
@@ -102,8 +100,6 @@ To override config in dropcat.yml, using options:
             throw new \RuntimeException($exceptionMessage, $error_object->code);
         }
         $output->writeln("<info>$this->heart tar finished</info>");
-
-
     }
 
     /**

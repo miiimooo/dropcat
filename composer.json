@@ -1,12 +1,12 @@
 {
   "name": "dropcat/dropcat",
-  "description": "Simple deploy tool for deploy of drupal sites",
+  "description": "delivery tool for web sites",
   "type": "drupal-deploy-tool",
   "license": "GPL-2.0+",
   "authors": [
     {
-        "name": "BOFH of WK sweden, with friends",
-        "role": "Cat owners"
+        "name": "BOFH of digitalist group sweden, with friends",
+        "role": "cat owners"
     }
    ],
   "require": {

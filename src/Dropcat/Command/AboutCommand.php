@@ -20,6 +20,6 @@ class AboutCommand extends DropcatCommand
     {
         $output->writeln("<info>dropcat is a open source website delivery tool. " .
           "\ndeveloped by digitalist group sweden. meow! $this->cat" .
-      "</info>");
+        "</info>");
     }
 }

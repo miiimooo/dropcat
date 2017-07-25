@@ -148,7 +148,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
             // We don't run entity updates in drupal 6, so:
             $ent = null;
         }
-        else {
+        if (!isset($version) || $version == '') {
             throw new Exception('version of drupal not recognised.');
         }
 

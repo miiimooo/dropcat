@@ -20,6 +20,5 @@ class RunCommand extends DropcatCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
     }
 }

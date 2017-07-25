@@ -3,17 +3,11 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
-
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class DbImportCommand extends DropcatCommand
 {
@@ -54,7 +48,6 @@ To override config in dropcat.yml, using options:
                 )
             )
           ->setHelp($HelpText);
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -73,23 +66,22 @@ To override config in dropcat.yml, using options:
                 echo "Db exists at $path_to_db \n";
             }
             $file_type = pathinfo($path_to_db);
-            switch($file_type['extension'])
-            {
+            switch ($file_type['extension']) {
                 case "gz":
                     if ($output->isVerbose()) {
                         echo "Filetype is gz \n";
                     }
                     $process = new Process(
-                      "gunzip $path_to_db --force -c > $db_dump"
+                        "gunzip $path_to_db --force -c > $db_dump"
                     );
-                    $process->setTimeout($timeout);
-                    $process->run();
+                        $process->setTimeout($timeout);
+                        $process->run();
                     if (!$process->isSuccessful()) {
                         throw new ProcessFailedException($process);
                         exit(1);
                     }
-                    echo $process->getOutput();
-                    $output->writeln("gzipped db dump written to $db_dump");
+                        echo $process->getOutput();
+                        $output->writeln("gzipped db dump written to $db_dump");
                     break;
                 default: // Handle no file extension
                     echo "only gzip (.gz) is supported for now";

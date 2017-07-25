@@ -4,7 +4,6 @@ namespace Dropcat\Services;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Input\ArgvInput;
 
-
 /**
  * Class AppConfiguration
  * @package Services
@@ -24,7 +23,6 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         $running_path = getcwd();
         if (file_exists($running_path . '/.dropcat') && is_dir($running_path . '/.dropcat')) {
             $running_path .= '/.dropcat';
-
         }
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
@@ -1019,5 +1017,4 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             return null;
         }
     }
-
 }

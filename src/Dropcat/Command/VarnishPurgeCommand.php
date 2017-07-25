@@ -44,50 +44,48 @@ class VarnishPurgeCommand extends DropcatCommand
                       $this->configuration->siteEnvironmentUrl()
                   ),
                 )
-              )
+          )
           ->setHelp($HelpText);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      $varrnish_port = $input->getOption('varnish-port');
-      $varrnish_ip = $input->getOption('varnish-ip');
-      $url = $input->getOption('url');
+        $varrnish_port = $input->getOption('varnish-port');
+        $varrnish_ip = $input->getOption('varnish-ip');
+        $url = $input->getOption('url');
       // Open the socket
-      $errno = ( integer) "";
-      $errstr = ( string) "";
-      if ($varrnish_port && $varrnish_ip){
+        $errno = ( integer) "";
+        $errstr = ( string) "";
+        if ($varrnish_port && $varrnish_ip) {
+            $varnish_sock = fsockopen(
+                $this->configuration->deployVarnishIP(),
+                $this->configuration->deployVarnishPort(),
+                $errno,
+                $errstr,
+                10
+            );
 
-          $varnish_sock = fsockopen(
-            $this->configuration->deployVarnishIP(),
-            $this->configuration->deployVarnishPort(),
-            $errno,
-            $errstr,
-            10
-          );
+              $host = parse_url($this->configuration->siteEnvironmentUrl(), PHP_URL_HOST);
+              // Prepare the command to send
+              $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
+              $cmd .= "Host: ". $host . "\r\n";
+              $cmd .= "Connection: Close\r\n";
+              $cmd .= "\r\n";
 
-          $host = parse_url($this->configuration->siteEnvironmentUrl(), PHP_URL_HOST);
-          // Prepare the command to send
-          $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
-          $cmd .= "Host: ". $host . "\r\n";
-          $cmd .= "Connection: Close\r\n";
-          $cmd .= "\r\n";
+              // Send the request
+              fwrite($varnish_sock, $cmd);
 
-          // Send the request
-          fwrite($varnish_sock, $cmd);
+              $response = "";
+            while (!feof($varnish_sock)) {
+                $response .= fgets($varnish_sock, 128);
+            }
 
-          $response = "";
-          while (!feof($varnish_sock)) {
-            $response .= fgets($varnish_sock, 128);
-          }
-
-          print $response;
-          // Close the socket
-          fclose($varnish_sock);
-      }
-      else{
-        throw new \RuntimeException('No configuration related with varnish deploy environment', 111);
-      }
+              print $response;
+              // Close the socket
+              fclose($varnish_sock);
+        } else {
+            throw new \RuntimeException('No configuration related with varnish deploy environment', 111);
+        }
     }
 }
 

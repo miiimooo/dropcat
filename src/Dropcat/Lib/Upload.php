@@ -68,5 +68,4 @@ class Upload
             $this->output->writeln("<info>$from placed at $to at server $server</info>");
         }
     }
-
 }
