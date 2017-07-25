@@ -27,6 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Console\Input\InputOption;
 
+
 $container = new ContainerBuilder();
 // In order to have the container be available, or actually injected,
 // into the commands, I set the 'DropcatContainer' to be the container it self.

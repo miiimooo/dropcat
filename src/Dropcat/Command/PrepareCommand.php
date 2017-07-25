@@ -253,6 +253,9 @@ To override config in dropcat.yml, using options:
         // set need variables.
         $app_name = $this->configuration->localEnvironmentAppName();
         $env = getenv('DROPCAT_ENV');
+        if (!isset($env)) {
+            $env = 'dev';
+        }
         $mysql_root_user = $mysql_user;
         $mysql_root_pass = $mysql_password;
         $new_site_name = '';
@@ -265,6 +268,7 @@ To override config in dropcat.yml, using options:
             $db_dump_path = $db_dump_dir . '/' . $server_time . '.sql';
         }
 
+        // Create backup dir if it not exists.
         $db_dump_path_mkdir = "mkdir -p $db_dump_dir";
         $create_backup_dir = $this->runProcess($db_dump_path_mkdir);
         $create_backup_dir->setTimeout($timeout);
