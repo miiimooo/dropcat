@@ -3,15 +3,11 @@
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Exception;
 
 class VhostCreateCommand extends DropcatCommand
 {
@@ -162,7 +158,6 @@ To override config in dropcat.yml, using options:
         }
 
         echo $aliasCreate->getOutput();
-        $output = new ConsoleOutput();
 
         $output->writeln('<info>Task: vhost:create finished</info>');
     }

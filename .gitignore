@@ -3,3 +3,6 @@ vendor
 .DS_Store
 mycoolapp
 nbproject
+dropcat.phar
+dropcat.phar.version
+box.phar

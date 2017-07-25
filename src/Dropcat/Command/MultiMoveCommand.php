@@ -159,8 +159,8 @@ To override config in dropcat.yml, using options:
         $deploy_folder = "$app_name$separator$build_id";
 
         if ($output->isVerbose()) {
-            $output->writeln("<info>$this->mark deploy folder: $deploy_folder</info>");
-            $output->writeln("<info>$this->mark tarfile: $tarfile</info>");
+            $output->writeln("<info>$this->mark deploy folder is $deploy_folder</info>");
+            $output->writeln("<info>$this->mark tarfile is at $tarfile</info>");
         }
 
         $ssh = new SSH2($server, $port);

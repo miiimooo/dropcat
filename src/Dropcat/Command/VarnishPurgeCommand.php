@@ -1,9 +1,8 @@
 <?php
+
 namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
-use Dropcat\Services\Configuration;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,41 +21,41 @@ class VarnishPurgeCommand extends DropcatCommand
           ->setDescription("Purge your varnish instance")
           ->setDefinition(
               array(
-                  new InputOption(
-                      'varnish-ip',
-                      'vi',
-                      InputOption::VALUE_OPTIONAL,
-                      'Varnish IP (normal is external IP)',
-                      $this->configuration->deployVarnishIP()
-                  ),
-                  new InputOption(
-                      'varnish-port',
-                      'Varnish port',
-                      InputOption::VALUE_OPTIONAL,
-                      'To',
-                      $this->configuration->deployVarnishPort()
-                  ),
-                  new InputOption(
-                      'url',
-                      'u',
-                      InputOption::VALUE_OPTIONAL,
-                      'Site url',
-                      $this->configuration->siteEnvironmentUrl()
-                  ),
-                )
+              new InputOption(
+                  'varnish-ip',
+                  'vi',
+                  InputOption::VALUE_OPTIONAL,
+                  'Varnish IP (normal is external IP)',
+                  $this->configuration->deployVarnishIP()
+              ),
+              new InputOption(
+                  'varnish-port',
+                  'Varnish port',
+                  InputOption::VALUE_OPTIONAL,
+                  'To',
+                  $this->configuration->deployVarnishPort()
+              ),
+              new InputOption(
+                  'url',
+                  'u',
+                  InputOption::VALUE_OPTIONAL,
+                  'Site url',
+                  $this->configuration->siteEnvironmentUrl()
+              ),
+              )
           )
           ->setHelp($HelpText);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $varrnish_port = $input->getOption('varnish-port');
-        $varrnish_ip = $input->getOption('varnish-ip');
+        $varnish_port = $input->getOption('varnish-port');
+        $varnish_ip = $input->getOption('varnish-ip');
         $url = $input->getOption('url');
-      // Open the socket
-        $errno = ( integer) "";
-        $errstr = ( string) "";
-        if ($varrnish_port && $varrnish_ip) {
+        // Open the socket
+        $errno = ( integer)"";
+        $errstr = ( string)"";
+        if ($varnish_port && $varnish_ip) {
             $varnish_sock = fsockopen(
                 $this->configuration->deployVarnishIP(),
                 $this->configuration->deployVarnishPort(),
@@ -65,26 +64,34 @@ class VarnishPurgeCommand extends DropcatCommand
                 10
             );
 
-              $host = parse_url($this->configuration->siteEnvironmentUrl(), PHP_URL_HOST);
-              // Prepare the command to send
-              $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
-              $cmd .= "Host: ". $host . "\r\n";
-              $cmd .= "Connection: Close\r\n";
-              $cmd .= "\r\n";
+            $host = parse_url(
+                $this->configuration->siteEnvironmentUrl(),
+                PHP_URL_HOST
+            );
+            // Prepare the command to send
+            $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
+            $cmd .= "Host: " . $host . "\r\n";
+            $cmd .= "Connection: Close\r\n";
+            $cmd .= "\r\n";
 
-              // Send the request
-              fwrite($varnish_sock, $cmd);
+            // Send the request
+            fwrite($varnish_sock, $cmd);
 
-              $response = "";
+            $response = "";
             while (!feof($varnish_sock)) {
                 $response .= fgets($varnish_sock, 128);
             }
+            if ($output->isVerbose()) {
+                print $response;
+            }
 
-              print $response;
-              // Close the socket
-              fclose($varnish_sock);
+            // Close the socket
+            fclose($varnish_sock);
         } else {
-            throw new \RuntimeException('No configuration related with varnish deploy environment', 111);
+            throw new \RuntimeException(
+                'No configuration related with varnish deploy environment',
+                111
+            );
         }
     }
 }

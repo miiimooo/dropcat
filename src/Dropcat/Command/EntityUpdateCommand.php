@@ -6,7 +6,6 @@ use Dropcat\Lib\DropcatCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -51,7 +50,6 @@ To override config in dropcat.yml, using options:
         }
         echo $process->getOutput();
 
-        $output = new ConsoleOutput();
         $output->writeln('<info>Task: entity-update finished</info>');
     }
 }

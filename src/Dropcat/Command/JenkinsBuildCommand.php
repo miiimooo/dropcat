@@ -6,7 +6,6 @@ use Dropcat\Lib\DropcatCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use JenkinsApi\Jenkins;
 
 class JenkinsBuildCommand extends DropcatCommand
@@ -49,8 +48,6 @@ To override config in dropcat.yml, using options:
         $jenkins_server   = $input->getOption('jenkins_server');
         $jenkins_job      = $input->getOption('jenkins_job');
 
-        $output = new ConsoleOutput();
-
         $jenkins = new Jenkins($jenkins_server);
 
         $resultTime = null;
@@ -71,8 +68,6 @@ To override config in dropcat.yml, using options:
         $output->writeln("<info>the status of build is $result</info>");
         $resultText = $latestJobStatus->getConsoleTextBuild();
         $output->writeln("<info>$resultText</info>");
-
-        
 
         $output->writeln('<info>Task: Jenkins build done</info>');
     }

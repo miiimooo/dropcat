@@ -158,7 +158,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         foreach ($sites as $site => $siteProperty) {
             if ($multi == true) {
                 $exclude = 'default';
-                echo 'excluding default';
             }
             if ($site != $exclude) {
                 if ($site == 'default') {
