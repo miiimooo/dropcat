@@ -14,18 +14,11 @@ use Exception;
  */
 class Cleanup
 {
-    public $fs;
-    public $mark;
     public $verbose;
 
     public function __construct($verbose = false)
     {
         $this->verbose = $verbose;
-        $this->fs = new Filesystem();
-        $this->output = new ConsoleOutput();
-        $style = new Styles();
-        $mark = $style->heavyCheckMark();
-        $this->mark = $style->colorize('yellow', $mark);
     }
 
     public function deleteAutomaticDbBackups($backup_dir)

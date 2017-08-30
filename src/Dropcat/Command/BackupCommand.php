@@ -25,7 +25,7 @@ To override config in dropcat.yml, using options:
 <info>dropcat backup -d mysite -b /backup/dir</info>';
 
         $this->setName("backup")
-          ->setDescription("Backup site")
+          ->setDescription("backup site")
           ->setDefinition(
               [
               new InputOption(
@@ -167,6 +167,9 @@ To override config in dropcat.yml, using options:
         if (!isset($backup_name)) {
             $backup_name = $timestamp;
         }
+
+        $output->writeln("<info>$this->start backup started</info>");
+
         if ($no_db_backup != true) {
             $backupDb = new Process(
                 "mkdir -p $backup_path/$app &&
@@ -177,9 +180,11 @@ To override config in dropcat.yml, using options:
             if (!$backupDb->isSuccessful()) {
                 throw new ProcessFailedException($backupDb);
             }
-            echo $backupDb->getOutput();
-            $output->writeln('<info>' . $this->mark .
-              ' db backup finished</info>');
+            if ($output->isVerbose()) {
+                echo $backupDb->getOutput();
+            }
+            $output->writeln("<info>$this->mark db backup done</info>");
+
         }
         if ($backup_site === true) {
             $rsyncSite = new Process(
@@ -188,12 +193,15 @@ To override config in dropcat.yml, using options:
             );
             $rsyncSite->setTimeout($timeout);
             $rsyncSite->run();
-            // executes after the command finishes
             if (!$rsyncSite->isSuccessful()) {
                 throw new ProcessFailedException($rsyncSite);
             }
-            $output->writeln('<info>' . $this->mark .
-              ' site backup finished</info>');
+            if ($output->isVerbose()) {
+                echo $rsyncSite->getOutput();
+            }
+            $output->writeln("<info>$this->mark site backup done</info>");
         }
+        $output->writeln("<info>$this->heart backup finished</info>");
+
     }
 }

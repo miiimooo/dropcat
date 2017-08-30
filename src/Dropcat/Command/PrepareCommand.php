@@ -211,6 +211,13 @@ To override config in dropcat.yml, using options:
                   'Backup path',
                   $this->configuration->siteEnvironmentBackupPath()
               ),
+              new InputOption(
+                  'backup-db-path',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Backup DB path (absolute path with filename)',
+                  $this->configuration->siteEnvironmentBackupDbPath()
+              ),
               ]
           )
           ->setHelp($HelpText);
@@ -243,6 +250,8 @@ To override config in dropcat.yml, using options:
         $profile = $input->getOption('profile');
         $tracker_dir = $input->getOption('tracker-dir');
         $backup_path = $input->getOption('backup-path');
+        $db_dump_path = $input->getOption('backup-db-path');
+
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
         $verbose = false;
@@ -260,16 +269,23 @@ To override config in dropcat.yml, using options:
         $mysql_root_pass = $mysql_password;
         $new_site_name = '';
         $site_alias = "$web_root/$alias";
-        $db_dump_path = getenv('DB_DUMP_PATH');
-        $db_dump_dir = $backup_path . '/' . $app_name;
+        if (!isset($db_dump_path)) {
+            $db_dump_path = getenv('DB_DUMP_PATH');
+            if(!isset($db_dump_path)) {
+                throw new Exception('you need to set the DB_DUMP_PATH variable or add the backup-db-path option');
+            }
+        }
+
+        $backups_dir = substr($db_dump_path, 0, strrpos($db_dump_path, '/'));
+
         $server_time = date("Ymd_His");
 
         if (!isset($db_dump_path)) {
-            $db_dump_path = $db_dump_dir . '/' . $server_time . '.sql';
+            $db_dump_path = $backups_dir . '/' . $server_time . '.sql';
         }
 
         // Create backup dir if it not exists.
-        $db_dump_path_mkdir = "mkdir -p $db_dump_dir";
+        $db_dump_path_mkdir = "mkdir -p $backups_dir";
         $create_backup_dir = $this->runProcess($db_dump_path_mkdir);
         $create_backup_dir->setTimeout($timeout);
         $create_backup_dir->run();
@@ -648,9 +664,11 @@ To override config in dropcat.yml, using options:
             $clean->deleteOldRollbackTrackers($build_tracker_dir);
             $output->writeln('<info>' . $this->mark . ' deleted old rollback tracker files.</info>');
 
-            $backups_path = "$backup_path" . '/' . "$app_name" . '/';
+            $db_dump_dir = $backups_dir . "/";
+
+
             $clean = new Cleanup();
-            $clean->deleteAutomaticDbBackups($backups_path);
+            $clean->deleteAutomaticDbBackups($db_dump_dir);
             $output->writeln('<info>' . $this->mark . ' deleted old automatic db backups.</info>');
         }
         $output->writeln('<info>' . $this->heart . ' prepare finished</info>');

@@ -43,7 +43,7 @@ To override config in dropcat.yml, using options:
         $output->writeln("<info>$this->start reset-login started</info>");
 
         if ($output->isVerbose()) {
-            $output->writeln("<info>$this->mark using drush alias: ' . $drush_alias</info>");
+            $output->writeln("<info>$this->mark using drush alias: $drush_alias</info>");
         }
         $process = new Process("drush @$drush_alias uli");
         $process->run();

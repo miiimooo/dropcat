@@ -491,7 +491,17 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
         }
     }
 
-
+    /**
+     * Gets the sites backup path.
+     */
+    public function siteEnvironmentBackupDbPath()
+    {
+        if (isset($this->configuration['site']['environment']['backup_db_path'])) {
+            return $this->configuration['site']['environment']['backup_db_path'];
+        } else {
+            return null;
+        }
+    }
     /**
      * Gets all ignore-files from config-file.
      */

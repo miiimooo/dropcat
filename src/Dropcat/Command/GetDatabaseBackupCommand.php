@@ -76,6 +76,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 
         $process = new Process("scp -C -P $remote_backup_server_port $remote_backup_server_user@$remote_backup_server:$remote_backup_path/$remote_db_backup_name .");
         $output->writeln('<info>downloading ' . $remote_db_backup_name . '</info>');
+        $process->setTimeout(9999);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);

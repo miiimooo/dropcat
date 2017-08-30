@@ -21,7 +21,7 @@ To override config in dropcat.yml, using options:
 <info>dropcat dbimport -d mysite -i /var/dump -t 120</info>';
 
         $this->setName("db-import")
-            ->setDescription("Import DB to site")
+            ->setDescription("import database")
             ->setDefinition(
                 array(
                     new InputOption(
@@ -40,7 +40,7 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'time_out',
-                        'to',
+                        't',
                         InputOption::VALUE_OPTIONAL,
                         'Time out',
                         $this->configuration->timeOut()
@@ -60,6 +60,8 @@ To override config in dropcat.yml, using options:
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);
+
+        $output->writeln('<info>' . $this->start . ' db-import started</info>');
 
         if (file_exists($path_to_db)) {
             if ($output->isVerbose()) {
@@ -104,7 +106,9 @@ To override config in dropcat.yml, using options:
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        echo $process->getOutput();
-        $output->writeln('<info>Task: dbimport finished</info>');
+        if ($output->isVerbose()) {
+            echo $process->getOutput();
+        }
+        $output->writeln('<info>' . $this->heart . ' db-import finished</info>');
     }
 }

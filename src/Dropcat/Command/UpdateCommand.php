@@ -34,13 +34,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                   $this->configuration->trackerFile()
               ),
               new InputOption(
-                  'site',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Site to update',
-                  null
-              ),
-              new InputOption(
                   'no-entity-update',
                   null,
                   InputOption::VALUE_NONE,
@@ -97,9 +90,12 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         $config_split = $input->getOption('use-config-split') ? true : false;
         $config_partial = $input->getOption('use-config-import-partial') ? true : false;
         $multi = $input->getOption('multi') ? true : false;
-        $only_site = $input->getOption('site');
         $config_split_settings = $input->getOption('config-split-settings');
 
+        // If we have an option for config split settings, config split should be true.
+        if (isset($config_split_settings)) {
+            $config_split = true;
+        }
         $env = getenv('DROPCAT_ENV');
 
         $output->writeln('<info>' . $this->start . ' update started</info>');
@@ -168,6 +164,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 
                     if ($no_db_update == false) {
                         $process = new Process("drush @$alias updb -y $ent");
+                        $process->setTimeout(9999);
                         $process->run();
                         // Executes after the command finishes.
                         if (!$process->isSuccessful()) {
@@ -212,6 +209,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         $output->writeln("<info>$this->mark config split is enabled for $site</info>");
 
                         $process = new Process("drush @$alias csex $config_split_settings -y");
+                        $process->setTimeout(9999);
                         $process->run();
                         // Executes after the command finishes.
                         if (!$process->isSuccessful()) {
@@ -227,6 +225,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         if ($version == '8') {
                             $output->writeln("<info>$this->mark starting config import for $site</info>");
                             $process = new Process("drush @$alias cim -y $part");
+                            $process->setTimeout(9999);
                             $process->run();
                             // Executes after the command finishes.
                             if (!$process->isSuccessful()) {
