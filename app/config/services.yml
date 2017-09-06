@@ -214,3 +214,9 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.node:yarn-install:
+      class: Dropcat\Command\RunYarnInstallCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}

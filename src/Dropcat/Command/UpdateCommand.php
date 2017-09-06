@@ -69,6 +69,12 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                   InputOption::VALUE_NONE,
                   'Use multi-site setup'
               ),
+                new InputOption(
+                    'cache-rebuild-after-updatedb',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Cache rebuild after update db'
+                ),
               new InputOption(
                   'config-split-settings',
                   null,
@@ -90,6 +96,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         $config_split = $input->getOption('use-config-split') ? true : false;
         $config_partial = $input->getOption('use-config-import-partial') ? true : false;
         $multi = $input->getOption('multi') ? true : false;
+        $cr_after_updb = $input->getOption('cache-rebuild-after-updatedb') ? true : false;
         $config_split_settings = $input->getOption('config-split-settings');
 
         // If we have an option for config split settings, config split should be true.
@@ -177,6 +184,22 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 
                         $output->writeln("<info>$this->mark update db done for $site</info>");
                     }
+                    if ($cr_after_updb == true) {
+                        $process = new Process("drush @$alias cr");
+                        $process->setTimeout(9999);
+                        $process->run();
+                        // Executes after the command finishes.
+                        if (!$process->isSuccessful()) {
+                            $output->writeln("<info>$this->error could not rebuild cache for $site</info>");
+                            throw new ProcessFailedException($process);
+                        }
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
+
+                        $output->writeln("<info>$this->mark rebuild cache done for $site</info>");
+                    }
+
                     if ($config_split == true) {
                         if ($version == '7') {
                             $output->writeln("<info>Seems like you are trying to run config split on a drupal 7 site</info>");
