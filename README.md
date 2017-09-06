@@ -101,10 +101,9 @@ dropcat prepare
 
 dropcat tar --folder=${WORKSPACE}/application --temp-path=${WORKSPACE}/ -v
 dropcat upload --tar_dir=${WORKSPACE}/
-dropcat deploy -v
 dropcat symlink
 dropcat site-install
-dropcat config-import
+dropcat update
 
 ```
 All config for the deploy is in dropcat.stage.yml in application folder.
