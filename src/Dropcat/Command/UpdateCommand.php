@@ -186,7 +186,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     }
                     if ($cr_after_updb == true) {
                         $process = new Process("drush @$alias cr");
-                        $process->setTimeout(9999);
+
                         $process->run();
                         // Executes after the command finishes.
                         if (!$process->isSuccessful()) {
@@ -208,7 +208,9 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         // the solution, but it seems not needed if config_split is installed
                         // from the beginning.
                         $process = new Process("drush @$alias cc drush");
+                        $process->setTimeout(9999);
                         $process->run();
+
                         // Executes after the command finishes.
                         if (!$process->isSuccessful()) {
                             $output->writeln("<info>$this->error could not clear drush cache for $site</info>");
@@ -220,6 +222,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         }
 
                         $process = new Process("drush @$alias en config_split -y");
+                        $process->setTimeout(9999);
                         $process->run();
                         // Executes after the command finishes.
                         if (!$process->isSuccessful()) {
