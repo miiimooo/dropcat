@@ -11,18 +11,18 @@
    ],
   "require": {
     "php": ">=5.5.9",
-    "symfony/console": "2.8.*",
-    "symfony/process": "2.8.*",
+    "symfony/console": "^3",
+    "symfony/process": "^3",
     "phpseclib/phpseclib": "^2.0",
-    "symfony/config": "2.8.*",
-    "symfony/dependency-injection": "2.8.*",
-    "symfony/event-dispatcher": "2.8.*",
+    "symfony/config": "^3",
+    "symfony/dependency-injection": "^3",
+    "symfony/event-dispatcher": "^3",
     "pear/archive_tar": "^1.4",
     "padraic/phar-updater": "^1.0",
     "wkse/jenkins-php-api": "^0.1.13",
     "ocramius/proxy-manager": "^1.0",
-    "symfony/proxy-manager-bridge": "2.8.*",
-    "symfony/yaml": "2.8.*"
+    "symfony/proxy-manager-bridge": "^3",
+    "symfony/yaml": "^3"
   },
   "bin": [
     "app/dropcat"
