@@ -35,14 +35,14 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'build-id',
-                        'bi',
+                        null,
                         InputOption::VALUE_OPTIONAL,
                         'Id',
                         $this->configuration->localEnvironmentBuildId()
                     ),
                     new InputOption(
                         'separator',
-                        'se',
+                        null,
                         InputOption::VALUE_OPTIONAL,
                         'Name separator',
                         $this->configuration->localEnvironmentSeparator()
@@ -51,7 +51,7 @@ To override config in dropcat.yml, using options:
                         'tar',
                         't',
                         InputOption::VALUE_OPTIONAL,
-                        'Tar',
+                        'Tar name',
                         $this->configuration->localEnvironmentTarName()
                     ),
                     new InputOption(
@@ -84,18 +84,18 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'ssh_key_password',
-                        'skp',
+                        null,
                         InputOption::VALUE_OPTIONAL,
                         'SSH key password',
                         $this->configuration->localEnvironmentSshKeyPassword()
                     ),
-                    new InputOption(
+                  /*  new InputOption(
                         'target_path',
                         'tp',
                         InputOption::VALUE_OPTIONAL,
                         'Target path',
                         $this->configuration->remoteEnvironmentTargetPath()
-                    ),
+                    ),*/
                     new InputOption(
                         'web_root',
                         'w',
@@ -105,21 +105,21 @@ To override config in dropcat.yml, using options:
                     ),
                     new InputOption(
                         'temp_folder',
-                        'tf',
+                        null,
                         InputOption::VALUE_OPTIONAL,
                         'Temp folder',
                         $this->configuration->remoteEnvironmentTempFolder()
                     ),
                     new InputOption(
                         'alias',
-                        'aa',
+                        null,
                         InputOption::VALUE_OPTIONAL,
-                        'Symlink alias',
+                        'Symlink alias to deployed site',
                         $this->configuration->remoteEnvironmentAlias()
                     ),
                   new InputOption(
                       'keeptar',
-                      'kt',
+                      null,
                       InputOption::VALUE_NONE,
                       'Keep tar after move (defaults to no)'
                   ),
@@ -136,7 +136,7 @@ To override config in dropcat.yml, using options:
         $tar = $input->getOption('tar');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
-        $target_path = $input->getOption('target_path');
+        #$target_path = $input->getOption('target_path');
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');

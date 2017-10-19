@@ -81,7 +81,7 @@ class Db
         $mysql_root_pass = $conf['mysql-root-pass'];
         $db_dump_path = null;
 
-        if (isset($conf['db-dump-path'])) {
+        if (isset($conf['db-dum         p-path'])) {
             $db_dump_path = $conf['db-dump-path'];
         }
 

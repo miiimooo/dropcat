@@ -168,8 +168,8 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
      */
     public function localEnvironmentSshKeyPassword()
     {
-        if (isset($this->configuration['local']['environment']['ssh_key_password'])) {
-            return $this->configuration['local']['environment']['ssh_key_password'];
+        if (isset($this->configuration['remote']['environment']['ssh_key_password'])) {
+            return $this->configuration['remote']['environment']['ssh_key_password'];
         } else {
             return null;
         }
