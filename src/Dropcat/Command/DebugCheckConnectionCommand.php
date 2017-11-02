@@ -10,15 +10,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Exception;
 
-class CheckConnectionCommand extends DropcatCommand
+class DebugCheckConnectionCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = '<error>deprecated, use dropcat debug:check-connection instead';
+        $HelpText = 'The <info>debug:check-connection</info> command will check connection for env.
+<comment>Samples:</comment>
+To run with default options (using config from dropcat.yml in the current dir):
+<info>dropcat check-connection</info>';
 
-        $this->setName("check-connection")
+        $this->setName("debug:check-connection")
         ->setDescription("check ssh connection")
-        ->setHidden(true)
         ->setDefinition(
             array(
             new InputOption(

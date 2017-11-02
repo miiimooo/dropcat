@@ -14,17 +14,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use SplFileObject;
 use Exception;
 
-class InitCommand extends DropcatCommand
+class InitDrupalCommand extends DropcatCommand
 {
 
     protected function configure()
     {
-        $HelpText = '<error>deprecated, use init:drupal instead</error>';
+        $HelpText = '<info>The init:drupal creates a standard drupal installation with a profile.</info>';
 
-        $this->setName("init")
-            ->setDescription("Init D8 site")
-          ->setHidden(true)
-          ->setDefinition(
+        $this->setName("init:drupal")
+            ->setDescription("Init a Drupal 8 site")
+            ->setDefinition(
                 array(
                     new InputOption(
                         'profile',

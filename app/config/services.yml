@@ -220,3 +220,40 @@ services:
       lazy: true
       tags:
         - {name: console.command}
+    dropcat.command.generate:drush-alias:
+      class: Dropcat\Command\GenerateDrushAliasCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.init:drupal:
+      class: Dropcat\Command\InitDrupalCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.init:wp:
+      class: Dropcat\Command\InitWordpressCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.debug:check-connection:
+      class: Dropcat\Command\DebugCheckConnectionCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.generate:config:
+      class: Dropcat\Command\GenerateConfigCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command}
+    dropcat.command.multi:list:
+      class: Dropcat\Command\MultiListCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+            - {name: console.command}
+

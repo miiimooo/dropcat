@@ -9,15 +9,14 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class InitWPCommand extends DropcatCommand
+class InitWordpressCommand extends DropcatCommand
 {
 
     protected function configure()
     {
         $HelpText = '<error>deprecated, use dropcat init:wp instead</error>';
 
-        $this->setName("init-wp")
-            ->setHidden(true)
+        $this->setName("init:wp")
             ->setDescription("Init WP site")
             ->setHelp($HelpText);
     }

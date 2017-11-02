@@ -10,15 +10,19 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
-class CreateDrushAliasCommand extends DropcatCommand
+class GenerateDrushAliasCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = '<error>This command is deprecated and will be removed. Use dropcat generate:drush-alias instead</error>';
+        $HelpText = 'The <info>generate:drush-alias</info> command will create drush alias.
+<comment>Samples:</comment>
+To run with default options (using config from dropcat.yml in the current dir):
+<info>dropcat generate:drush-alias</info>
+To override config in dropcat.yml, using options, creates alias to stage env.
+<info>dropcat generate:drush-alias --env=stage</info>';
 
-        $this->setName("create-drush-alias")
-        ->setHidden(true)
-        ->setDescription("[deprected] create drush alias")
+        $this->setName("generate:drush-alias")
+        ->setDescription("creates a local drush alias")
         ->setHelp($HelpText)
 
         ->setDefinition(
@@ -27,7 +31,7 @@ class CreateDrushAliasCommand extends DropcatCommand
                 'local',
                 'l',
                 InputOption::VALUE_NONE,
-                "Create drush alias for local use (normally not needed to use this option)"
+                "Create drush alias for local use (this option is normaly not needed)."
             ),
             )
         );
