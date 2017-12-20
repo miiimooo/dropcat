@@ -14,133 +14,128 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class BackupCommand extends DropcatCommand
 {
-
+    protected static $defaultName = 'backup';
     protected function configure()
     {
-        $HelpText = 'The <info>backup</info> command will create a backup of site db.
-<comment>Samples:</comment>
-To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat backup</info>
-To override config in dropcat.yml, using options:
-<info>dropcat backup -d mysite -b /backup/dir</info>';
-
+        $HelpText = 'The <info>%command.name%</info> command will create a backup of sites database or/and the whole web site folder.';
         $this->setName("backup")
+          ->addUsage('-b /backup/dir')
           ->setDescription("backup site")
-          ->setDefinition(
-              [
-              new InputOption(
-                  'app-name',
-                  'ap',
-                  InputOption::VALUE_OPTIONAL,
-                  'application name',
-                  $this->configuration->localEnvironmentAppName()
-              ),
-              new InputOption(
-                  'mysql-host',
-                  'mh',
-                  InputOption::VALUE_OPTIONAL,
-                  'mysql host',
-                  $this->configuration->mysqlEnvironmentHost()
-              ),
-              new InputOption(
-                  'mysql-port',
-                  'mp',
-                  InputOption::VALUE_OPTIONAL,
-                  'mysql port',
-                  $this->configuration->mysqlEnvironmentPort()
-              ),
-              new InputOption(
-                  'mysql-db',
-                  'md',
-                  InputOption::VALUE_OPTIONAL,
-                  'mysql db',
-                  $this->configuration->mysqlEnvironmentDataBase()
-              ),
-              new InputOption(
-                  'mysql-user',
-                  'mu',
-                  InputOption::VALUE_OPTIONAL,
-                  'mysql user',
-                  $this->configuration->mysqlEnvironmentUser()
-              ),
-              new InputOption(
-                  'mysql-password',
-                  'mpd',
-                  InputOption::VALUE_OPTIONAL,
-                  'mysql password',
-                  $this->configuration->mysqlEnvironmentPassword()
-              ),
-              new InputOption(
-                  'backup-path',
-                  'b',
-                  InputOption::VALUE_OPTIONAL,
-                  'backup path',
-                  $this->configuration->siteEnvironmentBackupPath()
-              ),
-              new InputOption(
-                  'time-out',
-                  'to',
-                  InputOption::VALUE_OPTIONAL,
-                  'time out',
-                  $this->configuration->timeOut()
-              ),
-              new InputOption(
-                  'backup-site',
-                  'bs',
-                  InputOption::VALUE_NONE,
-                  'backup whole site'
-              ),
-              new InputOption(
-                  'no-db-backup',
-                  'ndb',
-                  InputOption::VALUE_NONE,
-                  'no database backup',
-                  null
-              ),
-              new InputOption(
-                  'backup-name',
-                  'bn',
-                  InputOption::VALUE_OPTIONAL,
-                  'name of backup',
-                  null
-              ),
-              new InputOption(
-                  'server',
-                  's',
-                  InputOption::VALUE_OPTIONAL,
-                  'server',
-                  $this->configuration->remoteEnvironmentServerName()
-              ),
-              new InputOption(
-                  'user',
-                  'u',
-                  InputOption::VALUE_OPTIONAL,
-                  'User (ssh)',
-                  $this->configuration->remoteEnvironmentSshUser()
-              ),
-              new InputOption(
-                  'ssh-port',
-                  'p',
-                  InputOption::VALUE_OPTIONAL,
-                  'SSH port',
-                  $this->configuration->remoteEnvironmentSshPort()
-              ),
-              new InputOption(
-                  'web-root',
-                  'w',
-                  InputOption::VALUE_OPTIONAL,
-                  'web root',
-                  $this->configuration->remoteEnvironmentWebRoot()
-              ),
-              new InputOption(
-                  'alias',
-                  'a',
-                  InputOption::VALUE_OPTIONAL,
-                  'symlink alias',
-                  $this->configuration->remoteEnvironmentAlias()
-              ),
+        ->setDefinition(
+            [
+            new InputOption(
+                'app-name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'application name',
+                $this->configuration->localEnvironmentAppName()
+            ),
+            new InputOption(
+                'mysql-host',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'mysql host',
+                $this->configuration->mysqlEnvironmentHost()
+            ),
+            new InputOption(
+                'mysql-port',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'mysql port',
+                $this->configuration->mysqlEnvironmentPort()
+            ),
+            new InputOption(
+                'mysql-db',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'mysql db',
+                $this->configuration->mysqlEnvironmentDataBase()
+            ),
+            new InputOption(
+                'mysql-user',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'mysql user',
+                $this->configuration->mysqlEnvironmentUser()
+            ),
+            new InputOption(
+                'mysql-password',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'mysql password',
+                $this->configuration->mysqlEnvironmentPassword()
+            ),
+            new InputOption(
+                'backup-path',
+                'b',
+                InputOption::VALUE_OPTIONAL,
+                'backup path',
+                $this->configuration->siteEnvironmentBackupPath()
+            ),
+            new InputOption(
+                'time-out',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'time out',
+                $this->configuration->timeOut()
+            ),
+            new InputOption(
+                'backup-site',
+                null,
+                InputOption::VALUE_NONE,
+                'backup whole site'
+            ),
+            new InputOption(
+                'no-db-backup',
+                null,
+                InputOption::VALUE_NONE,
+                'no database backup',
+                null
+            ),
+            new InputOption(
+                'backup-name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'name of backup',
+                null
+            ),
+            new InputOption(
+                'server',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'server',
+                $this->configuration->remoteEnvironmentServerName()
+            ),
+            new InputOption(
+                'user',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'User (ssh)',
+                $this->configuration->remoteEnvironmentSshUser()
+            ),
+            new InputOption(
+                'ssh-port',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'SSH port',
+                $this->configuration->remoteEnvironmentSshPort()
+            ),
+            new InputOption(
+                'web-root',
+                'w',
+                InputOption::VALUE_OPTIONAL,
+                'web root',
+                $this->configuration->remoteEnvironmentWebRoot()
+            ),
+            new InputOption(
+                'alias',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'symlink alias',
+                $this->configuration->remoteEnvironmentAlias()
+            ),
               ]
-          )
+        )
           ->setHelp($HelpText);
     }
 
@@ -184,7 +179,6 @@ To override config in dropcat.yml, using options:
                 echo $backupDb->getOutput();
             }
             $output->writeln("<info>$this->mark db backup done</info>");
-
         }
         if ($backup_site === true) {
             $rsyncSite = new Process(
@@ -202,6 +196,5 @@ To override config in dropcat.yml, using options:
             $output->writeln("<info>$this->mark site backup done</info>");
         }
         $output->writeln("<info>$this->heart backup finished</info>");
-
     }
 }
