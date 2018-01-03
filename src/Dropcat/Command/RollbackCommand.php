@@ -34,24 +34,24 @@ To override config in dropcat.yml, using options:
 <info>dropcat rollback --tracker-file=/my/dir/file.yml</info>';
         $this->setName("rollback")
           ->setDescription("Rollback a site")
-          ->setDefinition(
-              [
-              new InputOption(
-                  'tracker-file',
-                  't',
-                  InputOption::VALUE_OPTIONAL,
-                  'Trackerfile',
-                  $this->configuration->trackerFile()
-              ),
-              new InputOption(
-                  'id',
-                  'i',
-                  InputOption::VALUE_OPTIONAL,
-                  'Id (used for backups done during rollback, og not set a UUID will be generated instead',
-                  $this->configuration->rollbackId()
-              ),
+        ->setDefinition(
+            [
+            new InputOption(
+                'tracker-file',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Trackerfile',
+                $this->configuration->trackerFile()
+            ),
+            new InputOption(
+                'id',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'Id (used for backups done during rollback, og not set a UUID will be generated instead',
+                $this->configuration->rollbackId()
+            ),
               ]
-          )
+        )
           ->setHelp($HelpText);
     }
 

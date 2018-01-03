@@ -117,12 +117,12 @@ To override config in dropcat.yml, using options:
                         'Symlink alias to deployed site',
                         $this->configuration->remoteEnvironmentAlias()
                     ),
-                  new InputOption(
-                      'keeptar',
-                      null,
-                      InputOption::VALUE_NONE,
-                      'Keep tar after move (defaults to no)'
-                  ),
+                new InputOption(
+                    'keeptar',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Keep tar after move (defaults to no)'
+                ),
                 )
             )
             ->setHelp($HelpText);

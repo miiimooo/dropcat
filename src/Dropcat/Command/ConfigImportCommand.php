@@ -22,31 +22,31 @@ To override config in dropcat.yml, using options:
 
         $this->setName("config-import")
           ->setDescription("Configuration import")
-          ->setDefinition(
-              array(
-                  new InputOption(
-                      'drush_alias',
-                      'd',
-                      InputOption::VALUE_OPTIONAL,
-                      'Drush alias',
-                      $this->configuration->siteEnvironmentDrushAlias()
-                  ),
-                  new InputOption(
-                      'config_name',
-                      'c',
-                      InputOption::VALUE_OPTIONAL,
-                      'Name of config to import',
-                      $this->configuration->siteEnvironmentConfigName()
-                  ),
-                  new InputOption(
-                      'timeout',
-                      'to',
-                      InputOption::VALUE_OPTIONAL,
-                      'Timeout',
-                      $this->configuration->timeOut()
-                  ),
+        ->setDefinition(
+            array(
+                new InputOption(
+                    'drush_alias',
+                    'd',
+                    InputOption::VALUE_OPTIONAL,
+                    'Drush alias',
+                    $this->configuration->siteEnvironmentDrushAlias()
+                ),
+                new InputOption(
+                    'config_name',
+                    'c',
+                    InputOption::VALUE_OPTIONAL,
+                    'Name of config to import',
+                    $this->configuration->siteEnvironmentConfigName()
+                ),
+                new InputOption(
+                    'timeout',
+                    'to',
+                    InputOption::VALUE_OPTIONAL,
+                    'Timeout',
+                    $this->configuration->timeOut()
+                ),
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 

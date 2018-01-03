@@ -34,94 +34,94 @@ To override config in dropcat.yml, using options:
 <info>dropcat move --tracker-dir=/my/dir</info>';
         $this->setName("tracker")
           ->setDescription("Tracks configuration")
-          ->setDefinition(
-              [
-              new InputOption(
-                  'app-name',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'App name',
-                  $this->configuration->localEnvironmentAppName()
-              ),
-              new InputOption(
-                  'tracker-dir',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Tracker direcory',
-                  $this->configuration->trackerDir()
-              ),
-              new InputOption(
-                  'db-dump',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Complete path to db backup',
-                  $this->configuration->trackerDbDump()
-              ),
-              new InputOption(
-                  'db-name',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Database name.',
-                  $this->configuration->trackerDbName()
-              ),
-              new InputOption(
-                  'db-user',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Database name.',
-                  $this->configuration->trackerDbUser()
-              ),
-              new InputOption(
-                  'db-pass',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Database password.',
-                  $this->configuration->trackerDbPass()
-              ),
-              new InputOption(
-                  'db-host',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Database host.',
-                  $this->configuration->trackerDbHost()
-              ),
-              new InputOption(
-                  'id',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Id of tracker',
-                  $this->configuration->trackerId()
-              ),
-              new InputOption(
-                  'site-path',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Path to site',
-                  $this->configuration->trackerSitePath()
-              ),
-              new InputOption(
-                  'web-root',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Web root',
-                  $this->configuration->remoteEnvironmentWebRoot()
-              ),
-              new InputOption(
-                  'alias',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Symlink alias',
-                  $this->configuration->remoteEnvironmentAlias()
-              ),
-              new InputOption(
-                  'drush-alias',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Drush alias',
-                  $this->configuration->siteEnvironmentDrushAlias()
-              ),
+        ->setDefinition(
+            [
+            new InputOption(
+                'app-name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'App name',
+                $this->configuration->localEnvironmentAppName()
+            ),
+            new InputOption(
+                'tracker-dir',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Tracker direcory',
+                $this->configuration->trackerDir()
+            ),
+            new InputOption(
+                'db-dump',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Complete path to db backup',
+                $this->configuration->trackerDbDump()
+            ),
+            new InputOption(
+                'db-name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Database name.',
+                $this->configuration->trackerDbName()
+            ),
+            new InputOption(
+                'db-user',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Database name.',
+                $this->configuration->trackerDbUser()
+            ),
+            new InputOption(
+                'db-pass',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Database password.',
+                $this->configuration->trackerDbPass()
+            ),
+            new InputOption(
+                'db-host',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Database host.',
+                $this->configuration->trackerDbHost()
+            ),
+            new InputOption(
+                'id',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Id of tracker',
+                $this->configuration->trackerId()
+            ),
+            new InputOption(
+                'site-path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Path to site',
+                $this->configuration->trackerSitePath()
+            ),
+            new InputOption(
+                'web-root',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Web root',
+                $this->configuration->remoteEnvironmentWebRoot()
+            ),
+            new InputOption(
+                'alias',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Symlink alias',
+                $this->configuration->remoteEnvironmentAlias()
+            ),
+            new InputOption(
+                'drush-alias',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Drush alias',
+                $this->configuration->siteEnvironmentDrushAlias()
+            ),
               ]
-          )
+        )
           ->setHelp($HelpText);
     }
 

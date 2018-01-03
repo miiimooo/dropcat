@@ -24,66 +24,66 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 
         $this->setName("update")
           ->setDescription("Run needed updates after a deploy.")
-          ->setDefinition(
-              array(
-              new InputOption(
-                  'tracker-file',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Trackerfile',
-                  $this->configuration->trackerFile()
-              ),
-              new InputOption(
-                  'no-entity-update',
-                  null,
-                  InputOption::VALUE_NONE,
-                  'Do not run entity updates'
-              ),
-              new InputOption(
-                  'no-db-update',
-                  null,
-                  InputOption::VALUE_NONE,
-                  'Do not run update database'
-              ),
-              new InputOption(
-                  'no-config-import',
-                  null,
-                  InputOption::VALUE_NONE,
-                  'Do not import config'
-              ),
-              new InputOption(
-                  'use-config-split',
-                  null,
-                  InputOption::VALUE_NONE,
-                  'Use config split'
-              ),
-              new InputOption(
-                  'use-config-import-partial',
-                  null,
-                  InputOption::VALUE_NONE,
-                  'Use partial import of config'
-              ),
-              new InputOption(
-                  'multi',
-                  null,
-                  InputOption::VALUE_NONE,
-                  'Use multi-site setup'
-              ),
+        ->setDefinition(
+            array(
+            new InputOption(
+                'tracker-file',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Trackerfile',
+                $this->configuration->trackerFile()
+            ),
+            new InputOption(
+                'no-entity-update',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not run entity updates'
+            ),
+            new InputOption(
+                'no-db-update',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not run update database'
+            ),
+            new InputOption(
+                'no-config-import',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not import config'
+            ),
+            new InputOption(
+                'use-config-split',
+                null,
+                InputOption::VALUE_NONE,
+                'Use config split'
+            ),
+            new InputOption(
+                'use-config-import-partial',
+                null,
+                InputOption::VALUE_NONE,
+                'Use partial import of config'
+            ),
+            new InputOption(
+                'multi',
+                null,
+                InputOption::VALUE_NONE,
+                'Use multi-site setup'
+            ),
                 new InputOption(
                     'no-cache-rebuild-after-updatedb',
                     null,
                     InputOption::VALUE_NONE,
                     'Cache rebuild after update db'
                 ),
-              new InputOption(
-                  'config-split-settings',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Config split settings to use',
-                  null
-              ),
+            new InputOption(
+                'config-split-settings',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Config split settings to use',
+                null
+            ),
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 

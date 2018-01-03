@@ -13,8 +13,6 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-
-
 class GenerateConfigCommand extends DropcatCommand
 {
     protected function configure()

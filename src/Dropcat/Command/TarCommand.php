@@ -20,45 +20,45 @@ To override config in dropcat.yml, using options:
 
         $this->setName("tar")
           ->setDescription("Tar folder")
-          ->setDefinition(
-              array(
-                  new InputOption(
-                      'folder',
-                      'f',
-                      InputOption::VALUE_OPTIONAL,
-                      'Folder',
-                      $this->configuration->localEnvironmentAppPath()
-                  ),
-                  new InputOption(
-                      'build-id',
-                      'bi',
-                      InputOption::VALUE_OPTIONAL,
-                      'Id',
-                      $this->configuration->localEnvironmentBuildId()
-                  ),
-                  new InputOption(
-                      'temp-path',
-                      't',
-                      InputOption::VALUE_OPTIONAL,
-                      'Temp (./ for current dir)',
-                      $this->configuration->localEnvironmentTmpPath()
-                  ),
-                  new InputOption(
-                      'app-name',
-                      'a',
-                      InputOption::VALUE_OPTIONAL,
-                      'App name',
-                      $this->configuration->localEnvironmentAppName()
-                  ),
-                  new InputOption(
-                      'separator',
-                      'se',
-                      InputOption::VALUE_OPTIONAL,
-                      'Name separator',
-                      $this->configuration->localEnvironmentSeparator()
-                  ),
+        ->setDefinition(
+            array(
+                new InputOption(
+                    'folder',
+                    'f',
+                    InputOption::VALUE_OPTIONAL,
+                    'Folder',
+                    $this->configuration->localEnvironmentAppPath()
+                ),
+                new InputOption(
+                    'build-id',
+                    'bi',
+                    InputOption::VALUE_OPTIONAL,
+                    'Id',
+                    $this->configuration->localEnvironmentBuildId()
+                ),
+                new InputOption(
+                    'temp-path',
+                    't',
+                    InputOption::VALUE_OPTIONAL,
+                    'Temp (./ for current dir)',
+                    $this->configuration->localEnvironmentTmpPath()
+                ),
+                new InputOption(
+                    'app-name',
+                    'a',
+                    InputOption::VALUE_OPTIONAL,
+                    'App name',
+                    $this->configuration->localEnvironmentAppName()
+                ),
+                new InputOption(
+                    'separator',
+                    'se',
+                    InputOption::VALUE_OPTIONAL,
+                    'Name separator',
+                    $this->configuration->localEnvironmentSeparator()
+                ),
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 

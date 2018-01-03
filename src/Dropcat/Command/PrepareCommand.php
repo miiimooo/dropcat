@@ -35,191 +35,191 @@ To override config in dropcat.yml, using options:
 
         $this->setName('prepare')
           ->setDescription('Prepare site')
-          ->setDefinition(
-              [
-              new InputOption(
-                  'drush-folder',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Drush folder',
-                  $this->configuration->localEnvironmentDrushFolder()
-              ),
-              new InputOption(
-                  'drush-script',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Drush script path (can be remote)'
-              ),
-              new InputOption(
-                  'drush-alias',
-                  'd',
-                  InputOption::VALUE_OPTIONAL,
-                  'Drush alias',
-                  $this->configuration->siteEnvironmentDrushAlias()
-              ),
-              new InputOption(
-                  'server',
-                  's',
-                  InputOption::VALUE_OPTIONAL,
-                  'Server',
-                  $this->configuration->remoteEnvironmentServerName()
-              ),
-              new InputOption(
-                  'user',
-                  'u',
-                  InputOption::VALUE_OPTIONAL,
-                  'User (ssh)',
-                  $this->configuration->remoteEnvironmentSshUser()
-              ),
-              new InputOption(
-                  'ssh-port',
-                  'p',
-                  InputOption::VALUE_OPTIONAL,
-                  'SSH port',
-                  $this->configuration->remoteEnvironmentSshPort()
-              ),
-              new InputOption(
-                  'ssh-key-password',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'SSH key password',
-                  $this->configuration->localEnvironmentSshKeyPassword()
-              ),
-              new InputOption(
-                  'ssh-key',
-                  'i',
-                  InputOption::VALUE_OPTIONAL,
-                  'SSH key',
-                  $this->configuration->remoteEnvironmentIdentifyFile()
-              ),
-              new InputOption(
-                  'web-root',
-                  'w',
-                  InputOption::VALUE_OPTIONAL,
-                  'Web root',
-                  $this->configuration->remoteEnvironmentWebRoot()
-              ),
-              new InputOption(
-                  'alias',
-                  'a',
-                  InputOption::VALUE_OPTIONAL,
-                  'Symlink alias',
-                  $this->configuration->remoteEnvironmentAlias()
-              ),
-              new InputOption(
-                  'url',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Site url',
-                  $this->configuration->siteEnvironmentUrl()
-              ),
-              new InputOption(
-                  'site-name',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Site name',
-                  $this->configuration->siteEnvironmentName()
-              ),
-              new InputOption(
-                  'mysql-host',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Mysql host',
-                  $this->configuration->mysqlEnvironmentHost()
-              ),
-              new InputOption(
-                  'mysql-port',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Mysql port',
-                  $this->configuration->mysqlEnvironmentPort()
-              ),
-              new InputOption(
-                  'mysql-db',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Mysql db',
-                  $this->configuration->mysqlEnvironmentDataBase()
-              ),
-              new InputOption(
-                  'mysql-user',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Mysql user',
-                  $this->configuration->mysqlEnvironmentUser()
-              ),
-              new InputOption(
-                  'mysql-password',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Mysql password',
-                  $this->configuration->mysqlEnvironmentPassword()
-              ),
-              new InputOption(
-                  'timeout',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Timeout',
-                  $this->configuration->timeOut()
-              ),
-              new InputOption(
-                  'tracker-file',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Trackerfile',
-                  $this->configuration->trackerFile()
-              ),
-              new InputOption(
-                  'create-site',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Create site',
-                  $this->configuration->createSite()
-              ),
-              new InputOption(
-                  'sync-folder',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Sync folder',
-                  $this->configuration->syncFolder()
-              ),
-              new InputOption(
-                  'config-split-folder',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Config split folder',
-                  $this->configuration->configSplitFolder()
-              ),
-              new InputOption(
-                  'profile',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Install profile to use',
-                  $this->configuration->drupalInstallProfile()
-              ),
-              new InputOption(
-                  'tracker-dir',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Tracker direcory',
-                  $this->configuration->trackerDir()
-              ),
-              new InputOption(
-                  'backup-path',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Backup path',
-                  $this->configuration->siteEnvironmentBackupPath()
-              ),
-              new InputOption(
-                  'backup-db-path',
-                  null,
-                  InputOption::VALUE_OPTIONAL,
-                  'Backup DB path (absolute path with filename)',
-                  $this->configuration->siteEnvironmentBackupDbPath()
-              ),
+        ->setDefinition(
+            [
+            new InputOption(
+                'drush-folder',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Drush folder',
+                $this->configuration->localEnvironmentDrushFolder()
+            ),
+            new InputOption(
+                'drush-script',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Drush script path (can be remote)'
+            ),
+            new InputOption(
+                'drush-alias',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Drush alias',
+                $this->configuration->siteEnvironmentDrushAlias()
+            ),
+            new InputOption(
+                'server',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Server',
+                $this->configuration->remoteEnvironmentServerName()
+            ),
+            new InputOption(
+                'user',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'User (ssh)',
+                $this->configuration->remoteEnvironmentSshUser()
+            ),
+            new InputOption(
+                'ssh-port',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'SSH port',
+                $this->configuration->remoteEnvironmentSshPort()
+            ),
+            new InputOption(
+                'ssh-key-password',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'SSH key password',
+                $this->configuration->localEnvironmentSshKeyPassword()
+            ),
+            new InputOption(
+                'ssh-key',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'SSH key',
+                $this->configuration->remoteEnvironmentIdentifyFile()
+            ),
+            new InputOption(
+                'web-root',
+                'w',
+                InputOption::VALUE_OPTIONAL,
+                'Web root',
+                $this->configuration->remoteEnvironmentWebRoot()
+            ),
+            new InputOption(
+                'alias',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'Symlink alias',
+                $this->configuration->remoteEnvironmentAlias()
+            ),
+            new InputOption(
+                'url',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Site url',
+                $this->configuration->siteEnvironmentUrl()
+            ),
+            new InputOption(
+                'site-name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Site name',
+                $this->configuration->siteEnvironmentName()
+            ),
+            new InputOption(
+                'mysql-host',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Mysql host',
+                $this->configuration->mysqlEnvironmentHost()
+            ),
+            new InputOption(
+                'mysql-port',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Mysql port',
+                $this->configuration->mysqlEnvironmentPort()
+            ),
+            new InputOption(
+                'mysql-db',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Mysql db',
+                $this->configuration->mysqlEnvironmentDataBase()
+            ),
+            new InputOption(
+                'mysql-user',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Mysql user',
+                $this->configuration->mysqlEnvironmentUser()
+            ),
+            new InputOption(
+                'mysql-password',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Mysql password',
+                $this->configuration->mysqlEnvironmentPassword()
+            ),
+            new InputOption(
+                'timeout',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Timeout',
+                $this->configuration->timeOut()
+            ),
+            new InputOption(
+                'tracker-file',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Trackerfile',
+                $this->configuration->trackerFile()
+            ),
+            new InputOption(
+                'create-site',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Create site',
+                $this->configuration->createSite()
+            ),
+            new InputOption(
+                'sync-folder',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sync folder',
+                $this->configuration->syncFolder()
+            ),
+            new InputOption(
+                'config-split-folder',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Config split folder',
+                $this->configuration->configSplitFolder()
+            ),
+            new InputOption(
+                'profile',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Install profile to use',
+                $this->configuration->drupalInstallProfile()
+            ),
+            new InputOption(
+                'tracker-dir',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Tracker direcory',
+                $this->configuration->trackerDir()
+            ),
+            new InputOption(
+                'backup-path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Backup path',
+                $this->configuration->siteEnvironmentBackupPath()
+            ),
+            new InputOption(
+                'backup-db-path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Backup DB path (absolute path with filename)',
+                $this->configuration->siteEnvironmentBackupDbPath()
+            ),
               ]
-          )
+        )
           ->setHelp($HelpText);
     }
 
@@ -271,7 +271,7 @@ To override config in dropcat.yml, using options:
         $site_alias = "$web_root/$alias";
         if (!isset($db_dump_path)) {
             $db_dump_path = getenv('DB_DUMP_PATH');
-            if(!isset($db_dump_path)) {
+            if (!isset($db_dump_path)) {
                 throw new Exception('you need to set the DB_DUMP_PATH variable or add the backup-db-path option');
             }
         }

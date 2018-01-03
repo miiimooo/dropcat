@@ -24,8 +24,8 @@ class InitCommand extends DropcatCommand
         $this->setName("init")
             ->setDescription("Init D8 site")
           ->setHidden(true)
-          ->setDefinition(
-                array(
+        ->setDefinition(
+            array(
                     new InputOption(
                         'profile',
                         'p',
@@ -35,7 +35,7 @@ class InitCommand extends DropcatCommand
                     ),
 
                 )
-            )
+        )
             ->setHelp($HelpText);
     }
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -22,8 +22,8 @@ class RunGulpCommand extends RunCommand
 
         $this->setName("node:gulp")
           ->setDescription("run gulp")
-          ->setDefinition(
-              array(
+        ->setDefinition(
+            array(
                 new InputOption(
                     'gulp-dir',
                     'gd',
@@ -60,7 +60,7 @@ class RunGulpCommand extends RunCommand
                     $this->configuration->nodeEnvironment()
                 ),
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 

@@ -23,13 +23,13 @@ To override config in dropcat.yml, using options:
             ->setDescription("delete a vhost on a remote server")
             ->setDefinition(
                 array(
-                   new InputOption(
-                       'target',
-                       't',
-                       InputOption::VALUE_OPTIONAL,
-                       'Vhost target folder',
-                       $this->configuration->vhostTarget()
-                   ),
+                new InputOption(
+                    'target',
+                    't',
+                    InputOption::VALUE_OPTIONAL,
+                    'Vhost target folder',
+                    $this->configuration->vhostTarget()
+                ),
                     new InputOption(
                         'file_name',
                         'f',

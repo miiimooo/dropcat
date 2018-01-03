@@ -22,54 +22,54 @@ To override config in dropcat.yml, using options:
 
         $this->setName("site-install")
           ->setDescription("Site install")
-          ->setDefinition(
-              array(
-                  new InputOption(
-                      'drush_alias',
-                      'd',
-                      InputOption::VALUE_OPTIONAL,
-                      'Drush alias',
-                      $this->configuration->siteEnvironmentDrushAlias()
-                  ),
-                  new InputOption(
-                      'profile',
-                      'p',
-                      InputOption::VALUE_OPTIONAL,
-                      'Profile',
-                      $this->configuration->siteEnvironmentProfile()
-                  ),
-                  new InputOption(
-                      'time_out',
-                      'to',
-                      InputOption::VALUE_OPTIONAL,
-                      'Time out',
-                      $this->configuration->timeOut()
-                  ),
-                  new InputOption(
-                      'admin_pass',
-                      'ap',
-                      InputOption::VALUE_OPTIONAL,
-                      'Admin pass',
-                      $this->configuration->siteEnvironmentAdminPass()
-                  ),
-                  new InputOption(
-                      'admin_user',
-                      'au',
-                      InputOption::VALUE_OPTIONAL,
-                      'Admin user',
-                      $this->configuration->siteEnvironmentAdminUser()
-                  ),
-                  new InputOption(
-                      'install_options',
-                      'io',
-                      InputOption::VALUE_OPTIONAL,
-                      'Drush install options',
-                      $this->configuration->siteEnvironmentDrushInstallOptions()
-                  ),
+        ->setDefinition(
+            array(
+                new InputOption(
+                    'drush_alias',
+                    'd',
+                    InputOption::VALUE_OPTIONAL,
+                    'Drush alias',
+                    $this->configuration->siteEnvironmentDrushAlias()
+                ),
+                new InputOption(
+                    'profile',
+                    'p',
+                    InputOption::VALUE_OPTIONAL,
+                    'Profile',
+                    $this->configuration->siteEnvironmentProfile()
+                ),
+                new InputOption(
+                    'time_out',
+                    'to',
+                    InputOption::VALUE_OPTIONAL,
+                    'Time out',
+                    $this->configuration->timeOut()
+                ),
+                new InputOption(
+                    'admin_pass',
+                    'ap',
+                    InputOption::VALUE_OPTIONAL,
+                    'Admin pass',
+                    $this->configuration->siteEnvironmentAdminPass()
+                ),
+                new InputOption(
+                    'admin_user',
+                    'au',
+                    InputOption::VALUE_OPTIONAL,
+                    'Admin user',
+                    $this->configuration->siteEnvironmentAdminUser()
+                ),
+                new InputOption(
+                    'install_options',
+                    'io',
+                    InputOption::VALUE_OPTIONAL,
+                    'Drush install options',
+                    $this->configuration->siteEnvironmentDrushInstallOptions()
+                ),
 
 
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 

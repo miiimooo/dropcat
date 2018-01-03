@@ -18,17 +18,17 @@ class MultiListCommand extends DropcatCommand
         $this->setName("multi:list")
           ->setDescription("list drupal multi sites")
           ->setHelp($HelpText)
-          ->setDefinition(
-              array(
-                  new InputOption(
-                      'tracker-file',
-                      't',
-                      InputOption::VALUE_REQUIRED,
-                      'tracker file',
-                      null
-                  )
+        ->setDefinition(
+            array(
+                new InputOption(
+                    'tracker-file',
+                    't',
+                    InputOption::VALUE_REQUIRED,
+                    'tracker file',
+                    null
+                )
               )
-          );
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -46,7 +46,6 @@ class MultiListCommand extends DropcatCommand
             if (isset($site['web']['site-domain'])) {
                 $domains[] = $site['web']['site-domain'];
             }
-
         }
         $domains = array_filter($domains);
         foreach ($domains as $domain) {

@@ -19,31 +19,31 @@ class VarnishPurgeCommand extends DropcatCommand
         <info>dropcat varnish:purge --url=http://mysite.foo --varnish-port=80</info>';
         $this->setName("varnish:purge")
           ->setDescription("Purge your varnish instance")
-          ->setDefinition(
-              array(
-              new InputOption(
-                  'varnish-ip',
-                  'vi',
-                  InputOption::VALUE_OPTIONAL,
-                  'Varnish IP (normal is external IP)',
-                  $this->configuration->deployVarnishIP()
-              ),
-              new InputOption(
-                  'varnish-port',
-                  'Varnish port',
-                  InputOption::VALUE_OPTIONAL,
-                  'To',
-                  $this->configuration->deployVarnishPort()
-              ),
-              new InputOption(
-                  'url',
-                  'u',
-                  InputOption::VALUE_OPTIONAL,
-                  'Site url',
-                  $this->configuration->siteEnvironmentUrl()
-              ),
+        ->setDefinition(
+            array(
+            new InputOption(
+                'varnish-ip',
+                'vi',
+                InputOption::VALUE_OPTIONAL,
+                'Varnish IP (normal is external IP)',
+                $this->configuration->deployVarnishIP()
+            ),
+            new InputOption(
+                'varnish-port',
+                'Varnish port',
+                InputOption::VALUE_OPTIONAL,
+                'To',
+                $this->configuration->deployVarnishPort()
+            ),
+            new InputOption(
+                'url',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'Site url',
+                $this->configuration->siteEnvironmentUrl()
+            ),
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 

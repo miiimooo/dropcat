@@ -24,107 +24,107 @@ To override config in dropcat.yml, using options:
 
         $this->setName("multi:move")
           ->setDescription("Moves site in place")
-          ->setDefinition(
-              array(
-              new InputOption(
-                  'app-name',
-                  'a',
-                  InputOption::VALUE_OPTIONAL,
-                  'App name',
-                  $this->configuration->localEnvironmentAppName()
-              ),
-              new InputOption(
-                  'build-id',
-                  'bi',
-                  InputOption::VALUE_OPTIONAL,
-                  'Id',
-                  $this->configuration->localEnvironmentBuildId()
-              ),
-              new InputOption(
-                  'separator',
-                  'se',
-                  InputOption::VALUE_OPTIONAL,
-                  'Name separator',
-                  $this->configuration->localEnvironmentSeparator()
-              ),
-              new InputOption(
-                  'tar',
-                  't',
-                  InputOption::VALUE_OPTIONAL,
-                  'Tar',
-                  $this->configuration->localEnvironmentTarName()
-              ),
-              new InputOption(
-                  'server',
-                  's',
-                  InputOption::VALUE_OPTIONAL,
-                  'Server',
-                  $this->configuration->remoteEnvironmentServerName()
-              ),
-              new InputOption(
-                  'user',
-                  'u',
-                  InputOption::VALUE_OPTIONAL,
-                  'User (ssh)',
-                  $this->configuration->remoteEnvironmentSshUser()
-              ),
-              new InputOption(
-                  'ssh_port',
-                  'p',
-                  InputOption::VALUE_OPTIONAL,
-                  'SSH port',
-                  $this->configuration->remoteEnvironmentSshPort()
-              ),
-              new InputOption(
-                  'identity_file',
-                  'i',
-                  InputOption::VALUE_OPTIONAL,
-                  'Identify file',
-                  $this->configuration->remoteEnvironmentIdentifyFile()
-              ),
-              new InputOption(
-                  'ssh_key_password',
-                  'skp',
-                  InputOption::VALUE_OPTIONAL,
-                  'SSH key password',
-                  $this->configuration->localEnvironmentSshKeyPassword()
-              ),
-              new InputOption(
-                  'target_path',
-                  'tp',
-                  InputOption::VALUE_OPTIONAL,
-                  'Target path',
-                  $this->configuration->remoteEnvironmentTargetPath()
-              ),
-              new InputOption(
-                  'web_root',
-                  'w',
-                  InputOption::VALUE_OPTIONAL,
-                  'Web root',
-                  $this->configuration->remoteEnvironmentWebRoot()
-              ),
-              new InputOption(
-                  'temp_folder',
-                  'tf',
-                  InputOption::VALUE_OPTIONAL,
-                  'Temp folder',
-                  $this->configuration->remoteEnvironmentTempFolder()
-              ),
-              new InputOption(
-                  'alias',
-                  'aa',
-                  InputOption::VALUE_OPTIONAL,
-                  'Symlink alias',
-                  $this->configuration->remoteEnvironmentAlias()
-              ),
-              new InputOption(
-                  'keeptar',
-                  'kt',
-                  InputOption::VALUE_NONE,
-                  'Keep tar after move (defaults to no)'
-              ),
+        ->setDefinition(
+            array(
+            new InputOption(
+                'app-name',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'App name',
+                $this->configuration->localEnvironmentAppName()
+            ),
+            new InputOption(
+                'build-id',
+                'bi',
+                InputOption::VALUE_OPTIONAL,
+                'Id',
+                $this->configuration->localEnvironmentBuildId()
+            ),
+            new InputOption(
+                'separator',
+                'se',
+                InputOption::VALUE_OPTIONAL,
+                'Name separator',
+                $this->configuration->localEnvironmentSeparator()
+            ),
+            new InputOption(
+                'tar',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Tar',
+                $this->configuration->localEnvironmentTarName()
+            ),
+            new InputOption(
+                'server',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Server',
+                $this->configuration->remoteEnvironmentServerName()
+            ),
+            new InputOption(
+                'user',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'User (ssh)',
+                $this->configuration->remoteEnvironmentSshUser()
+            ),
+            new InputOption(
+                'ssh_port',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'SSH port',
+                $this->configuration->remoteEnvironmentSshPort()
+            ),
+            new InputOption(
+                'identity_file',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'Identify file',
+                $this->configuration->remoteEnvironmentIdentifyFile()
+            ),
+            new InputOption(
+                'ssh_key_password',
+                'skp',
+                InputOption::VALUE_OPTIONAL,
+                'SSH key password',
+                $this->configuration->localEnvironmentSshKeyPassword()
+            ),
+            new InputOption(
+                'target_path',
+                'tp',
+                InputOption::VALUE_OPTIONAL,
+                'Target path',
+                $this->configuration->remoteEnvironmentTargetPath()
+            ),
+            new InputOption(
+                'web_root',
+                'w',
+                InputOption::VALUE_OPTIONAL,
+                'Web root',
+                $this->configuration->remoteEnvironmentWebRoot()
+            ),
+            new InputOption(
+                'temp_folder',
+                'tf',
+                InputOption::VALUE_OPTIONAL,
+                'Temp folder',
+                $this->configuration->remoteEnvironmentTempFolder()
+            ),
+            new InputOption(
+                'alias',
+                'aa',
+                InputOption::VALUE_OPTIONAL,
+                'Symlink alias',
+                $this->configuration->remoteEnvironmentAlias()
+            ),
+            new InputOption(
+                'keeptar',
+                'kt',
+                InputOption::VALUE_NONE,
+                'Keep tar after move (defaults to no)'
+            ),
               )
-          )
+        )
           ->setHelp($HelpText);
     }
 
