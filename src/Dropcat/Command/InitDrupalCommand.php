@@ -94,8 +94,9 @@ class InitDrupalCommand extends DropcatCommand
         $read = new SplFileObject('web_init/web/profiles/' . $my_profile . '/' . $my_profile . '.install', 'r');
         $content = $read->fread($read->getSize());
         $content = str_replace("wkstandard_install", "$my_profile" . "_install", $content);
+        $content = str_replace("wkstandard_setup_cleanup", "$my_profile" . "_setup_cleanup", $content);
         $content = str_replace(
-            "Install, update and uninstall functions for the wkstandard installation profile.",
+            "Install, update and uninstall functions for the wk-standard installation profile.",
             "Install, update and uninstall functions for $my_profile installation profile.",
             $content
         );
