@@ -130,7 +130,7 @@ class InitDrupalCommand extends DropcatCommand
 
         $io->note('Renaming of functions and files finished');
         // Move all contents inside web_init to current dir (including files ^.*)
-        $process = new Process("find web_init/ -mindepth 1 -maxdepth 1 -exec mv -t ./ -- {} + && rm -rf web_init");
+        $process = new Process("rm -rf web_init/.git && find web_init/ -mindepth 1 -maxdepth 1 -exec mv -t ./ -- {} + && rm -rf web_init");
         $process->run();
         // Executes after the command finishes.
         if (!$process->isSuccessful()) {
