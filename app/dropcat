@@ -26,9 +26,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
 
 
 $container = new ContainerBuilder();
+$container->addCompilerPass(new AddConsoleCommandPass);
 // In order to have the container be available, or actually injected,
 // into the commands, I set the 'DropcatContainer' to be the container it self.
 // In services.yml we use '@DropcatContainer' to inject it into the command.
