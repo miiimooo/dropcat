@@ -8,7 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
-
 class GenerateDropcatFilesCommand extends DropcatCommand
 {
     protected static $defaultName = 'generate:dropcat-files';

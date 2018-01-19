@@ -22,8 +22,9 @@ To override config in dropcat.yml, using options:
 
         $this->setName("run-remote")
             ->setDescription("run command or script on local environment")
-            ->setDefinition(
-                array(
+          ->setHidden(true)
+        ->setDefinition(
+            array(
                     new InputOption(
                         'input',
                         'i',
@@ -68,7 +69,7 @@ To override config in dropcat.yml, using options:
                     ),
 
                 )
-            )
+        )
             ->setHelp($HelpText);
     }
 

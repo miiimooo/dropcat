@@ -22,8 +22,9 @@ To override config in dropcat.yml, using options:
 
         $this->setName("jenkins-build")
             ->setDescription("Jenkins build site")
-            ->setDefinition(
-                array(
+          ->setHidden(true)
+        ->setDefinition(
+            array(
                     new InputOption(
                         'jenkins_server',
                         'sv',
@@ -39,7 +40,7 @@ To override config in dropcat.yml, using options:
                         $this->configuration->deployJenkinsJob()
                     ),
                 )
-            )
+        )
             ->setHelp($HelpText);
     }
 

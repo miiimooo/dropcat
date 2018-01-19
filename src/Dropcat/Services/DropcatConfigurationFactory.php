@@ -5,7 +5,6 @@ namespace Dropcat\Services;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Input\ArgvInput;
 
-
 class DropcatConfigurationFactory
 {
 
@@ -22,7 +21,7 @@ class DropcatConfigurationFactory
 
         if (file_exists($running_path . '/dropcat.yml')) {
             $default_config = Yaml::parse(
-              file_get_contents($running_path . '/dropcat.yml')
+                file_get_contents($running_path . '/dropcat.yml')
             );
             $configs = $default_config;
         }
@@ -30,7 +29,7 @@ class DropcatConfigurationFactory
         $environment = '/dropcat.' . $env . '.yml';
         if (file_exists($running_path . $environment)) {
             $env_config = Yaml::parse(
-              file_get_contents($running_path . $environment)
+                file_get_contents($running_path . $environment)
             );
             // Recreate configs if env. exists.
             if (isset($default_config)) {

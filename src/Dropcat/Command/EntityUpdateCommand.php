@@ -22,8 +22,9 @@ To override config in dropcat.yml, using options:
 
         $this->setName("entity-update")
             ->setDescription("Update entities")
-            ->setDefinition(
-                array(
+          ->setHidden(true)
+        ->setDefinition(
+            array(
                     new InputOption(
                         'drush_alias',
                         'd',
@@ -32,7 +33,7 @@ To override config in dropcat.yml, using options:
                         $this->configuration->siteEnvironmentDrushAlias()
                     ),
                 )
-            )
+        )
             ->setHelp($HelpText);
     }
 

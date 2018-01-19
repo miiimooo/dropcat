@@ -90,13 +90,6 @@ To override config in dropcat.yml, using options:
                 $this->configuration->localEnvironmentSshKeyPassword()
             ),
             new InputOption(
-                'target_path',
-                'tp',
-                InputOption::VALUE_OPTIONAL,
-                'Target path',
-                $this->configuration->remoteEnvironmentTargetPath()
-            ),
-            new InputOption(
                 'web_root',
                 'w',
                 InputOption::VALUE_OPTIONAL,
@@ -136,7 +129,6 @@ To override config in dropcat.yml, using options:
         $tar = $input->getOption('tar');
         $server = $input->getOption('server');
         $user = $input->getOption('user');
-        $target_path = $input->getOption('target_path');
         $port = $input->getOption('ssh_port');
         $ssh_key_password = $input->getOption('ssh_key_password');
         $identity_file = $input->getOption('identity_file');

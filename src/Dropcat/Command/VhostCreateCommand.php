@@ -147,6 +147,7 @@ To override config in dropcat.yml, using options:
           "$server_alias\n" .
           "$extra\n" .
           "</VirtualHost>\n";
+
         $aliasCreate= new Process(
             "ssh -o LogLevel=Error $user@$server -p $port \"echo '$virtualHost' > $target/$file_name $runbash\""
         );
