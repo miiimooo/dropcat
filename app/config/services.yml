@@ -256,3 +256,10 @@ services:
       lazy: true
       tags:
             - {name: console.command}
+
+    dropcat.command.scan:mixed-content:
+      class: Dropcat\Command\MixedContentCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+            - {name: console.command, command: scan:mixed-content}
