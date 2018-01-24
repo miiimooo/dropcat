@@ -37,6 +37,14 @@ class MixedContentCommand extends DropcatCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        if (version_compare(phpversion(), '7.1', '<')) {
+            $output->writeln('<info>' . $this->error .
+            ' scan:mixed-content only works on php 7.1 and higher.</info>');
+            exit();
+        }
+
+
         $domain = $input->getOption('domain');
         if ($output->isVerbose()) {
             echo 'scanning domain: ' . $domain . "\n";
