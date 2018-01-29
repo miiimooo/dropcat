@@ -2,7 +2,7 @@
   "name": "dropcat/dropcat",
   "description": "delivery tool for web sites",
   "type": "drupal-deploy-tool",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
         "name": "BOFH of digitalist group sweden, with friends",
