@@ -6,11 +6,9 @@ use Dropcat\Lib\DropcatCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Spatie\MixedContentScanner\MixedContentScanner;
-use Dropcat\Lib\MixedContentLogger;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MixedContentCommand extends DropcatCommand
+
+class DnsCommand extends DropcatCommand
 {
     protected static $defaultName = 'scan:mixed-content';
     protected function configure()
