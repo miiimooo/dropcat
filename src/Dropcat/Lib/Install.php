@@ -26,7 +26,7 @@ class Install
         $this->output = new ConsoleOutput();
     }
 
-    public function drupal($config, $verbose)
+    public function drupal($config, $lang, $verbose)
     {
         $profile = $config['profile'];
         $site_name = $config['site-name'];
@@ -38,10 +38,11 @@ class Install
         }
         $this->output->writeln("<info>$this->mark starting installation of $alias</info>");
         $install= new Process(
-            "drush @$alias si $profile --account-name=admin --account-pass=admin --site-name=$site_name --sites-subdir=$subdir --yes $v"
+            "drush @$alias si $profile --account-name=admin --account-pass=admin --site-name=$site_name --sites-subdir=$subdir --locale=$lang --yes $v"
         );
         $install->setTimeout(999);
         $install->run();
+
         // executes after the command finishes
         if (!$install->isSuccessful()) {
             throw new ProcessFailedException($install);

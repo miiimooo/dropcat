@@ -8,6 +8,7 @@ use Dropcat\Lib\CheckDrupal;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Exception;
@@ -169,6 +170,43 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                 if (isset($siteProperty['drush']['alias'])) {
                     $alias = $siteProperty['drush']['alias'];
 
+                    // backup
+
+                    //create dir if it does not exist
+                    $backup_dir = $this->configuration->siteEnvironmentBackupPath() .
+                      '/' . $this->configuration->localEnvironmentAppName() . '/' .
+                      $alias;
+
+                    $process = new Process("mkdir -p $backup_dir");
+                    $process->setTimeout(9999);
+                    $process->run();
+                    // Executes after the command finishes.
+                    if (!$process->isSuccessful()) {
+                        $output->writeln("<info>$this->error could not create backup dir.</info>");
+                        throw new ProcessFailedException($process);
+                    }
+                    if ($output->isVerbose()) {
+                        echo $process->getOutput();
+                    }
+
+                    $server_time = date("Ymd_His");
+                    $process = new Process("drush @$alias sql-dump -y > $backup_dir/$alias-$server_time.sql");
+                    $process->setTimeout(9999);
+                    $process->run();
+                    // Executes after the command finishes.
+                    if (!$process->isSuccessful()) {
+                        $output->writeln("<info>$this->error could not update db for $site</info>");
+                        throw new ProcessFailedException($process);
+                    }
+                    if ($output->isVerbose()) {
+                        echo $process->getOutput();
+                    }
+
+                    $output->writeln("<info>$this->mark backup done for $alias</info>");
+
+
+                    // end backup.
+
                     if ($no_db_update == false) {
                         $process = new Process("drush @$alias updb -y $ent");
                         $process->setTimeout(9999);
@@ -203,7 +241,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         }
                         if ($version == '8') {
                             $process = new Process("drush @$alias cr");
-
+                            $process->setTimeout(9999);
                             $process->run();
                             // Executes after the command finishes.
                             if (!$process->isSuccessful()) {
@@ -267,6 +305,18 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     }
                     if ($no_config_import == false) {
                         if ($version == '8') {
+                            $output->writeln("<info>$this->mark starting partial config import for $site</info>");
+                            $process = new Process("drush @$alias cim -y --partial");
+                            $process->setTimeout(9999);
+                            $process->run();
+                            // Executes after the command finishes.
+                            if (!$process->isSuccessful()) {
+                                $output->writeln("<info>$this->error config import failed for $site</info>");
+                                throw new ProcessFailedException($process);
+                            }
+                            if ($output->isVerbose()) {
+                                echo $process->getOutput();
+                            }
                             $output->writeln("<info>$this->mark starting config import for $site</info>");
                             $process = new Process("drush @$alias cim -y $part");
                             $process->setTimeout(9999);

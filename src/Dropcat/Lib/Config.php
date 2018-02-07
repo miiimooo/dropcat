@@ -44,4 +44,46 @@ class Config
         echo $import->getOutput();
         $this->output->writeln("<info>$this->mark config imported for $alias</info>");
     }
+
+    public function importPartial($config, $verbose)
+    {
+        $alias = $config['drush-alias'];
+        $v = ' -q';
+        if ($verbose == true) {
+            $v = ' -v';
+        }
+        $import= new Process(
+          "drush @$alias cim --partial --yes $v"
+        );
+        $import->setTimeout(999);
+        $import->run();
+        // executes after the command finishes
+        if (!$import->isSuccessful()) {
+            throw new ProcessFailedException($import);
+        }
+        echo $import->getOutput();
+        $this->output->writeln("<info>$this->mark config imported for $alias</info>");
+    }
+
+    public function configSplitExport($config, $split, $verbose)
+    {
+        $alias = $config['drush-alias'];
+        $v = ' -q';
+        if ($verbose == true) {
+            $v = ' -v';
+        }
+        $import= new Process(
+          "drush @$alias csex $split --yes $v"
+        );
+        $import->setTimeout(999);
+        $import->run();
+        // executes after the command finishes
+        if (!$import->isSuccessful()) {
+            throw new ProcessFailedException($import);
+        }
+        echo $import->getOutput();
+        $this->output->writeln("<info>$this->mark config imported for $alias</info>");
+    }
+
+
 }

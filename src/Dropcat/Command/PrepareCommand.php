@@ -218,6 +218,20 @@ To override config in dropcat.yml, using options:
                 'Backup DB path (absolute path with filename)',
                 $this->configuration->siteEnvironmentBackupDbPath()
             ),
+            new InputOption(
+                'lang',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Language',
+                'en'
+            ),
+              new InputOption(
+                'config-split-settings',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Config split settings to use',
+                null
+              ),
               ]
         )
           ->setHelp($HelpText);
@@ -251,6 +265,8 @@ To override config in dropcat.yml, using options:
         $tracker_dir = $input->getOption('tracker-dir');
         $backup_path = $input->getOption('backup-path');
         $db_dump_path = $input->getOption('backup-db-path');
+        $lang = $input->getOption('lang');
+        $config_split_settings = $input->getOption('config-split-settings');
 
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
@@ -349,7 +365,8 @@ To override config in dropcat.yml, using options:
 
                 if (isset($create_site)) {
                     $cleaned_string = str_replace(".", "", $create_site);
-                    $new_site_name = mb_strimwidth($cleaned_string, 0, 59);
+                    $site_name = mb_strimwidth($cleaned_string, 0, 59);
+                    $new_site_name = preg_replace("#[^A-Za-z1-9]#","_", $site_name);
                     // check if a site already exists with that name.
                     if (strstr($site, $new_site_name)) {
                         throw new Exception('site already exists');
@@ -357,12 +374,12 @@ To override config in dropcat.yml, using options:
                 }
             }
 
-
+            $fixed_name = mb_strimwidth($new_site_name, 0, 64);
+            $mysql_user =  mb_strimwidth($new_site_name, 0, 32);
             $new_site_name = mb_strimwidth($new_site_name, 0, 16);
             $site_domain = $create_site;
-            $drush_alias = $new_site_name;
-            $mysql_user = $new_site_name;
-            $mysql_db = $new_site_name;
+            $drush_alias = $fixed_name;
+            $mysql_db = $fixed_name;
             $mysql_password = uniqid();
 
             $mysql_conf = [
@@ -558,7 +575,15 @@ To override config in dropcat.yml, using options:
                 ];
 
                 $install = new Install();
-                $install->drupal($drush_config, $verbose);
+                $install->drupal($drush_config, $lang, $verbose);
+
+                $import = new Config();
+                $import->importPartial($drush_config, $verbose);
+
+                if (isset($config_split_settings)) {
+                    $export = new Config();
+                    $export->configSplitExport($drush_config, $config_split_settings, $verbose);
+                }
 
                 $import = new Config();
                 $import->import($drush_config, $verbose);
