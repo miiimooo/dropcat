@@ -64,10 +64,14 @@ class VarnishPurgeCommand extends DropcatCommand
                 10
             );
 
-            $host = parse_url(
-                $this->configuration->siteEnvironmentUrl(),
-                PHP_URL_HOST
-            );
+            if ($url){
+                $target = $url;
+            }
+            else {
+                $target = $this->configuration->siteEnvironmentUrl();
+            }
+            $host = parse_url($target,PHP_URL_HOST);
+
             // Prepare the command to send
             $cmd = "DOMAINPURGE / HTTP/1.0\r\n";
             $cmd .= "Host: " . $host . "\r\n";
