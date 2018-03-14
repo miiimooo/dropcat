@@ -376,7 +376,7 @@ To override config in dropcat.yml, using options:
 
             $fixed_name = mb_strimwidth($new_site_name, 0, 64);
             $mysql_user =  mb_strimwidth($new_site_name, 0, 32);
-            $new_site_name = mb_strimwidth($new_site_name, 0, 16);
+            $new_site_name = mb_strimwidth($new_site_name, 0, 32);
             $site_domain = $create_site;
             $drush_alias = $fixed_name;
             $mysql_db = $fixed_name;
