@@ -565,7 +565,7 @@ To override config in dropcat.yml, using options:
               'ssh-key-password' => $ssh_key_password,
               'identity-file' => $identity_file,
             ];
-            if isset($server_alias) {
+            if (isset($server_alias)) {
                 $vhost_config['server-alias'] = $server_alias;
             }
 

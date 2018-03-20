@@ -53,7 +53,7 @@ class Vhost
             $runbash = " && $bash_command";
         }
         if (isset($server_alias)) {
-            $server_alias = "ServerAlias $server_alias\n";
+            $server_alias = "  ServerAlias $server_alias\n";
         }
         if (isset($extra)) {
             $extra = "$extra\n";
