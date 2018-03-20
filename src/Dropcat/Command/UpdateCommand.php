@@ -305,7 +305,8 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     }
                     if ($no_config_import == false) {
                         if ($version == '8') {
-                            $output->writeln("<info>$this->mark starting partial config import for $site</info>");
+                          // Remove partial for now.
+                          /*  $output->writeln("<info>$this->mark starting partial config import for $site</info>");
                             $process = new Process("drush @$alias cim -y --partial");
                             $process->setTimeout(9999);
                             $process->run();
@@ -316,7 +317,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             }
                             if ($output->isVerbose()) {
                                 echo $process->getOutput();
-                            }
+                            }*/
                             $output->writeln("<info>$this->mark starting config import for $site</info>");
                             $process = new Process("drush @$alias cim -y $part");
                             $process->setTimeout(9999);
