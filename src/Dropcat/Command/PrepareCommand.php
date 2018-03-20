@@ -226,11 +226,18 @@ To override config in dropcat.yml, using options:
                 'en'
             ),
               new InputOption(
-                'config-split-settings',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Config split settings to use',
-                null
+                  'config-split-settings',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Config split settings to use',
+                  null
+              ),
+              new InputOption(
+                  'server-alias',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Server alias',
+                  null
               ),
               ]
         )
@@ -267,6 +274,7 @@ To override config in dropcat.yml, using options:
         $db_dump_path = $input->getOption('backup-db-path');
         $lang = $input->getOption('lang');
         $config_split_settings = $input->getOption('config-split-settings');
+        $server_alias = $input->getOption('server-alias');
 
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
@@ -366,7 +374,7 @@ To override config in dropcat.yml, using options:
                 if (isset($create_site)) {
                     $cleaned_string = str_replace(".", "", $create_site);
                     $site_name = mb_strimwidth($cleaned_string, 0, 59);
-                    $new_site_name = preg_replace("#[^A-Za-z1-9]#","_", $site_name);
+                    $new_site_name = preg_replace("#[^A-Za-z1-9]#", "_", $site_name);
                     // check if a site already exists with that name.
                     if (strstr($site, $new_site_name)) {
                         throw new Exception('site already exists');
@@ -538,7 +546,6 @@ To override config in dropcat.yml, using options:
             $output->writeln('<info>' . $this->mark . ' needed files in place.</info>');
 
             // add option for this, now hardcoded
-            $server_alias = '';
             $target = '/etc/httpd/conf.d';
             $extra = '';
             $port = '80';
@@ -550,7 +557,6 @@ To override config in dropcat.yml, using options:
               'document-root' => "$site_alias/web",
               'port' => $port,
               'server-name' => $site_domain,
-              'server-alias' => $server_alias,
               'extra' => $extra,
               'bash-command' => $bash_command,
               'server' => $server,
@@ -559,6 +565,9 @@ To override config in dropcat.yml, using options:
               'ssh-key-password' => $ssh_key_password,
               'identity-file' => $identity_file,
             ];
+            if isset($server_alias) {
+                $vhost_config['server-alias'] = $server_alias;
+            }
 
             // Create a vhost file.
             $vhost = new Vhost();

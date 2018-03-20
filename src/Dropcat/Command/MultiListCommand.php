@@ -29,18 +29,25 @@ class MultiListCommand extends DropcatCommand
                     null
                 ),
                 new InputOption(
-                  'format',
-                  null,
-                  InputOption::VALUE_REQUIRED,
-                  'The output format (json or txt)',
-                  'txt'
+                    'format',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'The output format (json or txt)',
+                    'txt'
                 ),
                 new InputOption(
-                  'info',
-                  null,
-                  InputOption::VALUE_REQUIRED,
-                  'What to display (defaults to site-domain)',
-                  'site-domain'
+                    'info',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'What to display (defaults to site-domain)',
+                    'site-domain'
+                ),
+                new InputOption(
+                    'seperator',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'How to seperate output, only valid for txt format',
+                    'space'
                 ),
               )
         );
@@ -51,7 +58,7 @@ class MultiListCommand extends DropcatCommand
         $tracker_file = $input->getOption('tracker-file');
         $format = $input->getOption('format');
         $info = $input->getOption('info');
-
+        $seperator = $input->getOption('seperator');
 
         $tracker = new Tracker();
         $sites = $tracker->read($tracker_file);
@@ -61,36 +68,34 @@ class MultiListCommand extends DropcatCommand
         $print[] = '';
 
         if ($info = 'site-domain') {
-          foreach ($conf['sites'] as $site) {
-              if (isset($site['web']['site-domain'])) {
-                  $print[] = $site['web']['site-domain'];
-              }
-          }
-
+            foreach ($conf['sites'] as $site) {
+                if (isset($site['web']['site-domain'])) {
+                    $print[] = $site['web']['site-domain'];
+                }
+            }
         }
 
         if ($info = 'drush-alias') {
-          foreach ($conf['sites'] as $site) {
-              if (isset($site['drush']['alias'])) {
-                  $print[] = $site['drush']['alias'];
-              }
-          }
-
+            foreach ($conf['sites'] as $site) {
+                if (isset($site['drush']['alias'])) {
+                    $print[] = $site['drush']['alias'];
+                }
+            }
         }
           $print = array_filter($print);
         if ($format == 'json') {
-            foreach ($print as $out) {
-              $return_output[] = $out;
+            $out = json_encode($print);
+        } else {
+            if ($seperator == 'space') {
+                $out = implode(" ", $print);
             }
-            $out = json_encode($return_output);
+            if ($seperator == 'comma') {
+                $out = implode(",", $print);
+            }
+            if ($seperator == 'newline') {
+                $out = implode("\n", $print);
+            }
+        }
             $output->writeln("$out");
-        }
-        else {
-          foreach ($print as $out) {
-              //echo $domain . "\n";
-              $output->writeln("$out");
-          }
-        }
-
     }
 }

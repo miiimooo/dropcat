@@ -53,14 +53,14 @@ class Vhost
             $runbash = " && $bash_command";
         }
         if (isset($server_alias)) {
-            $server_alias = "$server_alias\n";
+            $server_alias = "ServerAlias $server_alias\n";
         }
         if (isset($extra)) {
             $extra = "$extra\n";
         }
         $virtualHost ="<VirtualHost *:$vhost_port>\n" .
           "  DocumentRoot $document_root\n" .
-          "  ServerName $server_name\n\n" .
+          "  ServerName $server_name\n" .
           "$server_alias" .
           "$extra" .
           "</VirtualHost>\n";
