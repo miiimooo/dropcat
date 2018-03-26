@@ -38,7 +38,9 @@ class Vhost
         $document_root = $config['document-root'];
         $vhost_port = $config['port'];
         $server_name = $config['server-name'];
-        $server_alias = $config['server-alias'];
+        if (isset($config['server-alias'])) {
+            $server_alias = $config['server-alias'];
+        }
         $extra = $config['extra'];
         $bash_command = $config['bash-command'];
         $server = $config['server'];
@@ -54,6 +56,8 @@ class Vhost
         }
         if (isset($server_alias)) {
             $server_alias = "  ServerAlias $server_alias\n";
+        } else {
+            $server_alias = '';
         }
         if (isset($extra)) {
             $extra = "$extra\n";

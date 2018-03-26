@@ -136,6 +136,10 @@ To override config in dropcat.yml, using options:
         $identity_file = $input->getOption('identity-file');
         $identity_file_content = file_get_contents($identity_file);
 
+        if (!isset($server_alias)) {
+            $server_alias = '';
+        }
+
         $runbash = '';
         if (isset($bash_command)) {
             $runbash = " && $bash_command";

@@ -67,7 +67,7 @@ class MultiListCommand extends DropcatCommand
 
         $print[] = '';
 
-        if ($info = 'site-domain') {
+        if ($info == 'site-domain') {
             foreach ($conf['sites'] as $site) {
                 if (isset($site['web']['site-domain'])) {
                     $print[] = $site['web']['site-domain'];
@@ -75,7 +75,7 @@ class MultiListCommand extends DropcatCommand
             }
         }
 
-        if ($info = 'drush-alias') {
+        if ($info == 'drush-alias') {
             foreach ($conf['sites'] as $site) {
                 if (isset($site['drush']['alias'])) {
                     $print[] = $site['drush']['alias'];
