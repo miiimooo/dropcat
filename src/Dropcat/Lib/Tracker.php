@@ -52,6 +52,7 @@ class Tracker
                 $file->dumpFile($default_tracker, $yaml);
             } catch (IOExceptionInterface $e) {
                 echo "An error occurred while creating your file at " . $e->getPath();
+                exit;
             }
             $this->output->writeln('<info>' . $this->mark . ' default tracker created</info>');
         } else {

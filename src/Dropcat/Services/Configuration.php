@@ -776,7 +776,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             $target = $this->configuration['vhost']['target'];
             return $target;
         } else {
-            return '';
+            return '/etc/httpd/conf.d';
         }
     }
     public function vhostPort()
@@ -816,7 +816,7 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             $bash_command = $this->configuration['vhost']['bash_command'];
             return $bash_command;
         } else {
-            return null;
+            return 'sudo service httpd restart';
         }
     }
 

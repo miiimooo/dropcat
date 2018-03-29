@@ -239,6 +239,26 @@ To override config in dropcat.yml, using options:
                   'Server alias',
                   null
               ),
+              new InputOption(
+                  'keep-drush-alias',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'do no overwrite drush alias'
+              ),
+              new InputOption(
+                'vhost-target',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Where to create vhost (multi)',
+                $this->configuration->vhostTarget()
+              ),
+              new InputOption(
+                'vhost-bash-command',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Command to run on vhost creation',
+                $this->configuration->vhostBashCommand()
+              )
               ]
         )
           ->setHelp($HelpText);
@@ -275,6 +295,9 @@ To override config in dropcat.yml, using options:
         $lang = $input->getOption('lang');
         $config_split_settings = $input->getOption('config-split-settings');
         $server_alias = $input->getOption('server-alias');
+        $keep_drush_alias = $input->getOption('keep-drush-alias') ? true : false;
+        $vhost_target = $input->getOption('vhost-target');
+        $vhost_bash_command = $input->getOption('vhost-bash-command');
 
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
@@ -464,25 +487,26 @@ To override config in dropcat.yml, using options:
             $write = new Tracker($verbose);
             $write->addMulti($tracker_conf);
 
+            if ($keep_drush_alias === false) {
             // Create drush alias, if it is drupal.
-            $check = new CheckDrupal();
-            if ($check->isDrupal()) {
-                $drush_alias_conf = [
-                  'site-name' => $site_name,
-                  'server' => $server,
-                  'user' => $user,
-                  'web-root' => $web_root,
-                  'alias' => $alias,
-                  'url' => $url,
-                  'ssh-port' => $ssh_port,
-                  'drush-script' => $drush_script,
-                  'drush-folder' => $drush_folder,
-                  'drush-alias' => $drush_alias,
-                ];
-                $write = new Write();
-                $write->drushAlias($drush_alias_conf);
+                $check = new CheckDrupal();
+                if ($check->isDrupal()) {
+                    $drush_alias_conf = [
+                      'site-name' => $site_name,
+                      'server' => $server,
+                      'user' => $user,
+                      'web-root' => $web_root,
+                      'alias' => $alias,
+                      'url' => $url,
+                      'ssh-port' => $ssh_port,
+                      'drush-script' => $drush_script,
+                      'drush-folder' => $drush_folder,
+                      'drush-alias' => $drush_alias,
+                    ];
+                    $write = new Write();
+                    $write->drushAlias($drush_alias_conf);
+                }
             }
-
             $sites_php_conf = [
               'app-name' => $app_name,
               'tracker-file' => $tracker_file,
@@ -546,10 +570,10 @@ To override config in dropcat.yml, using options:
             $output->writeln('<info>' . $this->mark . ' needed files in place.</info>');
 
             // add option for this, now hardcoded
-            $target = '/etc/httpd/conf.d';
+            $target = $vhost_target;
             $extra = '';
             $port = '80';
-            $bash_command = 'sudo service httpd restart';
+            $bash_command = $vhost_bash_command;
 
             $vhost_config = [
               'target' => $target,
@@ -605,23 +629,26 @@ To override config in dropcat.yml, using options:
             }
 
             // write drush alias.
-            $check = new CheckDrupal();
-            if ($check->isDrupal()) {
-                $drush_alias_conf = [
-                  'site-name' => $drush_alias,
-                  'server' => $server,
-                  'user' => $user,
-                  'web-root' => $web_root,
-                  'alias' => $alias,
-                  'url' => $url,
-                  'ssh-port' => $ssh_port,
-                  'drush-script' => $drush_script,
-                  'drush-folder' => $drush_folder,
-                  'drush-alias' => $drush_alias,
-                ];
-                $write = new Write();
-                $write->drushAlias($drush_alias_conf);
+            if ($keep_drush_alias === false) {
+                $check = new CheckDrupal();
+                if ($check->isDrupal()) {
+                    $drush_alias_conf = [
+                      'site-name' => $drush_alias,
+                      'server' => $server,
+                      'user' => $user,
+                      'web-root' => $web_root,
+                      'alias' => $alias,
+                      'url' => $url,
+                      'ssh-port' => $ssh_port,
+                      'drush-script' => $drush_script,
+                      'drush-folder' => $drush_folder,
+                      'drush-alias' => $drush_alias,
+                    ];
+                    $write = new Write();
+                    $write->drushAlias($drush_alias_conf);
+                }
             }
+
             // Create database if it does not exist.
             $new_db_conf = [
               'mysql-host' => $mysql_host,

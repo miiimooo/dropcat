@@ -19,8 +19,8 @@ class MultiListCommand extends DropcatCommand
         $this->setName("multi:list")
           ->setDescription("list drupal multi sites")
           ->setHelp($HelpText)
-        ->setDefinition(
-            array(
+          ->setDefinition(
+              [
                 new InputOption(
                     'tracker-file',
                     't',
@@ -49,8 +49,8 @@ class MultiListCommand extends DropcatCommand
                     'How to seperate output, only valid for txt format',
                     'space'
                 ),
-              )
-        );
+              ]
+          );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
