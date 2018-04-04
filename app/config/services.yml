@@ -277,3 +277,12 @@ services:
       lazy: true
       tags:
             - {name: console.command, command: sites:backup}
+
+
+    dropcat.command.reset:opcache:
+      class: Dropcat\Command\ResetOpcacheCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+            - {name: console.command, command: reset:opcache}
+

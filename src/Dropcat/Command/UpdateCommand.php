@@ -173,6 +173,8 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     // backup
 
                     //create dir if it does not exist
+/*
+
                     $backup_dir = $this->configuration->siteEnvironmentBackupPath() .
                       '/' . $this->configuration->localEnvironmentAppName() . '/' .
                       $alias;
@@ -202,9 +204,9 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         echo $process->getOutput();
                     }
 
-                    $output->writeln("<info>$this->mark backup done for $alias</info>");
+                    $output->writeln("<info>$this->mark update db done for $alias</info>");
 
-
+*/
                     // end backup.
 
                     if ($no_db_update == false) {

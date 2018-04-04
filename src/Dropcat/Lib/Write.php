@@ -142,4 +142,12 @@ class Write
         }
         $this->fs->dumpFile('/tmp/' . $conf['app-name'] . '.local.settings.php', $out);
     }
+
+    /**
+     * Write opcache reset file
+     */
+    public function file($conf)
+    {
+        $this->fs->dumpFile('/tmp/' . $conf['name'], $conf['content']);
+    }
 }
