@@ -53,7 +53,7 @@ class Config
             $v = ' -v';
         }
         $import= new Process(
-          "drush @$alias cim --partial --yes $v"
+            "drush @$alias cim --partial --yes $v"
         );
         $import->setTimeout(999);
         $import->run();
@@ -72,19 +72,19 @@ class Config
         if ($verbose == true) {
             $v = ' -v';
         }
-        $import= new Process(
-          "drush @$alias en config_split --yes $v && drush @$alias cc drush --yes $v"
+        $enable = new Process(
+            "drush @$alias en config_split --yes $v && drush @$alias cc drush --yes $v"
         );
-        $import->setTimeout(999);
-        $import->run();
+        $enable->setTimeout(999);
+        $enable->run();
         // executes after the command finishes
-        if (!$import->isSuccessful()) {
-            throw new ProcessFailedException($import);
+        if (!$enable->isSuccessful()) {
+            throw new ProcessFailedException($enable);
         }
-        echo $import->getOutput();
+        echo $enable->getOutput();
 
-        $import= new Process(
-          "drush @$alias csex $split --yes $v"
+        $import= news Process(
+            "drush @$alias csex $split --yes $v"
         );
         $import->setTimeout(999);
         $import->run();
@@ -95,6 +95,4 @@ class Config
         echo $import->getOutput();
         $this->output->writeln("<info>$this->mark config imported for $alias</info>");
     }
-
-
 }
