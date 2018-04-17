@@ -258,7 +258,13 @@ To override config in dropcat.yml, using options:
                 InputOption::VALUE_OPTIONAL,
                 'Command to run on vhost creation',
                 $this->configuration->vhostBashCommand()
-              )
+              ),
+              new InputOption(
+                'no-partial',
+                 null,
+                 InputOption::VALUE_NONE,
+                'do no use partial'
+              ),
               ]
         )
           ->setHelp($HelpText);
@@ -298,6 +304,8 @@ To override config in dropcat.yml, using options:
         $keep_drush_alias = $input->getOption('keep-drush-alias') ? true : false;
         $vhost_target = $input->getOption('vhost-target');
         $vhost_bash_command = $input->getOption('vhost-bash-command');
+        $no_partial = $input->getOption('no-partial') ? true : false;
+
 
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
@@ -611,7 +619,9 @@ To override config in dropcat.yml, using options:
                 $install->drupal($drush_config, $lang, $verbose);
 
                 $import = new Config();
-                $import->importPartial($drush_config, $verbose);
+                if ($no_partial == false) {
+                    $import->importPartial($drush_config, $verbose);
+                }
 
                 if (isset($config_split_settings)) {
                     $export = new Config();
@@ -715,18 +725,15 @@ To override config in dropcat.yml, using options:
             }
             $build_tracker_conf['db']['db-dump-path'] = $db_dump_path;
 
-
             $build_tracker = new Tracker($verbose);
             $build_tracker->rollback($build_tracker_conf, $build_tracker_file_name);
             $output->writeln('<info>' . $this->mark . ' created a rollback tracker file.</info>');
-
 
             $clean = new Cleanup();
             $clean->deleteOldRollbackTrackers($build_tracker_dir);
             $output->writeln('<info>' . $this->mark . ' deleted old rollback tracker files.</info>');
 
             $db_dump_dir = $backups_dir . "/";
-
 
             $clean = new Cleanup();
             $clean->deleteAutomaticDbBackups($db_dump_dir);

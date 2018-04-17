@@ -73,6 +73,17 @@ class Config
             $v = ' -v';
         }
         $import= new Process(
+          "drush @$alias en config_split --yes $v && drush @$alias cc drush --yes $v"
+        );
+        $import->setTimeout(999);
+        $import->run();
+        // executes after the command finishes
+        if (!$import->isSuccessful()) {
+            throw new ProcessFailedException($import);
+        }
+        echo $import->getOutput();
+
+        $import= new Process(
           "drush @$alias csex $split --yes $v"
         );
         $import->setTimeout(999);

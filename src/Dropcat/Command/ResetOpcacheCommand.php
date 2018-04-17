@@ -11,6 +11,7 @@ use Dropcat\Lib\Write;
 use Dropcat\Lib\Upload;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Dropcat\Lib\Remove;
 
 class ResetOpcacheCommand extends DropcatCommand
 {
@@ -98,7 +99,21 @@ class ResetOpcacheCommand extends DropcatCommand
                   InputOption::VALUE_OPTIONAL,
                   'Site url',
                   $this->configuration->siteEnvironmentUrl()
-              )
+              ),
+              new InputOption(
+                  'auth-user',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Basic auth user',
+                  null
+              ),
+                new InputOption(
+                    'auth-pass',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Basic auth pass',
+                    null
+                )
               ]
           );
     }
@@ -114,6 +129,8 @@ class ResetOpcacheCommand extends DropcatCommand
         $web_root = $input->getOption('web-root');
         $alias = $input->getOption('alias');
         $url = $input->getOption('url');
+        $auth_user = $input->getOption('auth-user');
+        $auth_pass = $input->getOption('auth-pass');
         $timeout = '999';
         $verbose = false;
 
@@ -134,7 +151,13 @@ class ResetOpcacheCommand extends DropcatCommand
         $random_file_name = UUID::v4() . '.php';
         $write = new Write();
         $out = '<?php' . "\n";
-        $out .= 'opcache_reset();' . "\n";
+        $out .= 'if (function_exists(\'opcache_reset\')) {' . "\n";
+        $out .= '  opcache_reset();' . "\n";
+        $out .= '}' . "\n";
+        $out .= 'if (function_exists(\'apc_clear_cache\')) {' . "\n";
+        $out .= '  apc_clear_cache();' . "\n";
+        $out .= '}' . "\n";
+        $out .= "\n";
 
         $conf = [
           'name' => $random_file_name,
@@ -148,8 +171,14 @@ class ResetOpcacheCommand extends DropcatCommand
         $upload_file = new Upload();
         $upload_file->place($remote_config, $from, $to, $verbose);
 
+        $request_url = "$url/$random_file_name";
+        if (isset($auth_pass) && isset($auth_user)) {
+
+            $request_url = str_replace('://', "://$auth_user:$auth_pass@", $request_url);
+        }
+
         // use curl to empty opcache
-        $request = new Process("curl -I $url/$random_file_name");
+        $request = new Process("curl -I $request_url");
         $request->setTimeout(10);
         $request->run();
         // Executes after the command finishes.
@@ -157,7 +186,31 @@ class ResetOpcacheCommand extends DropcatCommand
             throw new ProcessFailedException($request);
         }
         if ($verbose == true) {
-            echo $request->getOutput();
+            echo "\n" . $request->getOutput();
         }
+
+        $request_url = $url;
+        if (isset($auth_pass) && isset($auth_user)) {
+
+            $request_url = str_replace('://', "://$auth_user:$auth_pass@", $request_url);
+        }
+        // use curl to warm opcache
+        $request = new Process("curl -I $request_url");
+        $request->setTimeout(10);
+        $request->run();
+        // Executes after the command finishes.
+        if (!$request->isSuccessful()) {
+            throw new ProcessFailedException($request);
+        }
+        if ($verbose == true) {
+            echo "\n" . $request->getOutput();
+        }
+
+        // remove the random named file from the server.
+        $remove = new Remove();
+        $remove->file($remote_config, $to, $verbose);
+
+        $output->writeln('<info>' . $this->heart . ' opcache reset</info>');
+
     }
 }
