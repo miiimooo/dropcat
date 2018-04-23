@@ -146,4 +146,99 @@ class Db
             $this->output->writeln('<info>' . $this->mark . ' database exists</info>');
         }
     }
+    public function backup($conf, $path) {
+
+        extract($conf);
+
+        $process = new Process(
+          "mysqldump -u $user -p$pass -h $host -P $port $name > $path"
+        );
+        $process->setTimeout(999);
+        $process->run();
+        // Executes after the command finishes.
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        if ($this->verbose == true) {
+            echo $process->getOutput();
+        }
+        $this->output->writeln("<info>$this->mark database backed up to $path</info>");
+    }
+
+    public function import($conf, $path) {
+
+        extract($conf);
+
+        $process = new Process(
+          "mysql -u $user -p$pass -h $host -P $port $name < $path"
+        );
+        $process->setTimeout(999);
+        $process->run();
+        // Executes after the command finishes.
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        if ($this->verbose == true) {
+            echo $process->getOutput();
+        }
+        $this->output->writeln("<info>$this->mark database imported from $path</info>");
+    }
+
+    public function dumpTableName($conf, $path, $verbose) {
+
+        extract($conf);
+
+        $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE '$column' AND TABLE_SCHEMA = '$name'";
+
+        $process = new Process(
+          "mysql -u $user -p$pass -h $host -P $port -e \"$query\" > $path"
+        );
+
+        $process->setTimeout(999);
+        $process->run();
+        // Executes after the command finishes.
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        if ($verbose == true) {
+            echo $process->getOutput();
+        }
+        $this->output->writeln("<info>$this->mark database table names with column $name dumped to $path</info>");
+    }
+
+    public function updateTable($conf, $path, $verbose) {
+
+        // Create variables from array.
+        extract($conf);
+
+        $tables = file($path);
+
+        foreach($tables as $change_table) {
+            $change_table = trim(preg_replace('/\s+/', '', $change_table));
+            if ($change_table != 'TABLE_NAME') {
+                $query = "UPDATE $change_table SET $column = '$change'";
+                $process = new Process(
+                  "mysql -u $user -p$pass -h $host -P $port $name -e \"$query\""
+                );
+
+                $process->setTimeout(999);
+                $process->run();
+                // Executes after the command finishes.
+                if (!$process->isSuccessful()) {
+                    throw new ProcessFailedException($process);
+                }
+
+                if ($verbose == true) {
+                    echo $process->getOutput();
+                    $this->output->writeln("<info>mysql -u $user -p$pass -h $host -P $port $name -e $query</info>");
+                    $this->output->writeln("<info>$this->mark $change_table to use $change</info>");
+                }
+            }
+
+        }
+
+        $this->output->writeln("<info>$this->mark database table names with column $name language changed to $change</info>");
+    }
+
+
 }

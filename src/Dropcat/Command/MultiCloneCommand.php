@@ -2,12 +2,17 @@
 
 namespace Dropcat\Command;
 
+use Dropcat\Lib\Config;
 use Dropcat\Lib\DropcatCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Dropcat\Lib\Tracker;
 use Symfony\Component\Console\Input\ArrayInput;
+use Dropcat\Lib\Db;
+use Dropcat\Lib\UUID;
+use Dropcat\Lib\Name;
+use Dropcat\Lib\Language;
 
 class MultiCloneCommand extends DropcatCommand
 {
@@ -62,6 +67,13 @@ class MultiCloneCommand extends DropcatCommand
                   'config split settings',
                   null
                 ),
+                new InputOption(
+                    'server-alias',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Server alias',
+                    null
+                ),
               ]
           );
     }
@@ -74,9 +86,17 @@ class MultiCloneCommand extends DropcatCommand
         $profile = $input->getOption('profile');
         $language = $input->getOption('language');
         $config_split_settings = $input->getOption('config-split-settings');
+        $server_alias = $input->getOption('server-alias');
+
+        $verbose = false;
+
+        if ($output->isVerbose()) {
+            $verbose = true;
+        }
 
         $tracker = new Tracker();
         $sites = $tracker->read($tracker_file);
+
         if (isset($sites["$site"]) && is_array($sites["$site"])) {
             $to_clone = $sites["$site"];
         } else {
@@ -85,17 +105,103 @@ class MultiCloneCommand extends DropcatCommand
         }
         // run prepare to create a site
         $command = $this->getApplication()->find('prepare');
-        $arguments = array(
+        $arguments = [
           'command' => 'prepare',
           '--create-site' => $new_site,
           '--config-split-folder' => "sites/$new_site/sync",
           '--profile' => $profile,
           '--lang' => $language,
           '--config-split-settings' => $config_split_settings,
-        );
+          '--no-email' => true,
+        ];
+        if (isset ($server_alias)) {
+           $arguments['--server-alias'] = $server_alias;
+        }
 
         $prepareInput = new ArrayInput($arguments);
         $returnCode = $command->run( $prepareInput, $output);
+
+        $db = $to_clone['db'];
+
+        $conf = [
+            'name' => $db['name'],
+            'user' => $db['user'],
+            'pass' => $db['pass'],
+            'host' => $db['host'],
+            'port' => '3306',
+        ];
+
+        $random_name = UUID::v4();
+        $path = "/tmp/$random_name.sql";
+
+        $db_backup = new Db();
+        $db_backup->backup($conf, $path);
+
+        $clean_site_name = Name::site($new_site);
+        $tracker = new Tracker();
+        $sites = $tracker->read($tracker_file);
+
+        $new_site_db = $sites["$clean_site_name"]['db'];
+
+        $conf = [
+          'name' => $new_site_db['name'],
+          'user' => $new_site_db['user'],
+          'pass' => $new_site_db['pass'],
+          'host' => $new_site_db['host'],
+          'port' => '3306',
+        ];
+
+        $db_import = new Db();
+        $db_import->import($conf, $path);
+
+        $drush_alias = $sites["$clean_site_name"]['drush']['alias'];
+
+        // set language.
+        $set_language = new Language();
+        $set_language->setLang($language, $drush_alias, $verbose);
+
+        $config = [
+          'drush-alias' => $drush_alias,
+        ];
+
+        // do a silent config import - it could soft fail because of language.
+        // so we do not want a error in the console.
+        // this is a hack....
+        $silent_import = new Config();
+        $silent_import->silentImport($config, $verbose);
+
+        // set language again to override the config import if needed.
+        $set_language->setLang($language, $drush_alias, $verbose);
+
+        // normal config import, this should be nothing normally.
+        $silent_import = new Config();
+        $silent_import->import($config, $verbose);
+
+        $random_name = UUID::v4();
+        $path = "/tmp/$random_name.sql";
+
+        $conf['column'] = 'langcode';
+
+        // Dump table names with column langcode.
+        $dumpLang = new Db();
+        $dumpLang->dumpTableName($conf, $path, $verbose);
+
+        // set what to change to.
+        $conf['change'] = $language;
+
+        // loop through the tables and change language
+        $dumpLang = new Db();
+        $dumpLang->updateTable($conf, $path, $verbose);
+
+
+
+        // sql query för att få ut alla tabeller med langcode
+        // drush sql-query "SELECT TABLE_NAME  FROM INFORMATION_SCHEMA.COLUMNS  WHERE COLUMN_NAME LIKE 'langcode' AND TABLE_SCHEMA='mikketysk'" > filetxt
+        // loopa igenom filen
+        // drush sql-query "UPDATE poll set langcode='sv'"
+
+        // drush locale-import files/translations/drupal-8.4.5.sv sv
+        // drush upwd admin --password=admin
 
     }
 }

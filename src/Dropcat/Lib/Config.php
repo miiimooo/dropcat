@@ -45,6 +45,24 @@ class Config
         $this->output->writeln("<info>$this->mark config imported for $alias</info>");
     }
 
+    public function silentImport($config, $verbose)
+    {
+        $alias = $config['drush-alias'];
+        $v = ' -q';
+        if ($verbose == true) {
+            $v = ' -v';
+        }
+        $import= new Process(
+          "drush @$alias cim --yes --quiet"
+        );
+        $import->disableOutput();
+        $import->setTimeout(999);
+        $import->run();
+
+        $this->output->writeln("<info>$this->mark config imported for $alias</info>");
+    }
+
+
     public function importPartial($config, $verbose)
     {
         $alias = $config['drush-alias'];
@@ -83,7 +101,7 @@ class Config
         }
         echo $enable->getOutput();
 
-        $import= news Process(
+        $import= new Process(
             "drush @$alias csex $split --yes $v"
         );
         $import->setTimeout(999);

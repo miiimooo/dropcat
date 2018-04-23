@@ -39,15 +39,15 @@ class MultiListCommand extends DropcatCommand
                     'info',
                     null,
                     InputOption::VALUE_REQUIRED,
-                    'What to display (defaults to site-domain)',
-                    'site-domain'
+                    'What to display (defaults to site)',
+                    'site'
                 ),
                 new InputOption(
                     'seperator',
                     null,
                     InputOption::VALUE_REQUIRED,
                     'How to seperate output, only valid for txt format',
-                    'space'
+                    'newline'
                 ),
               ]
           );
@@ -67,6 +67,13 @@ class MultiListCommand extends DropcatCommand
 
         $print[] = '';
 
+        if ($info == 'site') {
+            foreach ($sites as $site => $siteProperty) {
+                if ($site !== 'default') {
+                    $print[] = $site;
+                }
+            }
+        }
         if ($info == 'site-domain') {
             foreach ($conf['sites'] as $site) {
                 if (isset($site['web']['site-domain'])) {
@@ -74,7 +81,6 @@ class MultiListCommand extends DropcatCommand
                 }
             }
         }
-
         if ($info == 'drush-alias') {
             foreach ($conf['sites'] as $site) {
                 if (isset($site['drush']['alias'])) {

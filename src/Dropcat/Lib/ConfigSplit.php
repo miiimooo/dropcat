@@ -7,6 +7,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 /**
  * Class ConfigSplit
  *
+ * Functions for handling drupal config splt.
+ *
  * @package Dropcat\Lib
  */
 class ConfigSplit
@@ -26,17 +28,17 @@ class ConfigSplit
         if ($this->verbose == true) {
             $v = ' -v';
         }
-        $install= new Process(
+        $task= new Process(
             "drush @$alias csex --yes $v"
         );
-        $install->setTimeout(999);
-        $install->run();
+        $task->setTimeout(999);
+        $task->run();
         // executes after the command finishes
-        if (!$install->isSuccessful()) {
-            throw new ProcessFailedException($install);
+        if (!$task->isSuccessful()) {
+            throw new ProcessFailedException($task);
         }
         if ($this->verbose == true) {
-            echo $install->getOutput();
+            echo $task->getOutput();
         }
     }
 }

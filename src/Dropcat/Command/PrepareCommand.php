@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Exception;
 use Dropcat\Lib\UUID;
+use Dropcat\Lib\Name;
 
 class PrepareCommand extends DropcatCommand
 {
@@ -246,24 +247,30 @@ To override config in dropcat.yml, using options:
                   'do no overwrite drush alias'
               ),
               new InputOption(
-                'vhost-target',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Where to create vhost (multi)',
-                $this->configuration->vhostTarget()
+                  'vhost-target',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Where to create vhost (multi)',
+                  $this->configuration->vhostTarget()
               ),
               new InputOption(
-                'vhost-bash-command',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Command to run on vhost creation',
-                $this->configuration->vhostBashCommand()
+                  'vhost-bash-command',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Command to run on vhost creation',
+                  $this->configuration->vhostBashCommand()
               ),
               new InputOption(
-                'no-partial',
-                 null,
-                 InputOption::VALUE_NONE,
-                'do no use partial'
+                  'no-partial',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'do no use partial'
+              ),
+              new InputOption(
+                  'no-email',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'do no send mail'
               ),
               ]
         )
@@ -305,7 +312,7 @@ To override config in dropcat.yml, using options:
         $vhost_target = $input->getOption('vhost-target');
         $vhost_bash_command = $input->getOption('vhost-bash-command');
         $no_partial = $input->getOption('no-partial') ? true : false;
-
+        $no_email = $input->getOption('no-email') ? true : false;
 
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
@@ -403,9 +410,7 @@ To override config in dropcat.yml, using options:
                 }
 
                 if (isset($create_site)) {
-                    $cleaned_string = str_replace(".", "", $create_site);
-                    $site_name = mb_strimwidth($cleaned_string, 0, 59);
-                    $new_site_name = preg_replace("#[^A-Za-z1-9]#", "_", $site_name);
+                    $new_site_name = Name::site($create_site);
                     // check if a site already exists with that name.
                     if (strstr($site, $new_site_name)) {
                         throw new Exception('site already exists');
@@ -485,6 +490,10 @@ To override config in dropcat.yml, using options:
               ],
             ];
 
+            if (isset($server_alias)) {
+                $site["$site_name"]['web']['server-alias'] = $server_alias;
+            }
+
             $tracker_conf = [
               'tracker-file' => $tracker_file,
               'new-site' => $site,
@@ -519,6 +528,7 @@ To override config in dropcat.yml, using options:
               'app-name' => $app_name,
               'tracker-file' => $tracker_file,
             ];
+
             $sitesphp = new Write();
             $sitesphp->sitesPhp($sites_php_conf);
 
@@ -560,10 +570,13 @@ To override config in dropcat.yml, using options:
             $upload_settings_local = new Upload();
             $upload_settings_local->place($remote_config, $from, $to, $verbose);
 
-            $from = "/tmp/$app_name-sites.php";
-            $to = $site_alias . '/web/sites/sites.php';
-            $upload_sites_php = new Upload();
-            $upload_sites_php->place($remote_config, $from, $to, $verbose);
+
+            if (file_exists("/tmp/$app_name-sites.php")) {
+                $from = "/tmp/$app_name-sites.php";
+                $to = $site_alias . '/web/sites/sites.php';
+                $upload_sites_php = new Upload();
+                $upload_sites_php->place($remote_config, $from, $to, $verbose);
+            }
 
             $from = realpath("settings/default.settings.php");
             $to = "$target/settings.php";
@@ -613,6 +626,7 @@ To override config in dropcat.yml, using options:
                   'profile' => $profile,
                   'site-name' => $site_name,
                   'subdir' => $site_domain,
+                  'no-email' => $no_email,
                 ];
 
                 $install = new Install();

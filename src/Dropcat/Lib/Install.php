@@ -32,13 +32,19 @@ class Install
         $site_name = $config['site-name'];
         $subdir = $config['subdir'];
         $alias = $config['drush-alias'];
+        $no_email = $config['no-email'];
+        $extra = '';
+
+        if ($no_email == true) {
+            $extra = ' install_configure_form.enable_update_status_module=NULL';
+        }
         $v = '';
         if ($verbose == true) {
             $v = ' -v';
         }
         $this->output->writeln("<info>$this->mark starting installation of $alias</info>");
         $install= new Process(
-            "drush @$alias si $profile --account-name=admin --account-pass=admin --site-name=$site_name --sites-subdir=$subdir --locale=$lang --yes $v"
+            "drush @$alias si $profile $extra --account-name=admin --account-pass=admin --site-name=$site_name --sites-subdir=$subdir --locale=$lang --yes $v"
         );
         $install->setTimeout(999);
         $install->run();
