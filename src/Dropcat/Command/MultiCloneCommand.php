@@ -13,6 +13,8 @@ use Dropcat\Lib\Db;
 use Dropcat\Lib\UUID;
 use Dropcat\Lib\Name;
 use Dropcat\Lib\Language;
+use Dropcat\Lib\Rsync;
+use Dropcat\Lib\Cache;
 
 class MultiCloneCommand extends DropcatCommand
 {
@@ -33,39 +35,39 @@ class MultiCloneCommand extends DropcatCommand
                     null
                 ),
                 new InputOption(
-                  'site',
-                  's',
-                  InputOption::VALUE_REQUIRED,
-                  'site',
-                  null
+                    'site',
+                    's',
+                    InputOption::VALUE_REQUIRED,
+                    'site',
+                    null
                 ),
                 new InputOption(
-                  'new-site',
-                  null,
-                  InputOption::VALUE_REQUIRED,
-                  'new site',
-                  null
+                    'new-site',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'new site',
+                    null
                 ),
                 new InputOption(
-                  'profile',
-                  'p',
-                  InputOption::VALUE_REQUIRED,
-                  'profile',
-                  null
+                    'profile',
+                    'p',
+                    InputOption::VALUE_REQUIRED,
+                    'profile',
+                    null
                 ),
                 new InputOption(
-                  'language',
-                  'l',
-                  InputOption::VALUE_REQUIRED,
-                  'language',
-                  null
+                    'language',
+                    'l',
+                    InputOption::VALUE_REQUIRED,
+                    'language',
+                    null
                 ),
                 new InputOption(
-                  'config-split-settings',
-                  'c',
-                  InputOption::VALUE_REQUIRED,
-                  'config split settings',
-                  null
+                    'config-split-settings',
+                    'c',
+                    InputOption::VALUE_REQUIRED,
+                    'config split settings',
+                    null
                 ),
                 new InputOption(
                     'server-alias',
@@ -114,12 +116,13 @@ class MultiCloneCommand extends DropcatCommand
           '--config-split-settings' => $config_split_settings,
           '--no-email' => true,
         ];
-        if (isset ($server_alias)) {
-           $arguments['--server-alias'] = $server_alias;
+        if (isset($server_alias)) {
+            $arguments['--server-alias'] = $server_alias;
         }
 
+
         $prepareInput = new ArrayInput($arguments);
-        $returnCode = $command->run( $prepareInput, $output);
+        $returnCode = $command->run($prepareInput, $output);
 
         $db = $to_clone['db'];
 
@@ -173,7 +176,7 @@ class MultiCloneCommand extends DropcatCommand
         // set language again to override the config import if needed.
         $set_language->setLang($language, $drush_alias, $verbose);
 
-        // normal config import, this should be nothing normally.
+        // normal config import, this should be nothing normally, but just in case
         $silent_import = new Config();
         $silent_import->import($config, $verbose);
 
@@ -193,6 +196,21 @@ class MultiCloneCommand extends DropcatCommand
         $dumpLang = new Db();
         $dumpLang->updateTable($conf, $path, $verbose);
 
+        $aliases = [
+          'original' => $to_clone['drush']['alias'],
+          'clone' => $drush_alias,
+         ];
+
+
+        $clone = $sites["$clean_site_name"];
+        $original = $to_clone;
+
+        $rsync_files = new Rsync();
+        $rsync_files->multi($original, $clone, $verbose);
+
+        $rebuild = new Cache();
+        $rebuild->rebuild($config, $verbose);
+
 
 
         // sql query för att få ut alla tabeller med langcode
@@ -202,6 +220,5 @@ class MultiCloneCommand extends DropcatCommand
 
         // drush locale-import files/translations/drupal-8.4.5.sv sv
         // drush upwd admin --password=admin
-
     }
 }
