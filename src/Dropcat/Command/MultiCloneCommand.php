@@ -15,6 +15,7 @@ use Dropcat\Lib\Name;
 use Dropcat\Lib\Language;
 use Dropcat\Lib\Rsync;
 use Dropcat\Lib\Cache;
+use Dropcat\Lib\ConfigSplit;
 
 class MultiCloneCommand extends DropcatCommand
 {
@@ -167,6 +168,10 @@ class MultiCloneCommand extends DropcatCommand
           'drush-alias' => $drush_alias,
         ];
 
+
+        $config_export = new ConfigSplit();
+        $config_export->export($config);
+
         // do a silent config import - it could soft fail because of language.
         // so we do not want a error in the console.
         // this is a hack....
@@ -175,6 +180,9 @@ class MultiCloneCommand extends DropcatCommand
 
         // set language again to override the config import if needed.
         $set_language->setLang($language, $drush_alias, $verbose);
+
+        $config_export = new ConfigSplit();
+        $config_export->export($config);
 
         // normal config import, this should be nothing normally, but just in case
         $silent_import = new Config();

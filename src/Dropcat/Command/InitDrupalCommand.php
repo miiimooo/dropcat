@@ -88,8 +88,8 @@ class InitDrupalCommand extends DropcatCommand
         );
         // Use .gitignore
         $fs->rename(
-          'web_init/.gitignore',
-          '.gitignore'
+            'web_init/.gitignore',
+            '.gitignore'
         );
 
 

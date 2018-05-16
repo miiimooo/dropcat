@@ -173,7 +173,6 @@ class ResetOpcacheCommand extends DropcatCommand
 
         $request_url = "$url/$random_file_name";
         if (isset($auth_pass) && isset($auth_user)) {
-
             $request_url = str_replace('://', "://$auth_user:$auth_pass@", $request_url);
         }
 
@@ -191,7 +190,6 @@ class ResetOpcacheCommand extends DropcatCommand
 
         $request_url = $url;
         if (isset($auth_pass) && isset($auth_user)) {
-
             $request_url = str_replace('://', "://$auth_user:$auth_pass@", $request_url);
         }
         // use curl to warm opcache
@@ -211,6 +209,5 @@ class ResetOpcacheCommand extends DropcatCommand
         $remove->file($remote_config, $to, $verbose);
 
         $output->writeln('<info>' . $this->heart . ' opcache reset</info>');
-
     }
 }

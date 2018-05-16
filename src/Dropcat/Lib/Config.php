@@ -53,7 +53,7 @@ class Config
             $v = ' -v';
         }
         $import= new Process(
-          "drush @$alias cim --yes --quiet"
+            "drush @$alias cim --yes --quiet"
         );
         $import->disableOutput();
         $import->setTimeout(999);

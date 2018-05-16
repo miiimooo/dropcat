@@ -1,7 +1,6 @@
 <?php
 namespace Dropcat\Lib;
 
-
 use Exception;
 use Swift_SmtpTransport;
 use Swift_Mailer;
@@ -53,6 +52,5 @@ class Mail
         ;
 
         $result = $mailer->send($message);
-
     }
 }

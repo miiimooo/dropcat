@@ -412,8 +412,8 @@ To override config in dropcat.yml, using options:
                 if (isset($create_site)) {
                     $new_site_name = Name::site($create_site);
                     // check if a site already exists with that name.
-                    if (strstr($site, $new_site_name)) {
-                        throw new Exception('site already exists');
+                    if ($site === $new_site_name) {
+                        throw new Exception("site $new_site_name already exists");
                     }
                 }
             }

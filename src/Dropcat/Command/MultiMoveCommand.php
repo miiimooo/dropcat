@@ -35,14 +35,14 @@ To override config in dropcat.yml, using options:
             ),
             new InputOption(
                 'build-id',
-                NULL,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Id',
                 $this->configuration->localEnvironmentBuildId()
             ),
             new InputOption(
                 'separator',
-              NULL,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Name separator',
                 $this->configuration->localEnvironmentSeparator()
@@ -84,14 +84,14 @@ To override config in dropcat.yml, using options:
             ),
             new InputOption(
                 'ssh_key_password',
-                NULL,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'SSH key password',
                 $this->configuration->localEnvironmentSshKeyPassword()
             ),
             new InputOption(
                 'target_path',
-                 NULL,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Target path',
                 $this->configuration->remoteEnvironmentTargetPath()
@@ -105,21 +105,21 @@ To override config in dropcat.yml, using options:
             ),
             new InputOption(
                 'temp_folder',
-                NULL,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Temp folder',
                 $this->configuration->remoteEnvironmentTempFolder()
             ),
             new InputOption(
                 'alias',
-                 NULL,
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Symlink alias',
                 $this->configuration->remoteEnvironmentAlias()
             ),
             new InputOption(
                 'keeptar',
-                 NULL,
+                null,
                 InputOption::VALUE_NONE,
                 'Keep tar after move (defaults to no)'
             ),

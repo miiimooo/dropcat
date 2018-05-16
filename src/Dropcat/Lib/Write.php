@@ -140,7 +140,6 @@ class Write
                     $out .= '$config[\'config_split.config_split.basic_site_settings\'][\'folder\'] = \'' . $siteProperty['web']['config-split-folder'] . "';\n";
                 }
                 $out .= '$config[\'locale.settings\'][\'translation\'][\'path\'] = \'' . 'sites/' . $siteProperty['web']['site-domain'] . '/files/translations' ."';\n";
-                
             }
         }
         $this->fs->dumpFile('/tmp/' . $conf['app-name'] . '.local.settings.php', $out);

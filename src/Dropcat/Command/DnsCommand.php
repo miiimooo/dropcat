@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-
 class DnsCommand extends DropcatCommand
 {
     protected static $defaultName = 'scan:mixed-content';
@@ -35,16 +34,16 @@ class DnsCommand extends DropcatCommand
     {
 
         if (version_compare(phpversion(), '7.1', '<')) {
-          $output->writeln('<error>' . $this->error .
+            $output->writeln('<error>' . $this->error .
             ' scan:mixed-content only works on php 7.1 and higher.</error>');
-          exit();
+            exit();
         }
 
         $domain = $input->getOption('domain');
         if (!isset($domain)) {
-          $output->writeln('<error>' . $this->error .
+            $output->writeln('<error>' . $this->error .
             ' please provide an domain, like --domain=https://mydomain.com</error>');
-          exit();
+            exit();
         }
 
         $styledOutput = new SymfonyStyle($input, $output);
