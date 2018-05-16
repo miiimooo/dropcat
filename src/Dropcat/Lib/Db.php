@@ -42,7 +42,8 @@ class Db
 
         // Create db user.
         $process = new Process(
-            "mysql -u $mysql_root_user -p$mysql_root_pass -h $mysql_host -e \"CREATE USER '$new_mysql_user'@'%' IDENTIFIED BY '$new_mysql_pass'\";"
+            "mysql -u $mysql_root_user -p$mysql_root_pass -h $mysql_host " .
+            " -e \"CREATE USER '$new_mysql_user'@'%' IDENTIFIED BY '$new_mysql_pass'\";"
         );
         $process->setTimeout($timeout);
         $process->run();
@@ -100,7 +101,8 @@ class Db
         if ($mysqli->select_db("$mysql_db") === false) {
             // Fix privileges for db user.
             $process = new Process(
-                "mysql -u $mysql_root_user -p$mysql_root_pass -h $mysql_host -e \"GRANT ALL PRIVILEGES ON * . * TO '$mysql_user'@'%' IDENTIFIED BY '$mysql_password'\";"
+                "mysql -u $mysql_root_user -p$mysql_root_pass -h $mysql_host " .
+                "-e \"GRANT ALL PRIVILEGES ON * . * TO '$mysql_user'@'%' IDENTIFIED BY '$mysql_password'\";"
             );
             $process->setTimeout($timeout);
             $process->run();
@@ -191,7 +193,8 @@ class Db
 
         extract($conf);
 
-        $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE '$column' AND TABLE_SCHEMA = '$name'";
+        $query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS " .
+          "WHERE COLUMN_NAME LIKE '$column' AND TABLE_SCHEMA = '$name'";
 
         $process = new Process(
             "mysql -u $user -p$pass -h $host -P $port -e \"$query\" > $path"
@@ -240,6 +243,7 @@ class Db
             }
         }
 
-        $this->output->writeln("<info>$this->mark database table names with column $name language changed to $change</info>");
+        $this->output->writeln("<info>$this->mark database table names with" .
+          " column $name language changed to $change</info>");
     }
 }

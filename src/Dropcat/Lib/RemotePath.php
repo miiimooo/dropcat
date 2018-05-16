@@ -53,7 +53,8 @@ class RemotePath
         try {
             $login = $ssh->login($user, $auth);
             if (!$login) {
-                throw new Exception('Login Failed using ' . $key . ' at port ' . $port . ' and user ' . $user . ' at ' . $server
+                throw new Exception('Login Failed using ' . $key . ' at port '
+                  . $port . ' and user ' . $user . ' at ' . $server
                   . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {

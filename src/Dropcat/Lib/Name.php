@@ -19,7 +19,7 @@ class Name
     /**
      * Create a folder on a remote server.
      */
-    static function site($name)
+    public static function site($name)
     {
         $cleaned_string = str_replace(".", "", $name);
         $site_name = mb_strimwidth($cleaned_string, 0, 59);
