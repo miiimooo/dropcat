@@ -286,3 +286,9 @@ services:
       tags:
             - {name: console.command, command: reset:opcache}
 
+    dropcat.command.security:drupal:
+      class: Dropcat\Command\SecurityDrupalCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+            - {name: console.command, command: security:drupal}

@@ -1,0 +1,148 @@
+<?php
+
+namespace Dropcat\Command;
+
+use Dropcat\Lib\DropcatCommand;
+use Dropcat\Lib\CheckDrupal;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Exception;
+use ComposerLockParser\ComposerInfo;
+use GuzzleHttp\Client;
+
+
+class SecurityDrupalCommand extends DropcatCommand
+{
+    protected function configure()
+    {
+        $HelpText = '<info>check drupal release security</info>';
+
+        $this->setName("security:drupal")
+          ->setDescription("check drupal security")
+          ->setDefinition(
+            array(
+              new InputOption(
+                'lock-file',
+                'l',
+                InputOption::VALUE_OPTIONAL,
+                'Lock flle path',
+                './composer.lock'
+              ),
+              new InputOption(
+                'api',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'API base url',
+                'https://drupal-versions.dglive.net'
+              ),
+              new InputOption(
+                'voldemort',
+                'm',
+                InputOption::VALUE_NONE,
+                'be evil, require latest'
+              ),
+              new InputOption(
+                'manual',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Manual check version, do not use lock file',
+                null
+              ),
+            )
+          )
+          ->setHelp($HelpText);
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $lock_file = $input->getOption('lock-file');
+        $api = $input->getOption('api');
+        $be_evil = $input->getOption('voldemort') ? true : false;
+        $version = $input->getOption('manual');
+
+        $check_drupal = new CheckDrupal();
+        $version_drupal = $check_drupal->version();
+
+        if ($version_drupal == '8')
+        {
+            if (!isset($version)) {
+                $read_lock = new ComposerInfo($lock_file);
+                $read_lock->parse();
+                $parse = $read_lock->getPackages();
+
+                foreach ($parse as $package) {
+                    $name[] = $package->getName();
+                    $version[] = $package->getVersion();
+                }
+
+                $key = array_search('drupal/core', $name);
+                if (!isset($key)) {
+                    $key = array_search('drupal/drupal', $name);
+                }
+                if ($key === false) {
+                    echo "drupal not found";
+                    exit();
+                }
+
+                if (isset($key) && isset($version)) {
+                    $existing = $version["$key"];
+                    $this->getVersion($existing, $api, $be_evil, $output);
+                }
+            }
+            else {
+                $this->getVersion($version, $api, $be_evil, $output);
+            }
+        }
+        else {
+            $output->writeln("<info>Security check, for now just works for drupal 8.</info>");
+
+        }
+    }
+
+    public function getVersion($version, $api, $be_evil, $output)
+    {
+
+        try {
+            $client = new Client(['base_uri' => "$api"]);
+            $res = $client->request('GET', "/api/v1/version/$version",
+              ['allow_redirects' => true]);
+
+            if ($res->hasHeader('400')) {
+                throw new Exception('drupal version not found');
+            }
+
+        } catch (Exception $e) {
+            echo $e->getMessage() . "\n";
+            exit(1);
+        }
+
+        $decoded = json_decode($res->getBody(), true);
+        $status = $decoded[0]['status'];
+
+        $ok = [
+          'latest',
+        ];
+        if ($be_evil === false) {
+            $ok = [
+              'latest',
+              'deprecated',
+            ];
+        }
+
+        if (in_array($status, $ok)) {
+            if ($status === 'deprecated') {
+                $output->writeln("<info>$this->mark drupal version $version is deprecated</info>");
+                $output->writeln("<error>THIS VERSION ($version) CAN'T BE DEPLOYED TO PRODUCTION!</error>");
+
+            } else {
+                $output->writeln("<info>$this->heart drupal version $version is ok</info>");
+            }
+        } else {
+            $output->writeln("<info>$this->error drupal version $version is not secure</info>");
+            $output->writeln("<error>ERROR!!!</error>");
+            exit(1);
+        }
+
+    }
+}
