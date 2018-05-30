@@ -11,7 +11,6 @@ use Exception;
 use ComposerLockParser\ComposerInfo;
 use GuzzleHttp\Client;
 
-
 class SecurityDrupalCommand extends DropcatCommand
 {
     protected function configure()
@@ -21,35 +20,35 @@ class SecurityDrupalCommand extends DropcatCommand
         $this->setName("security:drupal")
           ->setDescription("check drupal security")
           ->setDefinition(
-            array(
+              array(
               new InputOption(
-                'lock-file',
-                'l',
-                InputOption::VALUE_OPTIONAL,
-                'Lock flle path',
-                './composer.lock'
+                  'lock-file',
+                  'l',
+                  InputOption::VALUE_OPTIONAL,
+                  'Lock flle path',
+                  './composer.lock'
               ),
               new InputOption(
-                'api',
-                'a',
-                InputOption::VALUE_OPTIONAL,
-                'API base url',
-                'https://drupal-versions.dglive.net'
+                  'api',
+                  'a',
+                  InputOption::VALUE_OPTIONAL,
+                  'API base url',
+                  'https://drupal-versions.dglive.net'
               ),
               new InputOption(
-                'voldemort',
-                'm',
-                InputOption::VALUE_NONE,
-                'be evil, require latest'
+                  'voldemort',
+                  'm',
+                  InputOption::VALUE_NONE,
+                  'be evil, require latest'
               ),
               new InputOption(
-                'manual',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Manual check version, do not use lock file',
-                null
+                  'manual',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Manual check version, do not use lock file',
+                  null
               ),
-            )
+              )
           )
           ->setHelp($HelpText);
     }
@@ -98,19 +97,12 @@ class SecurityDrupalCommand extends DropcatCommand
                 $line = $get_output->getOutput();
                 $version = substr($line, -5);
                 $this->getVersion((float) $version, $api, $be_evil, $output);
-            }
-
-
-            else {
-
+            } else {
                 $output->writeln("<info>Sorry, could not find drupal.</info>");
-
             }
-
         } else {
             $this->getVersion($version, $api, $be_evil, $output);
         }
-
     }
 
     public function getVersion($version, $api, $be_evil, $output)
@@ -119,13 +111,15 @@ class SecurityDrupalCommand extends DropcatCommand
         try {
             $client = new Client(['base_uri' => "$api"]);
 
-            $res = $client->request('GET', "/api/v1/version/$version",
-              ['allow_redirects' => true]);
+            $res = $client->request(
+                'GET',
+                "/api/v1/version/$version",
+                ['allow_redirects' => true]
+            );
 
             if ($res->hasHeader('400')) {
                 throw new Exception('drupal version not found');
             }
-
         } catch (Exception $e) {
             echo $e->getMessage() . "\n";
             exit(1);
@@ -148,15 +142,19 @@ class SecurityDrupalCommand extends DropcatCommand
             if ($status === 'deprecated') {
                 $output->writeln("<info>$this->mark drupal version $version is deprecated</info>");
                 $output->writeln("<error>THIS VERSION ($version) CAN'T BE DEPLOYED TO PRODUCTION!</error>");
-
             } else {
                 $output->writeln("<info>$this->heart drupal version $version is ok</info>");
             }
         } else {
-            $output->writeln("<info>$this->error drupal version $version is not secure</info>");
-            $output->writeln("<error>ERROR!!!</error>");
-            exit(1);
+            if ($status == 'depcrecated') {
+                $output->writeln("<info>$this->error drupal version $version is deprecated</info>");
+                $output->writeln("<error>ERROR!!!</error>");
+                exit(1);
+            } else {
+                $output->writeln("<info>$this->error drupal version $version is not secure</info>");
+                $output->writeln("<error>ERROR!!!</error>");
+                exit(1);
+            }
         }
-
     }
 }
