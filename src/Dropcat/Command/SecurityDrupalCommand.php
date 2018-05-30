@@ -64,9 +64,9 @@ class SecurityDrupalCommand extends DropcatCommand
         $check_drupal = new CheckDrupal();
         $version_drupal = $check_drupal->version();
 
-        if ($version_drupal == '8')
-        {
-            if (!isset($version)) {
+
+        if (!isset($version)) {
+            if ($version_drupal == '8') {
                 $read_lock = new ComposerInfo($lock_file);
                 $read_lock->parse();
                 $parse = $read_lock->getPackages();
@@ -90,14 +90,27 @@ class SecurityDrupalCommand extends DropcatCommand
                     $this->getVersion($existing, $api, $be_evil, $output);
                 }
             }
-            else {
-                $this->getVersion($version, $api, $be_evil, $output);
+            if ($version_drupal == '7') {
+                $find_d7_command = 'find . -maxdepth 1 -type f \( -iname \*.make -o -iname \*.make \)| xargs grep "\[\drupal]\[version"';
+                $run_process = $this->runProcess($find_d7_command);
+                $run_process->run();
+                $get_output = $run_process->enableOutput();
+                $line = $get_output->getOutput();
+                $version = substr($line, -5);
+                $this->getVersion((float) $version, $api, $be_evil, $output);
             }
-        }
-        else {
-            $output->writeln("<info>Security check, for now just works for drupal 8.</info>");
 
+
+            else {
+
+                $output->writeln("<info>Sorry, could not find drupal.</info>");
+
+            }
+
+        } else {
+            $this->getVersion($version, $api, $be_evil, $output);
         }
+
     }
 
     public function getVersion($version, $api, $be_evil, $output)
@@ -105,6 +118,7 @@ class SecurityDrupalCommand extends DropcatCommand
 
         try {
             $client = new Client(['base_uri' => "$api"]);
+
             $res = $client->request('GET', "/api/v1/version/$version",
               ['allow_redirects' => true]);
 
