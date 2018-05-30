@@ -97,8 +97,6 @@ class SecurityDrupalCommand extends DropcatCommand
                 $line = $get_output->getOutput();
                 $version = substr($line, -5);
                 $this->getVersion((float) $version, $api, $be_evil, $output);
-            } else {
-                $output->writeln("<info>Sorry, could not find drupal.</info>");
             }
         } else {
             $this->getVersion($version, $api, $be_evil, $output);
