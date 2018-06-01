@@ -17,7 +17,8 @@ class BackupCommand extends DropcatCommand
     protected static $defaultName = 'backup';
     protected function configure()
     {
-        $HelpText = 'The <info>%command.name%</info> command will create a backup of sites database or/and the whole web site folder.';
+        $HelpText = 'The <info>%command.name%</info> command will create a backup' .
+          'of sites database or/and the whole web site folder.';
         $this->setName("backup")
           ->addUsage('-b /backup/dir')
           ->setDescription("backup site")

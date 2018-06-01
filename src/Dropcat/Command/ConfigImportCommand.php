@@ -13,7 +13,7 @@ class ConfigImportCommand extends DropcatCommand
 
     protected function configure()
     {
-        $HelpText = 'The <info>configimport</info> command import configuration to drupal site.
+        $HelpText = 'The <info>%command.name%</info> command import configuration to drupal site.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat configimport</info>

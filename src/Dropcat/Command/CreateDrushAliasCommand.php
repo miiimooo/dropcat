@@ -14,7 +14,8 @@ class CreateDrushAliasCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = '<error>This command is deprecated and will be removed. Use dropcat generate:drush-alias instead</error>';
+        $HelpText = '<error>This command is deprecated and will be removed. ' .
+          'Use dropcat generate:drush-alias instead</error>';
 
         $this->setName("create-drush-alias")
         ->setHidden(true)

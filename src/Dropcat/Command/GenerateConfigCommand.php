@@ -17,16 +17,16 @@ class GenerateConfigCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>generate:config</info> command will create a dropcat config file.';
+        $HelpText = 'The <info>%command.name%</info> command will create a dropcat config file.';
 
         $this->setName("generate:config")
-        ->setDescription("generates dropcat config.")
-        ->setHelp($HelpText)
+            ->setDescription("generates dropcat config.")
+            ->setHelp($HelpText)
+            ->setHidden(true)
 
-        ->setDefinition(
-            array(
-            )
-        );
+            ->setDefinition(
+                []
+            );
     }
 
 

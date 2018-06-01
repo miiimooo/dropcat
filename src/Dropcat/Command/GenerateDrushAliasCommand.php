@@ -14,7 +14,7 @@ class GenerateDrushAliasCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>generate:drush-alias</info> command will create drush alias.
+        $HelpText = 'The <info>%command.name%</info> command will create drush alias.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the current dir):
 <info>dropcat generate:drush-alias</info>

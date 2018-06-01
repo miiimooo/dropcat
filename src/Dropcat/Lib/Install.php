@@ -44,7 +44,9 @@ class Install
         }
         $this->output->writeln("<info>$this->mark starting installation of $alias</info>");
         $install= new Process(
-            "drush @$alias si $profile $extra --account-name=admin --account-pass=admin --site-name=$site_name --sites-subdir=$subdir --locale=$lang --yes $v"
+            "drush @$alias si $profile $extra --account-name=admin " .
+            "--account-pass=admin --site-name=$site_name --sites-subdir=$subdir " .
+            "--locale=$lang --yes $v"
         );
         $install->setTimeout(999);
         $install->run();

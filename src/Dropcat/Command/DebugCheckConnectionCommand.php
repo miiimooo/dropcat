@@ -14,7 +14,7 @@ class DebugCheckConnectionCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>debug:check-connection</info> command will check connection for env.
+        $HelpText = 'The <info>%command.name%</info> command will check connection for env.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the current dir):
 <info>dropcat check-connection</info>';

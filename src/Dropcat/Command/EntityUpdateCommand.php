@@ -13,7 +13,7 @@ class EntityUpdateCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>entity-update</info> command updates entities on a drupal site.
+        $HelpText = 'The <info>%command.name%</info> command updates entities on a drupal site.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat entity-update</info>

@@ -13,10 +13,10 @@ class GetDatabaseBackupCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>get:db-backup</info> command will run script or command.
+        $HelpText = 'The <info>%command.name%</info> command will run script or command.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
-<info>dropcat get:db-backup</info>';
+<info>dropcat %command.name%</info>';
 
         $this->setName("get:db-backup")
         ->setDescription("run command or script on local environment")
@@ -24,35 +24,35 @@ To run with default options (using config from dropcat.yml in the currrent dir):
             array(
             new InputOption(
                 'remote_backup_path',
-                'rbp',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Remote backup path',
                 $this->configuration->localEnvironmentBackupPath()
             ),
             new InputOption(
                 'remote_db_backup_name',
-                'rdbn',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Remote db backup name',
                 $this->configuration->localEnvironmentBackupDbName()
             ),
             new InputOption(
                 'remote_backup_server',
-                'rps',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Remote backup server',
                 $this->configuration->localEnvironmentBackupServer()
             ),
             new InputOption(
                 'remote_backup_server_user',
-                'rpsu',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'User for backup server',
                 $this->configuration->localEnvironmentBackupServerUser()
             ),
             new InputOption(
                 'remote_backup_server_port',
-                'rpsp',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'SSH Remote backup up server ssh port',
                 $this->configuration->localEnvironmentBackupServerPort()

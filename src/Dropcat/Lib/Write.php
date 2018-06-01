@@ -75,7 +75,8 @@ class Write
             echo 'an error occurred while creating your file at ' . $e->getPath();
             exit(1);
         }
-        $this->output->writeln('<info>' . $this->mark . ' drush alias ' .  $conf['drush-alias']  . ' created</info>');
+        $this->output->writeln("<info>$this->mark drush alias " . $conf['drush-alias'] .
+          " created</info>");
     }
 
 
@@ -137,9 +138,11 @@ class Write
                 $out .= "  include '../global.overrides.php';\n";
                 $out .= "}\n";
                 if (isset($siteProperty['web']['config-split-folder'])) {
-                    $out .= '$config[\'config_split.config_split.basic_site_settings\'][\'folder\'] = \'' . $siteProperty['web']['config-split-folder'] . "';\n";
+                    $out .= '$config[\'config_split.config_split.basic_site_settings\'][\'folder\'] = \'' .
+                      $siteProperty['web']['config-split-folder'] . "';\n";
                 }
-                $out .= '$config[\'locale.settings\'][\'translation\'][\'path\'] = \'' . 'sites/' . $siteProperty['web']['site-domain'] . '/files/translations' ."';\n";
+                $out .= '$config[\'locale.settings\'][\'translation\'][\'path\'] = \'' . 'sites/' .
+                  $siteProperty['web']['site-domain'] . '/files/translations' ."';\n";
             }
         }
         $this->fs->dumpFile('/tmp/' . $conf['app-name'] . '.local.settings.php', $out);

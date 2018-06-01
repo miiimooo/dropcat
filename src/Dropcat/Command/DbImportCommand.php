@@ -13,7 +13,7 @@ class DbImportCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>dbimport</info> command will import.
+        $HelpText = 'The <info>%command.name%</info> command will import.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat dbimport</info>

@@ -151,12 +151,22 @@ To override config in dropcat.yml, using options:
 
         $site_alias = "$web_root/$alias";
 
-        if (!isset($tracker_dir)) {
-            throw new Exception('tracker dir must be set');
+        try {
+            if (!isset($tracker_dir)) {
+                throw new Exception('tracker dir must be set');
+            }
+        } catch (\Exception $e) {
+            echo 'error ' . $e->getMessage();
         }
-        if (!isset($id)) {
-            throw new Exception('tracker id must be set');
+
+        try {
+            if (!isset($id)) {
+                throw new Exception('tracker id must be set');
+            }
+        } catch (\Exception $e) {
+            echo 'error ' . $e->getMessage();
         }
+
 
         // Dir for deploy tracker.
         $dir = "$tracker_dir/$app_name";
@@ -294,8 +304,9 @@ To override config in dropcat.yml, using options:
         try {
             $login = $ssh->login($user, $auth);
             if (!$login) {
-                throw new Exception('Login Failed using ' . $key . ' at port ' . $port . ' and user ' . $user . ' at ' . $server
-                  . ' ' . $ssh->getLastError());
+                throw new Exception('Login Failed using ' . $key .
+                  ' at port ' . $port . ' and user ' . $user . ' at ' . $server .
+                  ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
             echo $e->getMessage() . "\n";

@@ -13,7 +13,7 @@ class CacheRecreateCommand extends DropcatCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>cache-recreate</info> re-creates cache on a drupal site.
+        $HelpText = 'The <info>%command.name%</info> re-creates cache on a drupal site.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat cache-recreate</info>
