@@ -250,7 +250,7 @@ To override config in dropcat.yml, using options:
             $output->writeln("<info>$this->mark alias to deployed folder are: $web_root/$alias</info>");
         }
 
-        $ssh->exec("cp -Rf /tmp/$app_name-sites-$deploy_folder/* $sites_folder");
+        $ssh->exec("mv /tmp/$app_name-sites-$deploy_folder/* $sites_folder");
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
             echo "Could not move sites folder in place, error code $status\n";
