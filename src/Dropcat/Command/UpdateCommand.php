@@ -289,7 +289,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                                 echo $process->getOutput();
                             }
 
-                            $output->writeln("<info>$this->mark rebuild cache done for $site</info>");
                             $process = new Process("drush @$alias cr");
                             $process->setTimeout(9999);
                             $process->run();
@@ -353,90 +352,63 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             echo $process->getOutput();
                         }
                         $output->writeln("<info>$this->mark config split export done for $site</info>");
-
+                        if ($no_config_import == false) {
+                            if ($version == '8') {
+                                // Remove partial for now.
+                                /*  $output->writeln("<info>$this->mark starting partial config import for $site</info>");
+                                $process = new Process("drush @$alias cim -y --partial");
+                                $process->setTimeout(9999);
+                                $process->run();
+                                // Executes after the command finishes.
+                                if (!$process->isSuccessful()) {
+                                $output->writeln("<info>$this->error config import failed for $site</info>");
+                                throw new ProcessFailedException($process);
+                                }
+                                if ($output->isVerbose()) {
+                                echo $process->getOutput();
+                                }*/
+                                $output->writeln("<info>$this->mark starting config import for $site</info>");
+                                $process = new Process("drush @$alias cim -y $part");
+                                $process->setTimeout(9999);
+                                $process->run();
+                                // Executes after the command finishes.
+                                if (!$process->isSuccessful()) {
+                                    $output->writeln("<info>$this->error config import failed for $site</info>");
+                                    throw new ProcessFailedException($process);
+                                }
+                                if ($output->isVerbose()) {
+                                    echo $process->getOutput();
+                                }
+                                $output->writeln("<info>$this->mark config import done for $site</info>");
+                            }
+                        }
+                    }
+                        
                         $process = new Process("drush @$alias php-eval 'node_access_rebuild();'");
                         $process->setTimeout(9999);
                         $process->run();
                         // Executes after the command finishes.
-                        if (!$process->isSuccessful()) {
-                            $output->writeln("<info>$this->error could not rebuild permissions for $site</info>");
-                            throw new ProcessFailedException($process);
-                        }
-                        if ($output->isVerbose()) {
-                            echo $process->getOutput();
-                        }
+                    if (!$process->isSuccessful()) {
+                        $output->writeln("<info>$this->error could not rebuild permissions for $site</info>");
+                        throw new ProcessFailedException($process);
+                    }
+                    if ($output->isVerbose()) {
+                        echo $process->getOutput();
+                    }
                         $output->writeln("<info>$this->mark permissions rebuilt for $site</info>");
-                        
+
                         $process = new Process("drush @$alias sset system.maintenance_mode 0");
                         $process->setTimeout(9999);
                         $process->run();
                         // Executes after the command finishes.
-                        if (!$process->isSuccessful()) {
-                            $output->writeln("<info>$this->error could not remove $site from maintenance mode</info>");
-                            throw new ProcessFailedException($process);
-                        }
-                        if ($output->isVerbose()) {
-                            echo $process->getOutput();
-                        }
+                    if (!$process->isSuccessful()) {
+                        $output->writeln("<info>$this->error could not remove $site from maintenance mode</info>");
+                        throw new ProcessFailedException($process);
+                    }
+                    if ($output->isVerbose()) {
+                        echo $process->getOutput();
+                    }
                         $output->writeln("<info>$this->mark $site is now online.</info>");
-                    }
-                    if ($no_config_import == false) {
-                        if ($version == '8') {
-                            // Remove partial for now.
-                            /*  $output->writeln("<info>$this->mark starting partial config import for $site</info>");
-                            $process = new Process("drush @$alias cim -y --partial");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                            $output->writeln("<info>$this->error config import failed for $site</info>");
-                            throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                            echo $process->getOutput();
-                            }*/
-                            $output->writeln("<info>$this->mark starting config import for $site</info>");
-                            $process = new Process("drush @$alias cim -y $part");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error config import failed for $site</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                            }
-                            $output->writeln("<info>$this->mark config import done for $site</info>");
-
-                            $process = new Process("drush @$alias php-eval 'node_access_rebuild();'");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error could not rebuild permissions for $site</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                            }
-                            $output->writeln("<info>$this->mark permissions rebuilt for $site</info>");
-
-                            $process = new Process("drush @$alias sset system.maintenance_mode 0");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error could not remove $site from maintenance mode</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                            }
-
-                            $output->writeln("<info>$this->mark $site is now online.</info>");
-                        }
-                    }
                 }
             }
         }
