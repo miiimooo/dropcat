@@ -154,17 +154,35 @@ To override config in dropcat.yml, using options:
         } else {
             $tarfile = $app_name . $separator . $build_id . '.tar';
         }
+        if ($output->isVerbose()) {
+            echo "tar is going to be saved as $tarfile at $tar_dir \n";
+        }
+
         $localFileSha1 = sha1_file("$tar_dir/$tarfile");
+        if ($output->isVerbose()) {
+            echo "logging to server $server using port $port \n";
+        }
+
         $sftp = new SFTP($server, $port, $timeout);
         $sftp->setTimeout(999);
 
         $auth = new RSA();
         if (isset($ssh_key_password)) {
+            if ($output->isVerbose()) {
+                echo "using ssh key with password \n";
+            }
             $auth->setPassword($ssh_key_password);
         }
         $auth->loadKey($identity_file_content);
+        if ($output->isVerbose()) {
+            echo "loaded ssh key $identity_file \n";
+        }
         try {
+            if ($output->isVerbose()) {
+                echo "loggin in to server \n";
+            }
             $login = $sftp->login($user, $auth);
+
             if (!$login) {
                 throw new Exception('login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server);
             }
