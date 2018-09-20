@@ -18,9 +18,9 @@ use Exception;
 class UpdateCommand extends DropcatCommand
 {
 
-  /**
-   *
-   */
+    /**
+     *
+     */
     protected function configure()
     {
         $HelpText = 'The <info>update-database</info> command updates db if needed.
@@ -29,73 +29,73 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat update</info>';
 
         $this->setName("update")
-        ->setDescription("Run needed updates after a deploy.")
-        ->setDefinition(
+          ->setDescription("Run needed updates after a deploy.")
+          ->setDefinition(
             array(
-            new InputOption(
+              new InputOption(
                 'tracker-file',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Trackerfile',
                 $this->configuration->trackerFile()
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'no-entity-update',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not run entity updates'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'no-db-update',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not run update database'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'no-config-import',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not import config'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'use-config-split',
                 null,
                 InputOption::VALUE_NONE,
                 'Use config split'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'use-config-import-partial',
                 null,
                 InputOption::VALUE_NONE,
                 'Use partial import of config'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'multi',
                 null,
                 InputOption::VALUE_NONE,
                 'Use multi-site setup'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'no-cache-rebuild-after-updatedb',
                 null,
                 InputOption::VALUE_NONE,
                 'Cache rebuild after update db'
-            ),
-            new InputOption(
+              ),
+              new InputOption(
                 'config-split-settings',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Config split settings to use',
                 null
-            ),
+              ),
             )
-        )
-        ->setHelp($HelpText);
+          )
+          ->setHelp($HelpText);
     }
 
-  /**
-   *
-   */
+    /**
+     *
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tracker_file = $input->getOption('tracker-file');
@@ -308,7 +308,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     if ($config_split == true) {
                         if ($version == '7') {
                             $output->writeln('<info>Seems like you are trying to run config split ' .
-                            'on a drupal 7 site</info>');
+                              'on a drupal 7 site</info>');
                         }
                         // We had a bug about drush did not see drush csex, this was
                         // the solution, but it seems not needed if config_split is installed
@@ -383,11 +383,11 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             }
                         }
                     }
-                        
-                        $process = new Process("drush @$alias php-eval 'node_access_rebuild();'");
-                        $process->setTimeout(9999);
-                        $process->run();
-                        // Executes after the command finishes.
+
+                    $process = new Process("drush @$alias php-eval 'node_access_rebuild();'");
+                    $process->setTimeout(9999);
+                    $process->run();
+                    // Executes after the command finishes.
                     if (!$process->isSuccessful()) {
                         $output->writeln("<info>$this->error could not rebuild permissions for $site</info>");
                         throw new ProcessFailedException($process);
@@ -395,20 +395,24 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     if ($output->isVerbose()) {
                         echo $process->getOutput();
                     }
-                        $output->writeln("<info>$this->mark permissions rebuilt for $site</info>");
-
+                    $output->writeln("<info>$this->mark permissions rebuilt for $site</info>");
+                    if ($version == '7') {
+                        // @todo
+                    } else {
                         $process = new Process("drush @$alias sset system.maintenance_mode 0");
                         $process->setTimeout(9999);
                         $process->run();
                         // Executes after the command finishes.
-                    if (!$process->isSuccessful()) {
-                        $output->writeln("<info>$this->error could not remove $site from maintenance mode</info>");
-                        throw new ProcessFailedException($process);
+                        if (!$process->isSuccessful()) {
+                            $output->writeln("<info>$this->error could not remove $site from maintenance mode</info>");
+                            throw new ProcessFailedException($process);
+                        }
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
                     }
-                    if ($output->isVerbose()) {
-                        echo $process->getOutput();
-                    }
-                        $output->writeln("<info>$this->mark $site is now online.</info>");
+
+                    $output->writeln("<info>$this->mark $site is now online.</info>");
                 }
             }
         }

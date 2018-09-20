@@ -92,7 +92,11 @@ To override config in dropcat.yml, using options:
         if (!$ssh->login($user, $auth)) {
             exit('Login Failed');
         }
-        $ssh->exec($input);
+        $run = $ssh->exec($input);
+
+        if ($output->isVerbose()) {
+            echo $run;
+        }
 
         $output->writeln('<info>Task: run-remote finished</info>');
     }
