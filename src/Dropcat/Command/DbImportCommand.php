@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Exception;
 
 class DbImportCommand extends DropcatCommand
 {
@@ -57,6 +58,18 @@ To override config in dropcat.yml, using options:
         $timeout          = $input->getOption('time_out');
         $appname          = $this->configuration->localEnvironmentAppName();
         $db_dump          = "/tmp/$appname-db.sql";
+
+        try {
+            if (!isset($drush_alias)) {
+                throw new Exception('drush alias is needed');
+            }
+            if (!isset($path_to_db)) {
+                throw new Exception('path to db is needed');
+            }
+        } catch (Exception $e) {
+            echo 'error:' . $e->getMessage() . "\n";
+            exit(1);
+        }
 
         // Remove '@' if the alias beginns with it.
         $drush_alias = preg_replace('/^@/', '', $drush_alias);

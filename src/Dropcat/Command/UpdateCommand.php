@@ -31,64 +31,64 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         $this->setName("update")
           ->setDescription("Run needed updates after a deploy.")
           ->setDefinition(
-            array(
+              array(
               new InputOption(
-                'tracker-file',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Trackerfile',
-                $this->configuration->trackerFile()
+                  'tracker-file',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Trackerfile',
+                  $this->configuration->trackerFile()
               ),
               new InputOption(
-                'no-entity-update',
-                null,
-                InputOption::VALUE_NONE,
-                'Do not run entity updates'
+                  'no-entity-update',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Do not run entity updates'
               ),
               new InputOption(
-                'no-db-update',
-                null,
-                InputOption::VALUE_NONE,
-                'Do not run update database'
+                  'no-db-update',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Do not run update database'
               ),
               new InputOption(
-                'no-config-import',
-                null,
-                InputOption::VALUE_NONE,
-                'Do not import config'
+                  'no-config-import',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Do not import config'
               ),
               new InputOption(
-                'use-config-split',
-                null,
-                InputOption::VALUE_NONE,
-                'Use config split'
+                  'use-config-split',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Use config split'
               ),
               new InputOption(
-                'use-config-import-partial',
-                null,
-                InputOption::VALUE_NONE,
-                'Use partial import of config'
+                  'use-config-import-partial',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Use partial import of config'
               ),
               new InputOption(
-                'multi',
-                null,
-                InputOption::VALUE_NONE,
-                'Use multi-site setup'
+                  'multi',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Use multi-site setup'
               ),
               new InputOption(
-                'no-cache-rebuild-after-updatedb',
-                null,
-                InputOption::VALUE_NONE,
-                'Cache rebuild after update db'
+                  'no-cache-rebuild-after-updatedb',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Cache rebuild after update db'
               ),
               new InputOption(
-                'config-split-settings',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Config split settings to use',
-                null
+                  'config-split-settings',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Config split settings to use',
+                  null
               ),
-            )
+              )
           )
           ->setHelp($HelpText);
     }
@@ -367,6 +367,24 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                                 if ($output->isVerbose()) {
                                 echo $process->getOutput();
                                 }*/
+                                $output->writeln("<info>$this->mark starting config import for $site</info>");
+                                $process = new Process("drush @$alias cim -y $part");
+                                $process->setTimeout(9999);
+                                $process->run();
+                                // Executes after the command finishes.
+                                if (!$process->isSuccessful()) {
+                                    $output->writeln("<info>$this->error config import failed for $site</info>");
+                                    throw new ProcessFailedException($process);
+                                }
+                                if ($output->isVerbose()) {
+                                    echo $process->getOutput();
+                                }
+                                $output->writeln("<info>$this->mark config import done for $site</info>");
+                            }
+                        }
+                    } else {
+                        if ($no_config_import == false) {
+                            if ($version == '8') {
                                 $output->writeln("<info>$this->mark starting config import for $site</info>");
                                 $process = new Process("drush @$alias cim -y $part");
                                 $process->setTimeout(9999);
