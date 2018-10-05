@@ -82,7 +82,7 @@ class CheckConnectionCommand extends DropcatCommand
             $login = $ssh->login($user, $auth);
             if (!$login) {
                 throw new Exception('Login Failed using ' . $identity_file . ' and user ' . $user . ' at ' . $server
-                . ' ' . $ssh->getLastError());
+                . ':' . $ssh_port . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
             echo $e->getMessage() ."\n";
@@ -99,7 +99,7 @@ class CheckConnectionCommand extends DropcatCommand
 
             if (!$test_user) {
                 throw new Exception('Failed running test using ' . $identity_file . ' and user ' . $user . ' at ' . $server
-                . ' ' . $ssh->getLastError());
+                . ':' . $ssh_port . ' ' . $ssh->getLastError());
             }
         } catch (Exception $e) {
             echo $e->getMessage() ."\n";
@@ -107,7 +107,7 @@ class CheckConnectionCommand extends DropcatCommand
             $ssh->disconnect();
             exit(1);
         }
-        $output->writeln('<info>Successfully logged in to server as user <question>' . $test_user . '</question> on <question>' . $hostname .'</question>.</info>');
+        $output->writeln('<info>Successfully logged in to server as user <question>' . $test_user . '</question> on <question>' . $hostname . ':' . $ssh_port . '</question>.</info>');
         $ssh->disconnect();
     }
 }
