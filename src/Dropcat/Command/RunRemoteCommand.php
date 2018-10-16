@@ -83,9 +83,19 @@ To override config in dropcat.yml, using options:
         $input = $input->getOption('input');
 
         $ssh = new SSH2($server, $ssh_port);
+        if ($output->isVerbose()) {
+            echo "using $server and port $ssh_port";
+        }
+
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
+            if ($output->isVerbose()) {
+                echo "using $ssh_key_password as password";
+            }
+        }
+        if ($output->isVerbose()) {
+            echo "loading key $identity_file";
         }
         $auth->loadKey($identity_file_content);
 
