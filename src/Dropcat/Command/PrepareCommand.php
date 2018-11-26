@@ -521,7 +521,7 @@ To override config in dropcat.yml, using options:
                       'drush-alias' => $drush_alias,
                     ];
                     $write = new Write();
-                    $write->drushAlias($drush_alias_conf);
+                    $write->drushAlias($drush_alias_conf, $verbose);
                 }
             }
             $sites_php_conf = [
@@ -669,7 +669,7 @@ To override config in dropcat.yml, using options:
                       'drush-alias' => $drush_alias,
                     ];
                     $write = new Write();
-                    $write->drushAlias($drush_alias_conf);
+                    $write->drushAlias($drush_alias_conf, $verbose);
                 }
             }
 

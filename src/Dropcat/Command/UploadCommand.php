@@ -164,7 +164,7 @@ To override config in dropcat.yml, using options:
         }
 
         $sftp = new SFTP($server, $port, $timeout);
-        $sftp->setTimeout(999);
+        $sftp->setTimeout(240);
 
         $auth = new RSA();
         if (isset($ssh_key_password)) {

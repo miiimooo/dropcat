@@ -63,7 +63,6 @@ class SecurityDrupalCommand extends DropcatCommand
         $check_drupal = new CheckDrupal();
         $version_drupal = $check_drupal->version();
 
-
         if (!isset($version)) {
             if ($version_drupal == '8') {
                 $read_lock = new ComposerInfo($lock_file);
@@ -98,7 +97,8 @@ class SecurityDrupalCommand extends DropcatCommand
                 $get_output = $run_process->enableOutput();
                 $line = $get_output->getOutput();
                 $version = substr($line, -5);
-                $this->getVersion((float) $version, $api, $be_evil, $output);
+                $version = trim($version);
+                $this->getVersion($version, $api, $be_evil, $output);
             }
         } else {
             $this->getVersion($version, $api, $be_evil, $output);

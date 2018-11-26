@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
+
 class RunRemoteCommand extends RunCommand
 {
 
@@ -81,31 +82,38 @@ To override config in dropcat.yml, using options:
         $identity_file_content = file_get_contents($identity_file);
         $ssh_key_password = $input->getOption('ssh_key_password');
         $input = $input->getOption('input');
-
+        define('NET_SSH2_LOGGING', 2);
         $ssh = new SSH2($server, $ssh_port);
         if ($output->isVerbose()) {
-            echo "using $server and port $ssh_port";
+            $output->writeln("<info>using server $server and port $ssh_port</info>");
         }
 
         $auth = new RSA();
         if (isset($ssh_key_password)) {
             $auth->setPassword($ssh_key_password);
             if ($output->isVerbose()) {
-                echo "using $ssh_key_password as password";
+                $output->writeln("<info>using $ssh_key_password as password</info>");
             }
         }
         if ($output->isVerbose()) {
-            echo "loading key $identity_file";
+            $output->writeln("<info>loading key $identity_file</info>");
         }
         $auth->loadKey($identity_file_content);
 
         if (!$ssh->login($user, $auth)) {
-            exit('Login Failed');
+            $output->writeln($ssh->getLog());
+            $output->writeln($ssh->getErrors());
+            $output->writeln("<info>Login Failed</info>");
+            exit(1);
+        }
+        $ssh->login($user, $auth);
+        if ($output->isVerbose()) {
+            $output->writeln("<info>logging in with user $user</info>");
         }
         $run = $ssh->exec($input);
 
         if ($output->isVerbose()) {
-            echo $run;
+            $output->writeln("<info>$run</info>");
         }
 
         $output->writeln('<info>Task: run-remote finished</info>');

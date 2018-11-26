@@ -50,7 +50,7 @@ class Write
     /**
      * Write a drush alias.
      */
-    public function drushAlias($conf)
+    public function drushAlias($conf, $verbose = false)
     {
         $drushAlias = new CreateDrushAlias();
         $drushAlias->setName($conf['site-name']);
