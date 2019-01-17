@@ -20,6 +20,7 @@ class CreateDrushAlias
     private $url;
     private $sshport;
     private $drushScript = null;
+    private $drushmemorylimit;
 
     public function setName($sitename)
     {
@@ -61,11 +62,17 @@ class CreateDrushAlias
         $this->drushScript = $script_path;
     }
 
+    public function setDrushMemoryLimit($drushmemorylimit)
+    {
+        $this->drushMemoryLimit = $drushmemorylimit;
+    }
+
 
     public function getValue()
     {
         $aliasOut = '<?php
   $aliases["' . $this->sitename . '"] = array (
+    "php-options" =>  "' . $this->drushMemoryLimit . '",
     "remote-host" => "' . $this->server . '",
     "remote-user" => "' . $this->user . '",
     "root" => "' . $this->webroot . '/' . $this->alias . '/web",
