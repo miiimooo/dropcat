@@ -60,6 +60,8 @@ class Write
         $drushAlias->setSitePath($conf['alias']);
         $drushAlias->setUrl($conf['url']);
         $drushAlias->setSSHPort($conf['ssh-port']);
+        $drushAlias->setDrushMemoryLimit($conf['drush-memory-limit']);
+
         if ($conf['drush-script']) {
             $drushAlias->setDrushScriptPath($conf['drush-script']);
         }
