@@ -1027,4 +1027,17 @@ class Configuration extends DropcatConfigurationBase implements DropcatConfigura
             return null;
         }
     }
+
+    /**
+     * Get drush php memory
+     */
+    public function remoteEnvironmentDrushMemoryLimit()
+    {
+        if (isset($this->configuration['remote']['environment']['drush']['limit'])) {
+            echo 'foo';
+            return '"-d memory_limit=' . $this->configuration['remote']['environment']['drush']['limit'] . '"';
+        } else {
+            return '-d memory_limit=1024M';
+        }
+    }
 }

@@ -40,6 +40,12 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                   $this->configuration->trackerFile()
               ),
               new InputOption(
+                  'no-permission-rebuild',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Do not rebuild permissions'
+              ),
+              new InputOption(
                   'no-entity-update',
                   null,
                   InputOption::VALUE_NONE,
@@ -100,6 +106,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
     {
         $tracker_file = $input->getOption('tracker-file');
         $no_entity_update = $input->getOption('no-entity-update') ? true : false;
+        $no_permission_rebuild = $input->getOption('no-permission-rebuild') ? true : false;
         $no_db_update = $input->getOption('no-db-update') ? true : false;
         $no_config_import = $input->getOption('no-config-import') ? true : false;
         $config_split = $input->getOption('use-config-split') ? true : false;
@@ -401,19 +408,21 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                             }
                         }
                     }
+                    if ($no_permission_rebuild == false) {
+                        $process = new Process("drush @$alias php-eval 'node_access_rebuild();'");
+                        $process->setTimeout(9999);
+                        $process->run();
+                        // Executes after the command finishes.
+                        if (!$process->isSuccessful()) {
+                            $output->writeln("<info>$this->error could not rebuild permissions for $site</info>");
+                            throw new ProcessFailedException($process);
+                        }
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
+                        $output->writeln("<info>$this->mark permissions rebuilt for $site</info>");
+                    }
 
-                    $process = new Process("drush @$alias php-eval 'node_access_rebuild();'");
-                    $process->setTimeout(9999);
-                    $process->run();
-                    // Executes after the command finishes.
-                    if (!$process->isSuccessful()) {
-                        $output->writeln("<info>$this->error could not rebuild permissions for $site</info>");
-                        throw new ProcessFailedException($process);
-                    }
-                    if ($output->isVerbose()) {
-                        echo $process->getOutput();
-                    }
-                    $output->writeln("<info>$this->mark permissions rebuilt for $site</info>");
                     if ($version == '7') {
                         // @todo
                     } else {
