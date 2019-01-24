@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f883e5bf49bf5212efd45967bf2b62f7",
+    "content-hash": "4b53cd9f9bc27f6b1931e5c10bc9a914",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1936,16 +1936,16 @@
         },
         {
             "name": "t4web/composer-lock-parser",
-            "version": "1.1.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/t4web/ComposerLockParser.git",
-                "reference": "e0b6c19871b635bc673ff5859747d70c115f996a"
+                "reference": "9cc5ae37d72740f4d7a214f274ccbeaa85779942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/t4web/ComposerLockParser/zipball/e0b6c19871b635bc673ff5859747d70c115f996a",
-                "reference": "e0b6c19871b635bc673ff5859747d70c115f996a",
+                "url": "https://api.github.com/repos/t4web/ComposerLockParser/zipball/9cc5ae37d72740f4d7a214f274ccbeaa85779942",
+                "reference": "9cc5ae37d72740f4d7a214f274ccbeaa85779942",
                 "shasum": ""
             },
             "require": {
@@ -1976,7 +1976,7 @@
             "keywords": [
                 "composer.lock reader"
             ],
-            "time": "2018-10-30T07:47:04+00:00"
+            "time": "2016-11-27T18:18:49+00:00"
         },
         {
             "name": "wkse/jenkins-php-api",

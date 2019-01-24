@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Exception;
-use ComposerLockParser;
+use ComposerLockParser\ComposerInfo;
 use GuzzleHttp\Client;
 
 class SecurityDrupalCommand extends DropcatCommand
@@ -65,9 +65,9 @@ class SecurityDrupalCommand extends DropcatCommand
 
         if (!isset($version)) {
             if ($version_drupal == '8') {
-
-                $composerInfo = new ComposerLockParser\ComposerInfo($lock_file);
-                $parse = $composerInfo->getPackages();
+                $read_lock = new ComposerInfo($lock_file);
+                $read_lock->parse();
+                $parse = $read_lock->getPackages();
 
                 foreach ($parse as $package) {
                     $name[] = $package->getName();
