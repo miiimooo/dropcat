@@ -313,7 +313,10 @@ To override config in dropcat.yml, using options:
         $vhost_bash_command = $input->getOption('vhost-bash-command');
         $no_partial = $input->getOption('no-partial') ? true : false;
         $no_email = $input->getOption('no-email') ? true : false;
-        $drushMemoryLimit = $this->configuration->remoteEnvironmentDrushMemoryLimit();
+        $drush_memory_limit = $this->configuration->remoteEnvironmentDrushMemoryLimit();
+
+
+
 
         $output->writeln('<info>' . $this->start . ' prepare started</info>');
         $verbose = false;
@@ -519,7 +522,7 @@ To override config in dropcat.yml, using options:
                       'drush-script' => $drush_script,
                       'drush-folder' => $drush_folder,
                       'drush-alias' => $drush_alias,
-                      'drush-memory-limit' => $drushMemoryLimit,
+                      'drush-memory-limit' => $drush_memory_limit,
                     ];
                     $write = new Write();
                     $write->drushAlias($drush_alias_conf, $verbose);
@@ -668,6 +671,7 @@ To override config in dropcat.yml, using options:
                       'drush-script' => $drush_script,
                       'drush-folder' => $drush_folder,
                       'drush-alias' => $drush_alias,
+                      'drush-memory-limit' => $drush_memory_limit,
                     ];
                     $write = new Write();
                     $write->drushAlias($drush_alias_conf, $verbose);
