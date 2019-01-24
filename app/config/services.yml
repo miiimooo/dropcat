@@ -257,13 +257,6 @@ services:
       tags:
             - {name: console.command}
 
-    dropcat.command.scan:mixed-content:
-      class: Dropcat\Command\MixedContentCommand
-      arguments: ['@DropcatContainer','@dropcat.configuration']
-      lazy: true
-      tags:
-            - {name: console.command, command: scan:mixed-content}
-
     dropcat.command.multi:clone:
       class: Dropcat\Command\MultiCloneCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
