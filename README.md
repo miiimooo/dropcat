@@ -8,11 +8,9 @@
 After that you may run dropcat as: `vendor/bin/dropcat`
 
 ## Install globally (Mac/Linux)
-`curl -OL h https://dropcat.org/dropcat.phar > dropcat.phar`
+`curl -0 https://dropcat.org/dropcat.phar -o /usr/local/bin/dropcat`
 
-`chmod +x dropcat.phar`
-
-`sudo mv dropcat.phar /usr/local/bin/dropcat`
+`chmod +x /usr/local/bin/dropcat`
 
 `dropcat about`
 
