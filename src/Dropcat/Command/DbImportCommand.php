@@ -104,10 +104,8 @@ To override config in dropcat.yml, using options:
                     break;
             }
         } else {
-            if ($output->isVerbose()) {
-                echo "Db does not exist at $path_to_db \n";
-            }
-            exit(0);
+            echo "Db does not exist at $path_to_db \n";
+            exit(1);
         }
         $process = new Process(
             "drush @$drush_alias sql-drop -y &&
