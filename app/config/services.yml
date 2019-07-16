@@ -285,3 +285,9 @@ services:
       lazy: true
       tags:
             - {name: console.command, command: security:drupal}
+    dropcat.command.deploy:note:
+      class: Dropcat\Command\DeployNoteCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+            - {name: console.command, command: security:drupal}
