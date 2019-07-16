@@ -26,6 +26,12 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Console\Input\InputOption;
+use Composer\XdebugHandler\XdebugHandler;
+
+// Re-spawn if xdebug is loaded (unless DROPCAT_ALLOW_XDEBUG=1 is set).
+$xdebug = new XdebugHandler('dropcat', '--ansi');
+$xdebug->check();
+unset($xdebug);
 
 
 $container = new ContainerBuilder();
