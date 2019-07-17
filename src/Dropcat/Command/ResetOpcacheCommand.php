@@ -177,7 +177,7 @@ class ResetOpcacheCommand extends DropcatCommand
         }
 
         // use curl to empty opcache
-        $request = new Process("curl -I $request_url");
+        $request = new Process("curl -Ik $request_url");
         $request->setTimeout(10);
         $request->run();
         // Executes after the command finishes.
@@ -193,7 +193,7 @@ class ResetOpcacheCommand extends DropcatCommand
             $request_url = str_replace('://', "://$auth_user:$auth_pass@", $request_url);
         }
         // use curl to warm opcache
-        $request = new Process("curl -I $request_url");
+        $request = new Process("curl -Ik $request_url");
         $request->setTimeout(10);
         $request->run();
         // Executes after the command finishes.
