@@ -23,7 +23,8 @@ class UpdateCommand extends DropcatCommand
      */
     protected function configure()
     {
-        $HelpText = 'The <info>update-database</info> command updates db if needed.
+        $HelpText = 'The <info>update</info> command updates db if needed, also imports 
+        config and do config split if options supplied.
 <comment>Samples:</comment>
 To run with default options (using config from dropcat.yml in the currrent dir):
 <info>dropcat update</info>';
