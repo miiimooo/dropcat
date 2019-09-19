@@ -211,11 +211,16 @@ To override config in dropcat.yml, using options:
         }
 
         $sites_folder = "$deploy_path/sites/";
+        $old_sites = "$temp_folder/old_sites";
+        $number_of_folders_original = $ssh->exec("ls -l $sites_folder | grep -c ^d");
+        $output->writeln("<info>Number of sites in sites folder including default before deploy: $number_of_folders_original</info>");
 
-        $ssh->exec("rsync -av --progress $sites_folder /tmp/$app_name-sites-$deploy_folder --exclude=default");
+
+       # $ssh->exec("rsync -av --progress $sites_folder /tmp/$app_name-sites-$deploy_folder --exclude=default");
+        $ssh->exec("mv $sites_folder $old_sites");
         $status = $ssh->getExitStatus();
         if ($status !== 0) {
-            echo "could not copy sites folder, error code $status\n";
+            echo "could not move sites folder, error code $status\n";
             exit($status);
         }
         if (!($keeptar)) {
@@ -249,26 +254,23 @@ To override config in dropcat.yml, using options:
         if ($output->isVerbose()) {
             $output->writeln("<info>$this->mark alias to deployed folder are: $web_root/$alias</info>");
         }
-
-        $ssh->exec("cp -Rf /tmp/$app_name-sites-$deploy_folder/* $sites_folder");
-        $status = $ssh->getExitStatus();
-
+        $temp_sites = "$temp_folder/$build_id-sites";
+        $new_build_old_sites = "$deploy_path/sites";
+        $ssh->exec("mv $sites_folder $temp_sites && mv $old_sites $new_build_old_sites");
         if ($status !== 0) {
             echo "Could not move sites folder in place, error code $status\n";
             exit($status);
         }
+        $number_of_folders_new = $ssh->exec("ls -l $sites_folder | grep -c ^d");
+        $output->writeln("Number of sites in sites folder including default: $number_of_folders_new");
+
+        if ($number_of_folders_original !== $number_of_folders_new) {
+            $output->writeln("<error>Number of sites in sites folder does not match original. Aborted.</error>");
+            exit(1);
+        }
+
         if ($output->isVerbose()) {
             $output->writeln("<info>$this->mark sites folder moved in place</info>");
-        }
-        $ssh->exec("chmod 777 -R /tmp/$app_name-sites-$deploy_folder");
-        $ssh->exec("rm -rf /tmp/$app_name-sites-$deploy_folder");
-        // Commented out this check for now
-        $status = $ssh->getExitStatus();
-        if ($status !== 0) {
-            echo "Could not delete old sites folder, error code $status\n";
-        }
-        if ($output->isVerbose() && $status == 0) {
-            $output->writeln("<info>$this->mark old sites folder deleted</info>");
         }
 
         $ssh->disconnect();

@@ -141,7 +141,7 @@ class SecurityDrupalCommand extends DropcatCommand
         if (in_array($status, $ok)) {
             if ($status === 'deprecated') {
                 $output->writeln("<info>$this->mark drupal version $version is deprecated</info>");
-                $output->writeln("<error>THIS VERSION ($version) CAN'T BE DEPLOYED TO PRODUCTION!</error>");
+                $output->writeln("<error>THIS VERSION ($version) SHOULD NOT BE DEPLOYED TO PRODUCTION!</error>");
             } else {
                 $output->writeln("<info>$this->heart drupal version $version is ok</info>");
             }
@@ -152,7 +152,7 @@ class SecurityDrupalCommand extends DropcatCommand
                 exit(1);
             } else {
                 $output->writeln("<info>$this->error drupal version $version is not secure</info>");
-                $output->writeln("<error>ERROR!!!</error>");
+                $output->writeln("<error>ERROR!!! CAN NOT BE DEPLOYED TO PRODUCTION!</error>");
                 exit(1);
             }
         }
