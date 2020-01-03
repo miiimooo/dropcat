@@ -21,7 +21,7 @@ To override config in dropcat.yml, using options:
 <info>dropcat configimport -d mysite</info>';
 
         $this->setName("entity-update")
-            ->setDescription("Update entities")
+            ->setDescription("Update entities - deprecated as of Drupal 8.7")
             ->setDefinition(
                 array(
                     new InputOption(

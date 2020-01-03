@@ -28,6 +28,12 @@ services:
       lazy: true
       tags:
         - {name: console.command, command: config-import}
+    dropcat.command.config-pull:
+      class: Dropcat\Command\ConfigPullCommand
+      arguments: ['@DropcatContainer','@dropcat.configuration']
+      lazy: true
+      tags:
+        - {name: console.command, command: config-pull}
     dropcat.command.db-import:
       class: Dropcat\Command\DbImportCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']
