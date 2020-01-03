@@ -1,8 +1,10 @@
 <?php
 namespace Dropcat\Lib;
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
- * Class CheckDrupal
+ * Class CreateDrushAlias
  *
  * Checking if it is Drupal, and which version.
  *
@@ -12,19 +14,37 @@ namespace Dropcat\Lib;
 
 class CreateDrushAlias
 {
-    private $sitename;
+    private $drushAliasName;
+    private $env;
+    private $siteName;
     private $server;
     private $user;
     private $webroot;
-    private $alias;
+    private $sitePath;
     private $url;
     private $sshport;
     private $drushScript = null;
-    private $drushmemorylimit;
+    private $drushMemoryLimit;
+
+    /**
+     * @param string $env
+     */
+    public function setEnv($env): void {
+        $this->env = $env;
+    }
+
+    /**
+     * @param string $drushAliasName
+     *
+     * @return void
+     */
+    public function setDrushAliasName($drushAliasName): void {
+        $this->drushAliasName = $drushAliasName;
+    }
 
     public function setName($sitename)
     {
-        $this->sitename = $sitename;
+        $this->siteName = $sitename;
     }
 
     public function setServer($server)
@@ -42,9 +62,9 @@ class CreateDrushAlias
         $this->webroot = $webroot;
     }
 
-    public function setSitePath($alias)
+    public function setSitePath($sitePath)
     {
-        $this->alias = $alias;
+        $this->sitePath = $sitePath;
     }
 
     public function setUrl($url)
@@ -68,26 +88,37 @@ class CreateDrushAlias
     }
 
 
+    /**
+     * Get options for the drush alias.
+     * @return array
+     */
     public function getValue()
     {
-        $aliasOut = '<?php
-  $aliases["' . $this->sitename . '"] = array (
-    "php-options" =>  "' . $this->drushMemoryLimit . '",
-    "remote-host" => "' . $this->server . '",
-    "remote-user" => "' . $this->user . '",
-    "root" => "' . $this->webroot . '/' . $this->alias . '/web",
-    "uri"  => "' . $this->url . '",
-    "ssh-options" => "-o LogLevel=Error -q -p ' . $this->sshport . '",';
+        $options[$this->env] = [
+          "options" => ['php-options' => $this->drushMemoryLimit],
+          "host" => $this->server,
+          "user" => $this->user,
+          "root" => $this->webroot . '/' . $this->sitePath . '/web',
+          "uri"  => $this->url,
+          "ssh" => ['options' => '-o LogLevel=Error -q -p ' . $this->sshport],
+        ];
+
         if ($this->drushScript) {
-            $aliasOut .= '
-      "path-aliases" =>  array(
-         "%drush-script"  => "'. $this->drushScript .'",
-      ),';
+            $options[$this->env]['paths'] = [
+              'drush-script' => $this->drushScript
+            ];
         }
-        $aliasOut .= ');';
-        return ($aliasOut);
+
+        return $options;
     }
 
+    /**
+     * Get options for the drush alias as YAML.
+     * @return string
+     */
+    public function toYaml() {
+        return Yaml::dump($this->getValue());
+    }
 
   /**
    * Return the user's home directory.

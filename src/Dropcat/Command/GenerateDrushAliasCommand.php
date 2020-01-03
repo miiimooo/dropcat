@@ -40,7 +40,10 @@ To override config in dropcat.yml, using options, creates alias to stage env.
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
+
         if ($this->configuration) {
+            $drushAliasName = $this->configuration->siteEnvironmentDrushAlias();
             $siteName = $this->configuration->siteEnvironmentName();
             $webroot = $this->configuration->remoteEnvironmentWebRoot();
             $alias = $this->configuration->remoteEnvironmentAlias();
@@ -69,6 +72,8 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             }
 
             $drushAlias = new CreateDrushAlias();
+            $drushAlias->setEnv($env);
+            $drushAlias->setDrushAliasName($drushAliasName);
             $drushAlias->setName($siteName);
             $drushAlias->setServer($server);
             $drushAlias->setUser($user);
@@ -81,19 +86,28 @@ To override config in dropcat.yml, using options, creates alias to stage env.
             $home = new CreateDrushAlias();
             $home_dir = $home->drushServerHome();
 
-            $drush_alias_name = $this->configuration->siteEnvironmentDrushAlias();
-
             $drush_file = new Filesystem();
 
             try {
-                $drush_file->dumpFile($home_dir . '/.drush/' . $drush_alias_name .
-                '.aliases.drushrc.php', $drushAlias->getValue());
+                $yaml = $drushAlias->toYaml();
+                $filename = $home_dir . '/.drush/sites/' . $drushAliasName .
+                  '.site.yml';
+
+                if ($output->isVerbose()) {
+                    $output->writeln("<comment>Trying to write $filename</comment>");
+                }
+
+                $drush_file->dumpFile($filename, $yaml);
+
+                if ($output->isVerbose()) {
+                    $output->writeln("<info>Successfully written $filename</info>");
+                }
             } catch (IOExceptionInterface $e) {
                 echo 'An error occurred while creating your file at ' . $e->getPath();
             }
 
             $output->writeln('<info>Task: generate:drush-alias finished. You could now use:</info>');
-            $output->writeln('<info>drush @' . $siteName . '</info>');
+            $output->writeln('<info>drush @' . $drushAliasName . '.' . $env . '</info>');
         } else {
             echo 'I cannot create any alias, please check your --env parameter';
         }
