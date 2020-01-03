@@ -4,6 +4,7 @@ namespace Dropcat\Command;
 
 use Dropcat\Lib\DropcatCommand;
 use Dropcat\Lib\CreateDrushAlias;
+use Dropcat\Lib\Write;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,21 +27,21 @@ To override config in dropcat.yml, using options, creates alias to stage env.
         ->setHelp($HelpText)
 
         ->setDefinition(
-            array(
+            [
             new InputOption(
                 'local',
                 'l',
                 InputOption::VALUE_NONE,
-                "Create drush alias for local use (this option is normaly not needed)."
+                "Create drush alias for local use (this option is normally not needed)."
             ),
-            )
+            ]
         );
     }
 
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $env = $input->getParameterOption(array('--env', '-e'), getenv('DROPCAT_ENV') ?: 'dev');
+        $env = $input->getParameterOption(['--env', '-e'], getenv('DROPCAT_ENV') ?: 'dev');
 
         if ($this->configuration) {
             $drushAliasName = $this->configuration->siteEnvironmentDrushAlias();
@@ -71,43 +72,23 @@ To override config in dropcat.yml, using options, creates alias to stage env.
                 echo "drush memory limit is $drushMemoryLimit\n";
             }
 
-            $drushAlias = new CreateDrushAlias();
-            $drushAlias->setEnv($env);
-            $drushAlias->setDrushAliasName($drushAliasName);
-            $drushAlias->setName($siteName);
-            $drushAlias->setServer($server);
-            $drushAlias->setUser($user);
-            $drushAlias->setWebRoot($webroot);
-            $drushAlias->setSitePath($alias);
-            $drushAlias->setUrl($url);
-            $drushAlias->setSSHPort($sshport);
-            $drushAlias->setDrushMemoryLimit($drushMemoryLimit);
+            $conf = [
+              'env' => $env,
+              'drush-alias-name' => $drushAliasName,
+              'site-name' => $siteName,
+              'server' => $server,
+              'user' => $user,
+              'web-root' => $webroot,
+              'alias' => $alias,
+              'url' => $url,
+              'ssh-port' => $sshport,
+              'drush-memory-limit' => $drushMemoryLimit,
+            ];
 
-            $home = new CreateDrushAlias();
-            $home_dir = $home->drushServerHome();
+            $write = new Write();
+            $write->drushAlias($conf, $output->isVerbose());
 
-            $drush_file = new Filesystem();
-
-            try {
-                $yaml = $drushAlias->toYaml();
-                $filename = $home_dir . '/.drush/sites/' . $drushAliasName .
-                  '.site.yml';
-
-                if ($output->isVerbose()) {
-                    $output->writeln("<comment>Trying to write $filename</comment>");
-                }
-
-                $drush_file->dumpFile($filename, $yaml);
-
-                if ($output->isVerbose()) {
-                    $output->writeln("<info>Successfully written $filename</info>");
-                }
-            } catch (IOExceptionInterface $e) {
-                echo 'An error occurred while creating your file at ' . $e->getPath();
-            }
-
-            $output->writeln('<info>Task: generate:drush-alias finished. You could now use:</info>');
-            $output->writeln('<info>drush @' . $drushAliasName . '.' . $env . '</info>');
+            $output->writeln('<info>Task: generate:drush-alias finished.</info>');
         } else {
             echo 'I cannot create any alias, please check your --env parameter';
         }

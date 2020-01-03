@@ -130,12 +130,6 @@ services:
       lazy: true
       tags:
         - {name: console.command, command: check-connection}
-    dropcat.command.create-drush-alias:
-      class: Dropcat\Command\CreateDrushAliasCommand
-      arguments: ['@DropcatContainer','@dropcat.configuration']
-      lazy: true
-      tags:
-        - {name: console.command, command: create-drush-alias}
     dropcat.command.get:db-backup:
       class: Dropcat\Command\GetDatabaseBackupCommand
       arguments: ['@DropcatContainer','@dropcat.configuration']

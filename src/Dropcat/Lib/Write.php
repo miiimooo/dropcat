@@ -53,6 +53,10 @@ class Write
     public function drushAlias($conf, $verbose = false)
     {
         $drushAlias = new CreateDrushAlias();
+        if (!isset($conf['drush-folder'])) {
+            $conf['drush-folder'] = $drushAlias->drushServerHome();
+        }
+        $drushAlias->setEnv($conf['env']);
         $drushAlias->setName($conf['site-name']);
         $drushAlias->setServer($conf['server']);
         $drushAlias->setUser($conf['user']);
@@ -69,16 +73,24 @@ class Write
         $drush_file = $this->fs;
 
         try {
-            $drush_file->dumpFile(
-                $conf['drush-folder'] . '/' . $conf['drush-alias'] . '.aliases.drushrc.php',
-                $drushAlias->getValue()
-            );
+            $yaml = $drushAlias->toYaml();
+            $filename = $conf['drush-folder'] . '/.drush/sites/' . $conf['site-name'] .
+              '.site.yml';
+
+            if ($verbose) {
+                $this->output->writeln("<comment>Trying to write $filename</comment>");
+            }
+
+            $drush_file->dumpFile($filename, $yaml);
+
+            if ($verbose) {
+                $this->output->writeln("<info>Successfully written $filename</info>");
+            }
         } catch (IOExceptionInterface $e) {
-            echo 'an error occurred while creating your file at ' . $e->getPath();
-            exit(1);
+            echo 'An error occurred while creating your file at ' . $e->getPath();
         }
-        $this->output->writeln("<info>$this->mark drush alias " . $conf['drush-alias'] .
-          " created</info>");
+        $this->output->writeln("<info>$this->mark drush alias @" . $conf['site-name'] .
+          '.' . $conf['env'] . " created</info>");
     }
 
 
