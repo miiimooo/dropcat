@@ -1,4 +1,5 @@
 <?php
+
 namespace Dropcat\Lib;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -12,14 +13,15 @@ use Symfony\Component\Console\Output\ConsoleOutput;
  *
  * @package Dropcat\Lib
  */
-class Write
-{
+class Write {
+
     public $fs;
+
     public $mark;
+
     public $output;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->fs = new Filesystem();
         $style = new Styles();
         $mark = $style->heavyCheckMark();
@@ -30,8 +32,7 @@ class Write
     /**
      * Write a sites.php
      */
-    public function sitesPhp($conf)
-    {
+    public function sitesPhp($conf) {
         $tracker = new Tracker();
         $sites = $tracker->read($conf['tracker-file']);
         $out = "<?php\n" . '$sites = [' . "\n";
@@ -39,7 +40,7 @@ class Write
             if (isset($siteProperty['web']['server-alias'])) {
                 $alias = $siteProperty['web']['server-alias'];
                 $domain = $siteProperty['web']['site-domain'];
-                $out .=  "  '$alias' => '$domain',\n";
+                $out .= "  '$alias' => '$domain',\n";
             }
         }
         $out .= "];\n";
@@ -50,8 +51,7 @@ class Write
     /**
      * Write a drush alias.
      */
-    public function drushAlias($conf, $verbose = false)
-    {
+    public function drushAlias($conf, $verbose = FALSE) {
         $drushAlias = new CreateDrushAlias();
         if (!isset($conf['drush-folder'])) {
             $conf['drush-folder'] = $drushAlias->drushServerHome();
@@ -97,15 +97,14 @@ class Write
     /**
      * Write local.settings.php
      */
-    public function localSettingsPhp($conf)
-    {
+    public function localSettingsPhp($conf) {
         $tracker = new Tracker();
 
         $sites = $tracker->read($conf['tracker-file']);
         foreach ($sites as $site => $siteProperty) {
             if ($site == $conf['site']) {
                 $out = '<?php' . "\n";
-                $out .= '$settings[\'hash_salt\'] = \'' . $siteProperty['web']['hash']. '\';' . "\n\n";
+                $out .= '$settings[\'hash_salt\'] = \'' . $siteProperty['web']['hash'] . '\';' . "\n\n";
                 $out .= '$databases[\'default\'][\'default\'] = [' . "\n";
                 $out .= '  \'database\' => \'' . $siteProperty['db']['name'] . '\',' . "\n";
                 $out .= '  \'username\' => \'' . $siteProperty['db']['user'] . '\',' . "\n";
@@ -128,14 +127,13 @@ class Write
     /**
      * Write local.settings.php for multi setup
      */
-    public function localSettingsPhpMulti($conf)
-    {
+    public function localSettingsPhpMulti($conf) {
         $tracker = new Tracker();
         $sites = $tracker->read($conf['tracker-file']);
         foreach ($sites as $site => $siteProperty) {
             if ($site == $conf['site']) {
                 $out = '<?php' . "\n";
-                $out .= '$settings[\'hash_salt\'] = \'' . $siteProperty['web']['hash']. '\';' . "\n\n";
+                $out .= '$settings[\'hash_salt\'] = \'' . $siteProperty['web']['hash'] . '\';' . "\n\n";
                 $out .= '$databases[\'default\'][\'default\'] = [' . "\n";
                 $out .= '  \'database\' => \'' . $siteProperty['db']['name'] . '\',' . "\n";
                 $out .= '  \'username\' => \'' . $siteProperty['db']['user'] . '\',' . "\n";
@@ -147,7 +145,7 @@ class Write
                 $out .= "  'driver' => 'mysql',\n";
                 $out .= '];';
                 $out .= "\n\n";
-                $out .= '$config_directories[\'sync\'] = \'' . $siteProperty['web']['sync-folder'] .'\';' . "\n\n";
+                $out .= '$config_directories[\'sync\'] = \'' . $siteProperty['web']['sync-folder'] . '\';' . "\n\n";
                 $out .= "if (file_exists('../global.overrides.php')) {\n";
                 $out .= "  include '../global.overrides.php';\n";
                 $out .= "}\n";
@@ -156,7 +154,7 @@ class Write
                       $siteProperty['web']['config-split-folder'] . "';\n";
                 }
                 $out .= '$config[\'locale.settings\'][\'translation\'][\'path\'] = \'' . 'sites/' .
-                  $siteProperty['web']['site-domain'] . '/files/translations' ."';\n";
+                  $siteProperty['web']['site-domain'] . '/files/translations' . "';\n";
             }
         }
         $this->fs->dumpFile('/tmp/' . $conf['app-name'] . '.local.settings.php', $out);
@@ -165,8 +163,7 @@ class Write
     /**
      * Write opcache reset file
      */
-    public function file($conf)
-    {
+    public function file($conf) {
         $this->fs->dumpFile('/tmp/' . $conf['name'], $conf['content']);
     }
 }
