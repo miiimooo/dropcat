@@ -5,6 +5,7 @@ namespace Dropcat\Lib;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class CheckDrupal
@@ -73,15 +74,40 @@ class Write {
         $drush_file = $this->fs;
 
         try {
-            $yaml = $drushAlias->toYaml();
-            $filename = $conf['drush-folder'] . '/.drush/sites/' . $conf['site-name'] .
-              '.site.yml';
+            $filename = DROPCAT_COMPOSER_ROOT . '/drush/sites/self.site.yml';
+
+            if (file_exists($filename)) {
+                if ($verbose) {
+                    $msg = "<comment>$filename already exists. Parsing aliases.</comment>";
+                    $this->output->writeln($msg);
+                }
+                $aliases = Yaml::parseFile($filename);
+
+                // Just to inform about overwriting.
+                foreach ($aliases as $env => $options) {
+                    if ($env === $conf['env']) {
+                        if ($verbose) {
+                            $msg = "<error>$env alias already exists! Overwriting.</error>";
+                            $this->output->writeln($msg);
+                        }
+                    }
+                }
+
+                // Merge old aliases with the new.
+                $aliases = array_merge($aliases, $drushAlias->getValue());
+            }
 
             if ($verbose) {
                 $this->output->writeln("<comment>Trying to write $filename</comment>");
             }
 
-            $drush_file->dumpFile($filename, $yaml);
+            if (isset($aliases)) {
+                $yaml = Yaml::dump($aliases);
+                $drush_file->dumpFile($filename, $yaml);
+            } else {
+                $newAlias = $drushAlias->toYaml();
+                $drush_file->dumpFile($filename, $newAlias);
+            }
 
             if ($verbose) {
                 $this->output->writeln("<info>Successfully written $filename</info>");
@@ -89,8 +115,8 @@ class Write {
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your file at ' . $e->getPath();
         }
-        $this->output->writeln("<info>$this->mark drush alias @" . $conf['site-name'] .
-          '.' . $conf['env'] . " created</info>");
+        $this->output->writeln("<info>$this->mark drush alias @" .
+          $conf['env'] . " created. Run <comment>drush sa</comment> to see available aliases.</info>");
     }
 
 
