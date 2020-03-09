@@ -107,13 +107,20 @@ class ResetOpcacheCommand extends DropcatCommand
                   'Basic auth user',
                   null
               ),
-                new InputOption(
-                    'auth-pass',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Basic auth pass',
-                    null
-                )
+              new InputOption(
+                  'auth-pass',
+                  null,
+                  InputOption::VALUE_OPTIONAL,
+                  'Basic auth pass',
+                  null
+              ),
+              new InputOption(
+                  'curl_timeout',
+                  'ct',
+                  InputOption::VALUE_OPTIONAL,
+                  'Curl time out ',
+                  '10'
+              )
               ]
           );
     }
@@ -131,6 +138,7 @@ class ResetOpcacheCommand extends DropcatCommand
         $url = $input->getOption('url');
         $auth_user = $input->getOption('auth-user');
         $auth_pass = $input->getOption('auth-pass');
+        $curl_timeout = $input->getOption('curl_timeout');
         $timeout = '999';
         $verbose = false;
 
@@ -178,7 +186,7 @@ class ResetOpcacheCommand extends DropcatCommand
 
         // use curl to empty opcache
         $request = new Process("curl -Ik $request_url");
-        $request->setTimeout(10);
+        $request->setTimeout($curl_timeout);
         $request->run();
         // Executes after the command finishes.
         if (!$request->isSuccessful()) {
@@ -194,7 +202,7 @@ class ResetOpcacheCommand extends DropcatCommand
         }
         // use curl to warm opcache
         $request = new Process("curl -Ik $request_url");
-        $request->setTimeout(10);
+        $request->setTimeout($curl_timeout);
         $request->run();
         // Executes after the command finishes.
         if (!$request->isSuccessful()) {
