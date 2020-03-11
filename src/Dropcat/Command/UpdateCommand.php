@@ -89,6 +89,12 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                   'Cache rebuild after update db'
               ),
               new InputOption(
+                  'no-cache-rebuild-before-updatedb',
+                  null,
+                  InputOption::VALUE_NONE,
+                  'Cache rebuild before update db'
+              ),
+              new InputOption(
                   'config-split-settings',
                   null,
                   InputOption::VALUE_OPTIONAL,
@@ -114,6 +120,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
         $config_partial = $input->getOption('use-config-import-partial') ? true : false;
         $multi = $input->getOption('multi') ? true : false;
         $no_cr_after_updb = $input->getOption('no-cache-rebuild-after-updatedb') ? true : false;
+        $no_cr_before_updb = $input->getOption('no-cache-rebuild-before-updatedb') ? true : false;
         $config_split_settings = $input->getOption('config-split-settings');
 
         // If we have an option for config split settings, config split should be true.
@@ -225,17 +232,19 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     // end backup.
                     if ($no_db_update == false) {
                         if ($version == '8') {
-                            // First rebuild cahce.
-                            $process = new Process("drush @$alias cr");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error could not rebuild cache for $site</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
+                            if ($no_cr_before_updb == false) {
+                                // First rebuild cahce.
+                                $process = new Process("drush @$alias cr");
+                                $process->setTimeout(9999);
+                                $process->run();
+                                // Executes after the command finishes.
+                                if (!$process->isSuccessful()) {
+                                  $output->writeln("<info>$this->error could not rebuild cache for $site</info>");
+                                  throw new ProcessFailedException($process);
+                                }
+                                if ($output->isVerbose()) {
+                                  echo $process->getOutput();
+                                }
                             }
                         }
                         $process = new Process("drush @$alias updb -y $ent");
