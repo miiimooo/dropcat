@@ -63,6 +63,10 @@ class VarnishPurgeCommand extends DropcatCommand
                 $errstr,
                 10
             );
+            if (!$varnish_sock) { 
+                echo "connections failed $errno $errstr"; 
+                exit; 
+            }
 
             if ($url){
                 $target = $url;
@@ -83,7 +87,7 @@ class VarnishPurgeCommand extends DropcatCommand
 
             $response = "";
             while (!feof($varnish_sock)) {
-                $response .= fgets($varnish_sock, 128);
+                $response .= fgets($varnish_sock, 128); 
             }
             if ($output->isVerbose()) {
                 print $response;
