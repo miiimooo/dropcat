@@ -191,45 +191,51 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                     $site = $this->configuration->localEnvironmentAppName();
                 }
                 if (isset($siteProperty['drush']['alias'])) {
+                    if ($version == '7') {
+                        $process = new Process("drush @$alias drush vset maintenance_mode 1 && drush @$alias sql-query 'TRUNCATE TABLE sessions;'");
+                        $process->setTimeout(9999);
+                        $process->run();
+                        // Executes after the command finishes.
+                        if (!$process->isSuccessful()) {
+                            $output->writeln("<info>$this->error could not set $site in maintenance mode</info>");
+                            throw new ProcessFailedException($process);
+                        }
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
+                        $output->writeln("<info>$this->mark $site is in maintenance mode</info>");
+                    }
+                    if ($version == '8') {
+                        $process = new Process("drush @$alias sset system.maintenance_mode 1 && drush @$alias sql-query 'TRUNCATE TABLE sessions;'");
+                        $process->setTimeout(9999);
+                        $process->run();
+                        // Executes after the command finishes.
+                        if (!$process->isSuccessful()) {
+                            $output->writeln("<info>$this->error could not set $site in maintenance mode</info>");
+                            throw new ProcessFailedException($process);
+                        }
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
+
+                        $output->writeln("<info>$this->mark $site is in maintenance mode</info>");
+
+
+                        $process = new Process("drush @$alias cr");
+                        $process->setTimeout(9999);
+                        $process->run();
+                        // Executes after the command finishes.
+                        if (!$process->isSuccessful()) {
+                            $output->writeln("<info>$this->error could not rebuild cache for $site</info>");
+                            throw new ProcessFailedException($process);
+                        }
+                        if ($output->isVerbose()) {
+                            echo $process->getOutput();
+                        }
+
+                        $output->writeln("<info>$this->mark rebuild cache done for $site</info>");
+                    }
                     $alias = $siteProperty['drush']['alias'];
-
-                    // Backup
-                    // create dir if it does not exist
-                    /*
-
-                    $backup_dir = $this->configuration->siteEnvironmentBackupPath() .
-                    '/' . $this->configuration->localEnvironmentAppName() . '/' .
-                    $alias;
-
-                    $process = new Process("mkdir -p $backup_dir");
-                    $process->setTimeout(9999);
-                    $process->run();
-                    // Executes after the command finishes.
-                    if (!$process->isSuccessful()) {
-                    $output->writeln("<info>$this->error could not create backup dir.</info>");
-                    throw new ProcessFailedException($process);
-                    }
-                    if ($output->isVerbose()) {
-                    echo $process->getOutput();
-                    }
-
-                    $server_time = date("Ymd_His");
-                    $process = new Process("drush @$alias sql-dump -y > $backup_dir/$alias-$server_time.sql");
-                    $process->setTimeout(9999);
-                    $process->run();
-                    // Executes after the command finishes.
-                    if (!$process->isSuccessful()) {
-                    $output->writeln("<info>$this->error could not update db for $site</info>");
-                    throw new ProcessFailedException($process);
-                    }
-                    if ($output->isVerbose()) {
-                    echo $process->getOutput();
-                    }
-
-                    $output->writeln("<info>$this->mark update db done for $alias</info>");
-
-                     */
-                    // end backup.
                     if ($no_db_update == false) {
                         if ($version == '8') {
                             if ($no_cr_before_updb == false) {
@@ -278,48 +284,7 @@ To run with default options (using config from dropcat.yml in the currrent dir):
 
                             $output->writeln("<info>$this->mark cleared cache for $site</info>");
                         }
-                        if ($version == '8') {
-                            $process = new Process("drush @$alias sset system.maintenance_mode 1 && drush @$alias sql-query 'TRUNCATE TABLE sessions;'");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error could not set $site in maintenance mode</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                            }
 
-                            $output->writeln("<info>$this->mark $site is in maintenance mode</info>");
-
-
-                            $process = new Process("drush @$alias cr");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error could not rebuild cache for $site</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                            }
-
-                            $process = new Process("drush @$alias cr");
-                            $process->setTimeout(9999);
-                            $process->run();
-                            // Executes after the command finishes.
-                            if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error could not rebuild cache for $site</info>");
-                                throw new ProcessFailedException($process);
-                            }
-                            if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                            }
-
-                            $output->writeln("<info>$this->mark rebuild cache done for $site</info>");
-                        }
                     }
 
                     if ($config_split == true) {
@@ -371,19 +336,6 @@ To run with default options (using config from dropcat.yml in the currrent dir):
                         $output->writeln("<info>$this->mark config split export done for $site</info>");
                         if ($no_config_import == false) {
                             if ($version == '8') {
-                                // Remove partial for now.
-                                /*  $output->writeln("<info>$this->mark starting partial config import for $site</info>");
-                                $process = new Process("drush @$alias cim -y --partial");
-                                $process->setTimeout(9999);
-                                $process->run();
-                                // Executes after the command finishes.
-                                if (!$process->isSuccessful()) {
-                                $output->writeln("<info>$this->error config import failed for $site</info>");
-                                throw new ProcessFailedException($process);
-                                }
-                                if ($output->isVerbose()) {
-                                echo $process->getOutput();
-                                }*/
                                 $output->writeln("<info>$this->mark starting config import for $site</info>");
                                 $process = new Process("drush @$alias cim -y $part");
                                 $process->setTimeout(9999);
