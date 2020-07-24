@@ -1,18 +1,20 @@
 # Deploy tool for Drupal
+  
+Forked from https://gitlab.wklive.net/wk-public/dropcat
 
 [Please read our blog-series about dropcat](https://wunderkraut.se/dropcat)
 
 ## Install with composer
-`composer require dropcat/dropcat:dev-master`
+`composer require miiimooo/dropcat:dev-master`
 
 After that you may run dropcat as: `vendor/bin/dropcat`
 
-## Install globally (Mac/Linux)
-`curl -0 https://dropcat.org/dropcat.phar -o /usr/local/bin/dropcat`
+## **DEPRECATED** Install globally (Mac/Linux)
 
-`chmod +x /usr/local/bin/dropcat`
-
-`dropcat about`
+This will not work for this forked version of dropcat
+| `curl -0 https://dropcat.org/dropcat.phar -o /usr/local/bin/dropcat`
+| `chmod +x /usr/local/bin/dropcat`
+| `dropcat about`
 
 ## What does it do and why would anybody need it?
 Historically we at Wunderkraut Sweden (formerly NodeOne) have used a combination 
