@@ -123,6 +123,10 @@ To override config in dropcat.yml, using options:
                 $output->writeln("<error>$run</error>");
             }
             $output->writeln("<info>Output: $run</info>");
+        } else {
+            if (!empty($ssh->getStdError())) {
+              $output->writeln('<error>' . $ssh->getStdError() . '</error>');
+            }
         }
 
         $output->writeln('<info>Task: run-remote finished</info>');
