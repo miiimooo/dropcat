@@ -26,6 +26,6 @@
   "intercept": true,
   "main": "app/dropcat",
   "output": "dropcat.phar",
-  "compression": "GZ",
+  "compression": "NONE",
   "stub": true
 }
