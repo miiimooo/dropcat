@@ -9,10 +9,10 @@ Forked from https://gitlab.wklive.net/wk-public/dropcat
 
 After that you may run dropcat as: `vendor/bin/dropcat`
 
-## **DEPRECATED** Install globally (Mac/Linux)
+## Install globally (Mac/Linux)
 
-This will not work for this forked version of dropcat
-| `curl -0 https://dropcat.org/dropcat.phar -o /usr/local/bin/dropcat`
+For this forked version of dropcat
+| `curl -L0 https://github.com/miiimooo/dropcat/releases/download/2.0.0/dropcat.phar -o /usr/local/bin/dropcat`
 | `chmod +x /usr/local/bin/dropcat`
 | `dropcat about`
 

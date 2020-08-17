@@ -11,11 +11,12 @@
    ],
   "config": {
     "platform": {
-      "php": "5.6.30"
+      "php": "7.3"
     }
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": "^7.3",
+    "ext-phar": "*",
     "symfony/console": "^3",
     "symfony/process": "^3",
     "phpseclib/phpseclib": "^2.0",
