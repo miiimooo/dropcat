@@ -195,7 +195,7 @@ To override config in dropcat.yml, using options:
             exit(1);
         }
 
-        $tarExists = $sftp->file_exists("$tar_dir/$tarfile");
+        $tarExists = $sftp->file_exists("$targetdir/$tarfile");
         // Setting default value
 
         if ($output->isVerbose()) {
@@ -204,9 +204,9 @@ To override config in dropcat.yml, using options:
         $remoteFileSha1 = null;
         if ($tarExists) {
             if ($checksha1 === true) {
-                $remoteFileSha1 = $sftp->exec("sha1sum $tar_dir/$tarfile | awk '{print $1}'");
+                $remoteFileSha1 = $sftp->exec("sha1sum $targetdir/$tarfile | awk '{print $1}'");
                 if ($output->isVerbose()) {
-                    echo "tar is at $tar_dir/$tarfile\n";
+                    echo "tar is at $targetdir/$tarfile\n";
                     echo "local file hash is $localFileSha1\n";
                     echo "remote file hash is $remoteFileSha1\n";
                     echo "SHA1 for file match\n";
@@ -222,7 +222,7 @@ To override config in dropcat.yml, using options:
             }
         } else {
             if ($output->isVerbose()) {
-                echo "tar is at $tar_dir/$tarfile\n";
+                echo "tar is at $targetdir/$tarfile\n";
                 echo "local file hash is $localFileSha1\n";
                 echo "remote file hash is $remoteFileSha1\n";
             }

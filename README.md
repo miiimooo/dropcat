@@ -12,7 +12,7 @@ After that you may run dropcat as: `vendor/bin/dropcat`
 ## Install globally (Mac/Linux)
 
 For this forked version of dropcat
-| `curl -L0 https://github.com/miiimooo/dropcat/releases/download/2.1.0/dropcat.phar -o /usr/local/bin/dropcat`
+| `curl -L0 https://github.com/miiimooo/dropcat/releases/download/2.0.3/dropcat.phar -o /usr/local/bin/dropcat`
 | `chmod +x /usr/local/bin/dropcat`
 | `dropcat about`
 
