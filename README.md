@@ -12,7 +12,7 @@ After that you may run dropcat as: `vendor/bin/dropcat`
 ## Install globally (Mac/Linux)
 
 For this forked version of dropcat
-| `curl -L0 https://github.com/miiimooo/dropcat/releases/download/2.0.0/dropcat.phar -o /usr/local/bin/dropcat`
+| `curl -L0 https://github.com/miiimooo/dropcat/releases/download/2.1.0/dropcat.phar -o /usr/local/bin/dropcat`
 | `chmod +x /usr/local/bin/dropcat`
 | `dropcat about`
 
@@ -126,3 +126,7 @@ your code that has been tested.
 We don't give any gurantee that this tool will work for you, your site could be
 nuked from orbit by it, and we don't have any support for it, but if you have 
 problems using it, please create an issue.
+
+## Packaging
+To create a phar release:
+```vendor/bin/box build```

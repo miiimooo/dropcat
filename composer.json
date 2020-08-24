@@ -26,7 +26,7 @@
     "pear/archive_tar": "^1.4",
     "padraic/phar-updater": "^1.0",
     "wkse/jenkins-php-api": "^0.1.13",
-    "ocramius/proxy-manager": "^1.0",
+    "ocramius/proxy-manager": "2.0.4",
     "symfony/proxy-manager-bridge": "^3",
     "symfony/yaml": "^3",
     "symfony/filesystem": "^3.4",
