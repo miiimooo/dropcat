@@ -101,7 +101,6 @@ To override config in dropcat.yml, using options:
         $auth->loadKey($identity_file_content);
 
         if (!$ssh->login($user, $auth)) {
-            $output->writeln($ssh->getLog());
             $output->writeln($ssh->getErrors());
             $output->writeln("<info>Login Failed</info>");
             exit(1);
@@ -111,7 +110,6 @@ To override config in dropcat.yml, using options:
         }
         $run = $ssh->exec($input);
         if (!$run) {
-          $output->writeln($ssh->getLog());
           $output->writeln($ssh->getErrors());
           $output->writeln("<info>Exec Failed</info>");
           exit(2);
